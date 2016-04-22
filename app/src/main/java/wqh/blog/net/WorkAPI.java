@@ -1,7 +1,11 @@
 package wqh.blog.net;
 
+import java.util.List;
+
 import retrofit2.Call;
+import retrofit2.http.GET;
 import retrofit2.http.Query;
+import wqh.blog.bean.Holder;
 import wqh.blog.bean.Work;
 
 /**
@@ -9,8 +13,10 @@ import wqh.blog.bean.Work;
  */
 public interface WorkAPI {
 
-    Call<Work> queryById(@Query("id") int id);
+    @GET("work/queryById")
+    Call<Holder<Work>> queryById(@Query("id") int id);
 
-    Call<Work> queryByTitle(@Query("title") String title);
+    @GET("work/queryByTitle")
+    Call<Holder<Work>> queryByTitle(@Query("title") String title);
 
 }

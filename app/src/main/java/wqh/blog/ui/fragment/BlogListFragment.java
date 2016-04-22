@@ -5,20 +5,18 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
-import com.orhanobut.logger.Logger;
-
-import java.sql.Date;
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import wqh.blog.R;
 import wqh.blog.adapter.BlogAdapter;
 import wqh.blog.bean.Blog;
-import wqh.blog.presenter.LoadDataPresenter;
 import wqh.blog.presenter.BlogLoadPresenter;
+import wqh.blog.presenter.LoadDataPresenter;
 import wqh.blog.ui.base.BaseFragment;
+import wqh.blog.view.LoadDataView;
 
 /**
  * Created by WQH on 2016/4/11  19:14.
@@ -29,6 +27,7 @@ import wqh.blog.ui.base.BaseFragment;
  */
 public class BlogListFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
 
+    private static final String TAG = "BlogListFragment";
     @Bind(R.id.swipeRefreshLayout)
     SwipeRefreshLayout mRefreshLayout;
 
@@ -43,26 +42,22 @@ public class BlogListFragment extends BaseFragment implements SwipeRefreshLayout
         super.onCreate(savedInstanceState);
         mRefreshLayout.setOnRefreshListener(this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-
         mLoadDataPresenter = new BlogLoadPresenter();
+        mLoadDataPresenter.loadByCondition("2016-03", LoadDataPresenter.Type.TIME, new LoadDataView<Blog>() {
+            @Override
+            public void onSuccess(List<Blog> data) {
+                mAdapter = new BlogAdapter(getActivity(), data);
+                mRecyclerView.setAdapter(mAdapter);
+            }
+
+            @Override
+            public void onFail(int errorCode, String errorMsg) {
+                Log.e(TAG, "ErrorCode-> " + errorCode + ", ErrorMsg-> " + errorMsg);
+            }
+        });
 
     }
 
-    private List<Blog> getData() {
-        List<Blog> list = new ArrayList<>();
-
-        for (int i = 0; i < 100; ++i) {
-            Blog blog = new Blog();
-            blog.title = "Title " + i;
-            blog.tag = i + " ";
-            blog.abstractStr = "abstractStr " + i;
-            blog.times = i;
-            blog.type = "type " + i;
-            blog.createdAt = new Date(System.currentTimeMillis());
-            list.add(blog);
-        }
-        return list;
-    }
 
     @Override
     public int layoutId() {
@@ -77,15 +72,5 @@ public class BlogListFragment extends BaseFragment implements SwipeRefreshLayout
     @Override
     public void onRefresh() {
 
-    }
-
-    //onSuccess is called when mLoadDataPresenter.loadAll() success loadAll data from net
-    public void onSuccess(List<Blog> data) {
-        mAdapter = new BlogAdapter(getActivity(), getData());
-        mRecyclerView.setAdapter(mAdapter);
-    }
-
-    public void onFail(int errorCode, String errorMsg) {
-        Logger.i("BlogListFragment => " + errorCode + "  " + errorMsg);
     }
 }

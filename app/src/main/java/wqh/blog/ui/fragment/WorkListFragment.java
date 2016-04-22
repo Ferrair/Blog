@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import com.orhanobut.logger.Logger;
 
@@ -25,6 +26,7 @@ import wqh.blog.view.LoadDataView;
  */
 public class WorkListFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
 
+    private static final String TAG = "WorkListFragment";
     @Bind(R.id.swipeRefreshLayout)
     SwipeRefreshLayout mRefreshLayout;
 
@@ -32,7 +34,7 @@ public class WorkListFragment extends BaseFragment implements SwipeRefreshLayout
     RecyclerView mRecyclerView;
 
     WorkAdapter mAdapter;
-    LoadDataPresenter mLoadDataPresenter;
+    LoadDataPresenter<Work> mLoadDataPresenter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,19 +42,20 @@ public class WorkListFragment extends BaseFragment implements SwipeRefreshLayout
         mRefreshLayout.setOnRefreshListener(this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         mLoadDataPresenter = new WorkLoadPresenter();
+        /*mLoadDataPresenter.loadById(1, new LoadDataView<Work>() {
+            @Override
+            public void onSuccess(List<Work> data) {
+                mAdapter = new WorkAdapter(getActivity(), data);
+                mRecyclerView.setAdapter(mAdapter);
+            }
+
+            @Override
+            public void onFail(int errorCode, String errorMsg) {
+                Log.e(TAG, "ErrorCode-> " + errorCode + ", ErrorMsg-> " + errorMsg);
+            }
+        });*/
     }
 
-    private List<Work> getData() {
-        List<Work> list = new ArrayList<>();
-
-        for (int i = 0; i < 10; ++i) {
-            Work work = new Work();
-            work.title = "Work Title => " + i;
-            work.description = "Work Description => " + i;
-            list.add(work);
-        }
-        return list;
-    }
 
     @Override
     public int layoutId() {
@@ -67,14 +70,5 @@ public class WorkListFragment extends BaseFragment implements SwipeRefreshLayout
     @Override
     public void onRefresh() {
 
-    }
-
-    public void onSuccess(List<Work> data) {
-        mAdapter = new WorkAdapter(getActivity(), getData());
-        mRecyclerView.setAdapter(mAdapter);
-    }
-
-    public void onFail(int errorCode, String errorMsg) {
-        Logger.i("BlogListFragment => " + errorCode + "  " + errorMsg);
     }
 }

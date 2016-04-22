@@ -15,4 +15,9 @@ public class Blog {
     public Date createdAt;
     public String tag;
     public int times;
+
+    @Override
+    public String toString() {
+        return "Blog@" + id + "-->" + title;
+    }
 }

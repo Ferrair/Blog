@@ -21,7 +21,7 @@ public abstract class BaseAdapter<Holder extends RecyclerView.ViewHolder, DataTy
     protected OnItemLongClickListener<DataType> mOnItemLongClickListener;
 
     /**
-     * abstract method for subclass to bind item data to the view.
+     * abstract method for subclass to bind ITEM data to the view.
      * so the subclass can show this item data by views holden by holder
      * <p>
      * NOTE: Use this method instead of @see{#onBindViewHolder} which is final in this class

@@ -9,13 +9,16 @@ import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 /**
  * Created by WQH on 2016/4/16  19:13.
  */
 public class NetManager {
 
-    public static final String DOMAIN = "https://api.github.com/";
+    public static final String DOMAIN = "http://wangqihang.cn:8080/Blog/";
+    public static final int OK = 100; // Request OK
+    public static final int UNKNOWN = 109; // Some error that unknown for me
     private Retrofit retrofit;
 
 
