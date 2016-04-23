@@ -1,4 +1,4 @@
-package wqh.blog.bean;
+package wqh.blog.model.bean;
 
 /**
  * Created by WQH on 2016/4/11  16:45.

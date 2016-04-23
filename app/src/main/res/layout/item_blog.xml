@@ -6,6 +6,7 @@
     android:weightSum="5">
 
     <LinearLayout
+        android:id="@+id/item_blog"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="4"

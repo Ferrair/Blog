@@ -1,4 +1,4 @@
-package wqh.blog.adapter.base;
+package wqh.blog.ui.adapter.base;
 
 import java.util.List;
 
@@ -12,7 +12,19 @@ public interface Adapter<DataType> {
 
     boolean isEmpty();
 
+    /**
+     * Refresh the Adapter by the given newData.
+     * Means clear the last data.
+     */
     void refresh(List<DataType> newData);
+
+    /**
+     * Add newData to this Adapter.
+     * instead of #refresh,this method do NOT clear the last data.
+     * <p>
+     * One more thing:the Adapter MUST judge whether the Adapter holds data before.
+     */
+    void addAll(List<DataType> newData);
 
     void addOne(DataType data, int position);
 

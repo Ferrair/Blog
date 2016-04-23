@@ -18,7 +18,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import wqh.blog.R;
-import wqh.blog.adapter.FragmentAdapter;
+import wqh.blog.ui.adapter.FragmentAdapter;
 import wqh.blog.ui.base.BaseActivity;
 import wqh.blog.ui.fragment.BlogListFragment;
 import wqh.blog.ui.fragment.WorkListFragment;

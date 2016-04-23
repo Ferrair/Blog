@@ -1,12 +1,10 @@
-package wqh.blog.net;
-
-import java.util.List;
+package wqh.blog.model.remote;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
-import wqh.blog.bean.Holder;
-import wqh.blog.bean.Work;
+import wqh.blog.model.bean.Holder;
+import wqh.blog.model.bean.Work;
 
 /**
  * Created by WQH on 2016/4/16  20:49.

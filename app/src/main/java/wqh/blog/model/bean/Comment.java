@@ -1,4 +1,4 @@
-package wqh.blog.bean;
+package wqh.blog.model.bean;
 
 import java.sql.Date;
 

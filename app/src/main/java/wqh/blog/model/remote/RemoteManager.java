@@ -1,4 +1,4 @@
-package wqh.blog.net;
+package wqh.blog.model.remote;
 
 import java.io.IOException;
 
@@ -9,12 +9,11 @@ import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 /**
  * Created by WQH on 2016/4/16  19:13.
  */
-public class NetManager {
+public class RemoteManager {
 
     public static final String DOMAIN = "http://wangqihang.cn:8080/Blog/";
     public static final int OK = 100; // Request OK
@@ -23,10 +22,10 @@ public class NetManager {
 
 
     private static class ClassHolder {
-        private static NetManager INSTANCE = new NetManager();
+        private static RemoteManager INSTANCE = new RemoteManager();
     }
 
-    private NetManager() {
+    private RemoteManager() {
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 

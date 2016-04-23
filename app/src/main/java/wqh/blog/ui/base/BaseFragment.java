@@ -21,16 +21,17 @@ public abstract class BaseFragment extends Fragment {
 
     public abstract int layoutId();
 
+    //subclass can not override this method,and MUST override onActivityCreated()
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public final void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mRootView = LayoutInflater.from(mContext).inflate(layoutId(), null);
-        ButterKnife.bind(this, mRootView);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        mRootView = LayoutInflater.from(mContext).inflate(layoutId(), container, false);
+        ButterKnife.bind(this, mRootView);
         return mRootView;
     }
 

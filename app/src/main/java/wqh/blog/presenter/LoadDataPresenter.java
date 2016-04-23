@@ -56,7 +56,7 @@ public abstract class LoadDataPresenter<DataType> {
     }
 
     public enum Type {
-        TITLE, TAG, TIME
+        TITLE, TAG, TIME,TYPE
     }
 
 }

@@ -1,10 +1,10 @@
-package wqh.blog.net;
+package wqh.blog.model.remote;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
-import wqh.blog.bean.Blog;
-import wqh.blog.bean.Holder;
+import wqh.blog.model.bean.Blog;
+import wqh.blog.model.bean.Holder;
 
 /**
  * Created by WQH on 2016/4/16  19:22.
@@ -26,6 +26,8 @@ public interface BlogAPI {
     @GET("blog/queryByType")
     Call<Holder<Blog>> queryByType(@Query("type") String type);
 
-    Call<Holder<Blog>> queryAll(@Query("type") String type);
+    //Request to BlogController#index() in server
+    @GET("blog/")
+    Call<Holder<Blog>> queryAll();
 
 }

@@ -1,4 +1,4 @@
-package wqh.blog.adapter.event;
+package wqh.blog.ui.adapter.event;
 
 import android.view.View;
 

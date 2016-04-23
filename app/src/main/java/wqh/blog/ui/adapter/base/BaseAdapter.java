@@ -1,12 +1,12 @@
-package wqh.blog.adapter.base;
+package wqh.blog.ui.adapter.base;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 
 import java.util.List;
 
-import wqh.blog.adapter.event.OnItemClickListener;
-import wqh.blog.adapter.event.OnItemLongClickListener;
+import wqh.blog.ui.adapter.event.OnItemClickListener;
+import wqh.blog.ui.adapter.event.OnItemLongClickListener;
 
 /**
  * Created by WQH on 2016/4/11  21:07.
@@ -76,14 +76,19 @@ public abstract class BaseAdapter<Holder extends RecyclerView.ViewHolder, DataTy
         return getItemCount() == 0;
     }
 
-    /**
-     * Refresh the Adapter by the given newData
-     */
+
     @Override
     public void refresh(List<DataType> newData) {
         mListData.clear();
         mListData.addAll(newData);
         notifyDataSetChanged();
+    }
+
+    @Override
+    public void addAll(List<DataType> newData) {
+        if (this.mListData == null)
+            this.mListData = newData;
+        else mListData.addAll(newData);
     }
 
     @Override

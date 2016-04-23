@@ -1,4 +1,4 @@
-package wqh.blog.adapter;
+package wqh.blog.ui.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -13,8 +13,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import wqh.blog.R;
-import wqh.blog.adapter.base.BaseAdapter;
-import wqh.blog.bean.Blog;
+import wqh.blog.ui.adapter.base.BaseAdapter;
+import wqh.blog.model.bean.Blog;
 
 /**
  * Created by WQH on 2016/4/11  23:31.
@@ -26,6 +26,11 @@ public class BlogAdapter extends BaseAdapter<BlogAdapter.BlogHolder, Blog> {
     public BlogAdapter(Context mContext, List<Blog> mListData) {
         super(mContext, mListData);
     }
+
+    public BlogAdapter(Context mContext) {
+        super(mContext,null);
+    }
+
 
     @Override
     protected void onBindItemDataToView(BlogAdapter.BlogHolder holder, Blog itemData) {

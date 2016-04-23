@@ -1,4 +1,4 @@
-package wqh.blog.adapter;
+package wqh.blog.ui.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -13,8 +13,8 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import wqh.blog.R;
-import wqh.blog.adapter.base.BaseAdapter;
-import wqh.blog.bean.Work;
+import wqh.blog.ui.adapter.base.BaseAdapter;
+import wqh.blog.model.bean.Work;
 
 /**
  * Created by WQH on 2016/4/11  23:43.

@@ -7,11 +7,10 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import wqh.blog.bean.Blog;
-import wqh.blog.bean.Holder;
-import wqh.blog.bean.Work;
-import wqh.blog.net.NetManager;
-import wqh.blog.net.WorkAPI;
+import wqh.blog.model.bean.Holder;
+import wqh.blog.model.bean.Work;
+import wqh.blog.model.remote.RemoteManager;
+import wqh.blog.model.remote.WorkAPI;
 import wqh.blog.view.LoadDataView;
 
 /**
@@ -24,7 +23,7 @@ public class WorkLoadPresenter extends LoadDataPresenter<Work> {
 
     @Override
     public void initAPI() {
-        mWorkAPI = NetManager.create(WorkAPI.class);
+        mWorkAPI = RemoteManager.create(WorkAPI.class);
     }
 
     @Override
@@ -58,7 +57,7 @@ public class WorkLoadPresenter extends LoadDataPresenter<Work> {
             public void onResponse(Call<Holder<Work>> call, Response<Holder<Work>> response) {
                 if (response.isSuccessful()) {
                     Holder<Work> holder = response.body();
-                    if (holder.Code == NetManager.OK) {
+                    if (holder.Code == RemoteManager.OK) {
                         Log.i(TAG, holder.Result.toString());
                         List<Work> mList = holder.dataList(Work[].class);
                         mLoadDataView.onSuccess(mList);
@@ -67,13 +66,13 @@ public class WorkLoadPresenter extends LoadDataPresenter<Work> {
                         mLoadDataView.onFail(holder.Code, "At " + TAG + "#onResponse-> " + holder.Msg);
                     }
                 } else {
-                    mLoadDataView.onFail(NetManager.UNKNOWN, "At " + TAG + "#onResponse-> " + response.errorBody().toString());
+                    mLoadDataView.onFail(RemoteManager.UNKNOWN, "At " + TAG + "#onResponse-> " + response.errorBody().toString());
                 }
             }
 
             @Override
             public void onFailure(Call<Holder<Work>> call, Throwable t) {
-                mLoadDataView.onFail(NetManager.UNKNOWN, "At " + TAG + "#onFailure-> " + t.toString());
+                mLoadDataView.onFail(RemoteManager.UNKNOWN, "At " + TAG + "#onFailure-> " + t.toString());
             }
         });
     }

@@ -1,4 +1,4 @@
-package wqh.blog.adapter;
+package wqh.blog.ui.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
