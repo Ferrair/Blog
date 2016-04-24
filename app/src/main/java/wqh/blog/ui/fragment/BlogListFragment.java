@@ -29,10 +29,6 @@ import wqh.blog.view.LoadDataView;
 
 /**
  * Created by WQH on 2016/4/11  19:14.
- * <p>
- * <p>
- * 所有业务逻辑放在 LoadDataPresenter里面，Activity只负责UI的状态
- * 并提供LoadDataView给LoadDataPresenter，给其回掉使用
  */
 public class BlogListFragment extends BaseFragment
         implements SwipeRefreshLayout.OnRefreshListener {
@@ -61,9 +57,12 @@ public class BlogListFragment extends BaseFragment
         super.onActivityCreated(savedInstanceState);
         mRefreshLayout.setOnRefreshListener(this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+        //Load data
         mLoadDataPresenter.loadAll(mDefaultLoadDataView);
+
+        //init Adapter,and set listener
         mAdapter = new BlogAdapter(getActivity());
-        mAdapter.setOnItemClickListener((view, data) -> IntentUtil.goToOtherActivity(getActivity(), BlogItemActivity.class, "id", data.id));
+        mAdapter.setOnItemClickListener(R.id.item_blog, (view, data) -> IntentUtil.goToOtherActivity(getActivity(), BlogItemActivity.class, "id", data.id));
     }
 
     @Override
@@ -84,11 +83,11 @@ public class BlogListFragment extends BaseFragment
         }, 2000);
     }
 
-    /*@OnClick(R.id.item_blog)
-    public void onClickBlog() {
-        ToastUtil.showToast(getActivity(), "OnClick Blog");
-    }*/
-
+    /**
+     * A Load-Data View,which means show loaded-data is it's function.
+     * What's more,the loaded-data is from LoadDataPresenter.
+     * The default means that the view will exists forever unless a new Load-Data View is going to be added.
+     */
     private class DefaultLoadDataView implements LoadDataView<Blog> {
 
         @Override

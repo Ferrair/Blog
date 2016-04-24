@@ -29,7 +29,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         setContentView(layoutId());
         ButterKnife.bind(this);
 
-        //setSupportActionBar(mToolbar);
+        setSupportActionBar(mToolbar);
 
         if (!(this instanceof MainActivity) && mToolbar != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);

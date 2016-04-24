@@ -38,7 +38,7 @@ public class WorkAdapter extends BaseAdapter<WorkAdapter.WorkHolder, Work> {
         return new WorkHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_work, parent, false));
     }
 
-    static class WorkHolder extends RecyclerView.ViewHolder {
+    static class WorkHolder extends BaseAdapter.BaseHolder {
         @Bind(R.id.title)
         TextView title;
         @Bind(R.id.description)

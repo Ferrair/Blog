@@ -1,5 +1,4 @@
-1.RxJava + Retrofit
-2.add Listener
-3.ItemBlogActivity
-
+ErrorList:
 No adapter attached; skipping layout
+Blog's abstractStr can not disappear when collapse
+SwipeRefreshLayout.onRefresh crush

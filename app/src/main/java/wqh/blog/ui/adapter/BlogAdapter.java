@@ -28,7 +28,7 @@ public class BlogAdapter extends BaseAdapter<BlogAdapter.BlogHolder, Blog> {
     }
 
     public BlogAdapter(Context mContext) {
-        super(mContext,null);
+        super(mContext, null);
     }
 
 
@@ -48,7 +48,7 @@ public class BlogAdapter extends BaseAdapter<BlogAdapter.BlogHolder, Blog> {
         return new BlogHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_blog, parent, false));
     }
 
-    static class BlogHolder extends RecyclerView.ViewHolder {
+    static class BlogHolder extends BaseAdapter.BaseHolder{
         @Bind(R.id.title)
         TextView title;
         @Bind(R.id.abstractStr)
