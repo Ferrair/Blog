@@ -12,4 +12,9 @@ public class Comment {
     String createdBy;
     Date createdAt;
     int belongTo;
+
+    @Override
+    public String toString() {
+        return "Comment@" + id + " :BelongTo-> " + belongTo + " :Content-> " + content;
+    }
 }

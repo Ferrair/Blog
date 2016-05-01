@@ -10,7 +10,9 @@ import java.util.List;
 import butterknife.Bind;
 import wqh.blog.R;
 import wqh.blog.model.bean.Blog;
+import wqh.blog.model.bean.Comment;
 import wqh.blog.presenter.BlogLoadPresenter;
+import wqh.blog.presenter.CommentLoadPresenter;
 import wqh.blog.presenter.LoadDataPresenter;
 import wqh.blog.ui.base.BaseActivity;
 import wqh.blog.view.LoadDataView;
@@ -33,16 +35,24 @@ public class BlogItemActivity extends BaseActivity {
     TextView mDescriptionTextView;
     @Bind(R.id.toolbar_layout)
     CollapsingToolbarLayout mCollapsingToolbarLayout;
-    /**
+    /*
      * A Load-Data Presenter,which means load data from server is it's function.
      * On the other hand,load-data can't be found in this class
+     *
+     * And this below two class is a Presenter for Blog,and a Presenter for Comment which belongs to a Blog.
+     * that is why the two Presenter can be existed in one Activity
      */
-    LoadDataPresenter<Blog> mLoadDataPresenter = new BlogLoadPresenter();
-    /**
+    LoadDataPresenter<Blog> mBlogLoadDataPresenter = new BlogLoadPresenter();
+    LoadDataPresenter<Comment> mCommentLoadDataPresenter = new CommentLoadPresenter();
+    /*
      * A Load-Data View,which means show loaded-data is it's function.
      * What's more,the loaded-data is from LoadDataPresenter.
+     *
+     * The default means that the view will exists forever unless a new Load-Data View is going to be added.
+     * So,there are two LoadDataView,one for Blog and another for Comment which belongs to a Blog
      */
-    DefaultLoadDataView mDefaultLoadDataView = new DefaultLoadDataView();
+    DefaultBlogLoadDataView mDefaultBlogLoadDataView = new DefaultBlogLoadDataView();
+    DefaultCommentLoadDataView mDefaultCommentLoadDataView = new DefaultCommentLoadDataView();
 
     @Override
     protected int layoutId() {
@@ -54,18 +64,14 @@ public class BlogItemActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         initView();
         int blogId = getIntent().getIntExtra("id", 0);
-        mLoadDataPresenter.loadById(blogId, mDefaultLoadDataView);
+        mBlogLoadDataPresenter.loadById(blogId, mDefaultBlogLoadDataView);
+        mCommentLoadDataPresenter.loadById(blogId, mDefaultCommentLoadDataView);
     }
 
     private void initView() {
     }
 
-    /**
-     * A Load-Data View,which means show loaded-data is it's function.
-     * What's more,the loaded-data is from LoadDataPresenter.
-     * The default means that the view will exists forever unless a new Load-Data View is going to be added.
-     */
-    private class DefaultLoadDataView implements LoadDataView<Blog> {
+    private class DefaultBlogLoadDataView implements LoadDataView<Blog> {
 
         @Override
         public void onSuccess(List<Blog> data) {
@@ -77,6 +83,20 @@ public class BlogItemActivity extends BaseActivity {
             mCreatedAtTextView.setText(itemData.createdAt.toString());
             //mContentTextView.setText(itemData.content);
             mDescriptionTextView.setText(itemData.abstractStr);
+        }
+
+        @Override
+        public void onFail(int errorCode, String errorMsg) {
+            Log.e(TAG, "ErrorCode-> " + errorCode + ", ErrorMsg-> " + errorMsg);
+        }
+    }
+
+    private class DefaultCommentLoadDataView implements LoadDataView<Comment> {
+
+        @Override
+        public void onSuccess(List<Comment> data) {
+            for (Comment itemData : data)
+                Log.i(TAG, itemData.toString());
         }
 
         @Override

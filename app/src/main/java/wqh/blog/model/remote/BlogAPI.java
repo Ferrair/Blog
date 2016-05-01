@@ -4,6 +4,7 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 import wqh.blog.model.bean.Blog;
+import wqh.blog.model.bean.Comment;
 import wqh.blog.model.bean.Holder;
 
 /**
@@ -29,5 +30,4 @@ public interface BlogAPI {
     //Request to BlogController#index() in server
     @GET("blog/")
     Call<Holder<Blog>> queryAll();
-
 }
