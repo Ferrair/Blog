@@ -16,15 +16,19 @@ public class IntentUtil {
         mContext.startActivity(new Intent(mContext, cla));
     }
 
+    public static void goToOtherActivity(Context mContext, Intent aIntent) {
+        mContext.startActivity(aIntent);
+    }
+
     public static void goToOtherActivity(Context mContext, Class<?> cla, String name, Serializable mObject) {
         Intent intent = new Intent(mContext, cla);
         intent.putExtra(name, mObject);
         mContext.startActivity(intent);
     }
 
-    public static void goToOtherActivity(Context mContext, Class<?> cla, String name, int id) {
+    public static void goToOtherActivity(Context mContext, Class<?> cla, String key, int value) {
         Intent intent = new Intent(mContext, cla);
-        intent.putExtra(name, id);
+        intent.putExtra(key, value);
         mContext.startActivity(intent);
     }
 }

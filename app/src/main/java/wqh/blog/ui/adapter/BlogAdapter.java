@@ -39,7 +39,6 @@ public class BlogAdapter extends BaseAdapter<BlogAdapter.BlogHolder, Blog> {
         holder.tag.setText(itemData.tag);
         holder.times.setText(String.valueOf(itemData.times));
         holder.createdAt.setText(itemData.createdAt.toString().substring(10));
-
         //Todo: 怎么展示用户头像?
     }
 
@@ -48,7 +47,7 @@ public class BlogAdapter extends BaseAdapter<BlogAdapter.BlogHolder, Blog> {
         return new BlogHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_blog, parent, false));
     }
 
-    static class BlogHolder extends BaseAdapter.BaseHolder{
+    static class BlogHolder extends BaseAdapter.BaseHolder {
         @Bind(R.id.title)
         TextView title;
         @Bind(R.id.abstractStr)

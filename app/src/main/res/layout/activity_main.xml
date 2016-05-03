@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <!--
 This layout can hide the Toolbar(not including TabLayout) when the user scroll down ViewPager
 And the Fragments on TabLayout will be changed when the user scroll left or right

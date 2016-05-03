@@ -7,11 +7,11 @@ import java.sql.Date;
  * Created by WQH on 2016/4/11  16:43.
  */
 public class Comment {
-    int id;
-    String content;
-    String createdBy;
-    Date createdAt;
-    int belongTo;
+    public int id;
+    public String content;
+    public String createdBy;
+    public Date createdAt;
+    public int belongTo;
 
     @Override
     public String toString() {

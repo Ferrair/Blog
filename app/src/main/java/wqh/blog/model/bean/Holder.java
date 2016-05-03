@@ -23,6 +23,7 @@ public class Holder<Result> {
     public int Code;
     @SerializedName(value = "Msg")
     public String Msg;
+    //Todo: Using <code>Object</code> or other Object instead of <code>JsonArray</code>
     @SerializedName(value = "Result")
     public JsonArray Result;
 

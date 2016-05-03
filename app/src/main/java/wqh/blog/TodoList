@@ -1,6 +1,9 @@
-ErrorList:
-No adapter attached; skipping layout
-Blog's abstractStr can not disappear when collapse
+Error:
 SwipeRefreshLayout.onRefresh crush
+Blog's abstractStr can not disappear when collapse
+AllCommentsActivity 的Toolbar把内容遮挡
+CommentAPI --> POST 为什么不行???
 
-博客列表为空会报错，但是这种情况下，显示没有评论即可，这是Exception不是error
+
+Warring:
+No adapter attached; skipping layout

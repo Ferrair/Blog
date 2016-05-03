@@ -8,14 +8,16 @@ import android.widget.TextView;
 import java.util.List;
 
 import butterknife.Bind;
+import butterknife.OnClick;
 import wqh.blog.R;
 import wqh.blog.model.bean.Blog;
 import wqh.blog.model.bean.Comment;
-import wqh.blog.presenter.BlogLoadPresenter;
-import wqh.blog.presenter.CommentLoadPresenter;
-import wqh.blog.presenter.LoadDataPresenter;
+import wqh.blog.presenter.download.BlogDownLoadPresenter;
+import wqh.blog.presenter.download.CommentDownLoadPresenter;
+import wqh.blog.presenter.download.DownLoadPresenter;
 import wqh.blog.ui.base.BaseActivity;
-import wqh.blog.view.LoadDataView;
+import wqh.blog.util.IntentUtil;
+import wqh.blog.view.LoadView;
 
 /**
  * Created by WQH on 2016/4/24  20:45.
@@ -36,23 +38,25 @@ public class BlogItemActivity extends BaseActivity {
     @Bind(R.id.toolbar_layout)
     CollapsingToolbarLayout mCollapsingToolbarLayout;
     /*
-     * A Load-Data Presenter,which means load data from server is it's function.
-     * On the other hand,load-data can't be found in this class
+     * A Down-Load-Data Presenter,which means download data from server is it's function.
+     * On the other hand,download-data action can't be found in this class
      *
      * And this below two class is a Presenter for Blog,and a Presenter for Comment which belongs to a Blog.
-     * that is why the two Presenter can be existed in one Activity
+     * that is why the two Presenter will be existed in one Activity
      */
-    LoadDataPresenter<Blog> mBlogLoadDataPresenter = new BlogLoadPresenter();
-    LoadDataPresenter<Comment> mCommentLoadDataPresenter = new CommentLoadPresenter();
+    DownLoadPresenter<Blog> mBlogDownLoadPresenter = new BlogDownLoadPresenter();
+    DownLoadPresenter<Comment> mCommentDownLoadPresenter = new CommentDownLoadPresenter();
     /*
-     * A Load-Data View,which means show loaded-data is it's function.
-     * What's more,the loaded-data is from LoadDataPresenter.
+     * A Down-Load-Data View,which means show downloaded-data is it's function.
+     * And more,the downloaded-data is from DownLoadPresenter.
      *
-     * The default means that the view will exists forever unless a new Load-Data View is going to be added.
-     * So,there are two LoadDataView,one for Blog and another for Comment which belongs to a Blog
+     * The default means that the view will exists forever unless a new Down-Load-Data View is going to be added.
+     * So,there are two LoadView,one for Blog and another for Comment which belongs to a Blog
      */
-    DefaultBlogLoadDataView mDefaultBlogLoadDataView = new DefaultBlogLoadDataView();
-    DefaultCommentLoadDataView mDefaultCommentLoadDataView = new DefaultCommentLoadDataView();
+    DefaultBlogDownLoadView mDefaultBlogLoadDataView = new DefaultBlogDownLoadView();
+    DefaultCommentDownLoadView mDefaultCommentLoadDataView = new DefaultCommentDownLoadView();
+
+    int blogId;
 
     @Override
     protected int layoutId() {
@@ -62,16 +66,38 @@ public class BlogItemActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initView();
-        int blogId = getIntent().getIntExtra("id", 0);
-        mBlogLoadDataPresenter.loadById(blogId, mDefaultBlogLoadDataView);
-        mCommentLoadDataPresenter.loadById(blogId, mDefaultCommentLoadDataView);
+        //get data from Intent.And the title extra means CollapsingToolbarLayout will show title immediately.
+        blogId = getIntent().getIntExtra("id", 0);
+        String title = getIntent().getStringExtra("title");
+
+        initView(title);
+        mBlogDownLoadPresenter.loadById(blogId, mDefaultBlogLoadDataView);
+        mCommentDownLoadPresenter.loadById(blogId, mDefaultCommentLoadDataView);
     }
 
-    private void initView() {
+    private void initView(String title) {
+        mCollapsingToolbarLayout.setTitle(title);
     }
 
-    private class DefaultBlogLoadDataView implements LoadDataView<Blog> {
+    /*
+     * Footer Layout.
+     * Using <code>@OnClick</code> to go to another Activity.
+     */
+    @OnClick(R.id.post_comment)
+    public void postComment() {
+        IntentUtil.goToOtherActivity(this, PostCommentActivity.class, "id", blogId);
+    }
+
+    @OnClick(R.id.all_comments)
+    public void allComments() {
+        IntentUtil.goToOtherActivity(this, AllCommentsActivity.class, "id", blogId);
+    }
+
+    /*
+     * The below class will show View after fetch data from server.
+     * So see initView() method in this class.
+     */
+    private class DefaultBlogDownLoadView implements LoadView<Blog> {
 
         @Override
         public void onSuccess(List<Blog> data) {
@@ -91,7 +117,7 @@ public class BlogItemActivity extends BaseActivity {
         }
     }
 
-    private class DefaultCommentLoadDataView implements LoadDataView<Comment> {
+    private class DefaultCommentDownLoadView implements LoadView<Comment> {
 
         @Override
         public void onSuccess(List<Comment> data) {

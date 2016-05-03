@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Blog</string>
     <string name="search">Search</string>
-    <string name="title_activity_scrolling">ScrollingActivity</string>
+    <string name="footer_behavior" translatable="false">wqh.blog.ui.view.FooterBehavior</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 
