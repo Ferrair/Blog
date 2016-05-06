@@ -1,6 +1,5 @@
 package wqh.blog.ui.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -48,13 +47,7 @@ public class BlogListFragment extends ScrollFragment {
 
         //init Adapter,and set listener
         mAdapter = new BlogAdapter(getActivity());
-        mAdapter.setOnItemClickListener(R.id.item_blog, (view, data) ->
-        {
-            Intent mIntent = new Intent(getActivity(), BlogItemActivity.class);
-            mIntent.putExtra("id", data.id);
-            mIntent.putExtra("title", data.title);
-            IntentUtil.goToOtherActivity(getActivity(), mIntent);
-        });
+        mAdapter.setOnItemClickListener(R.id.item_blog, (view, data) -> IntentUtil.goToOtherActivity(getActivity(), BlogItemActivity.class, "id", data.id));
     }
 
     @Override

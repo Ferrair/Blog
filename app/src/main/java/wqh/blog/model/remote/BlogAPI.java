@@ -30,4 +30,7 @@ public interface BlogAPI {
     //Request to BlogController#index() in server
     @GET("blog/")
     Call<Holder<Blog>> queryAll();
+
+    @GET("blog/addTimes")
+    Call<Holder<Blog>> addTimes(@Query("id") int id);
 }

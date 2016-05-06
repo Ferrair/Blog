@@ -1,6 +1,7 @@
 package wqh.blog.ui.adapter;
 
 import android.content.Context;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,10 @@ public class WorkAdapter extends BaseAdapter<WorkAdapter.WorkHolder, Work> {
 
     public WorkAdapter(Context mContext, List<Work> mListData) {
         super(mContext, mListData);
+    }
+
+    public WorkAdapter(Context mContext) {
+        super(mContext, null);
     }
 
     @Override

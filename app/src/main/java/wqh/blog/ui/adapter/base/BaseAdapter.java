@@ -69,7 +69,11 @@ public abstract class BaseAdapter<Holder extends BaseAdapter.BaseHolder, DataTyp
 
         for (int i = 0; i < mLongItemClickListener.size(); ++i) {
             int resId = mLongItemClickListener.keyAt(i);
-            holder.getView(resId).setOnLongClickListener(view -> mLongItemClickListener.get(resId).onItemLongClick(view, itemData));
+            holder.getView(resId).setOnLongClickListener(view -> {
+                mLongItemClickListener.get(resId).onItemLongClick(view, itemData);
+                // return true means this view consume this action.So will not dispatch this action.
+                return true;
+            });
         }
     }
 

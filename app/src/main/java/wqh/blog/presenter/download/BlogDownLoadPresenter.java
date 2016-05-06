@@ -78,7 +78,9 @@ public class BlogDownLoadPresenter extends DownLoadPresenter<Blog> {
         call.enqueue(new BlogCallback(mLoadView));
     }
 
-    //The inner class that do the callback work after fetch data from server
+    // The inner class that do the callback work after fetch data from server
+    // MUST specify the type of the generics.(like this:Blog)
+    // Why? GSON parse Json must know the type at RUNTIME
     class BlogCallback implements Callback<Holder<Blog>> {
 
         LoadView<Blog> mLoadView;

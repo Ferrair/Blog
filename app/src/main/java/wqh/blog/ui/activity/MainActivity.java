@@ -22,7 +22,7 @@ import wqh.blog.ui.adapter.FragmentAdapter;
 import wqh.blog.ui.base.BaseActivity;
 import wqh.blog.ui.fragment.BlogListFragment;
 import wqh.blog.ui.fragment.WorkListFragment;
-import wqh.blog.ui.view.DrawerDelegate;
+import wqh.blog.ui.customview.DrawerDelegate;
 
 /**
  * Created by WQH on 2016/4/11  17:11.

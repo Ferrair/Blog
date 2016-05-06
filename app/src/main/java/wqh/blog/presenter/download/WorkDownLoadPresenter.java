@@ -26,7 +26,8 @@ public class WorkDownLoadPresenter extends DownLoadPresenter<Work> {
 
     @Override
     public void loadAll(LoadView<Work> mLoadView) {
-
+        Call<Holder<Work>> call = mWorkAPI.queryAll();
+        doQuery(call, mLoadView);
     }
 
     @Override

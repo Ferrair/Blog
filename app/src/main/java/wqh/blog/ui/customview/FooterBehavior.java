@@ -1,4 +1,4 @@
-package wqh.blog.ui.view;
+package wqh.blog.ui.customview;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;

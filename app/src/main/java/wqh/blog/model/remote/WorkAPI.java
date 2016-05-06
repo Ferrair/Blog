@@ -17,4 +17,6 @@ public interface WorkAPI {
     @GET("work/queryByTitle")
     Call<Holder<Work>> queryByTitle(@Query("title") String title);
 
+    @GET("work/")
+    Call<Holder<Work>> queryAll();
 }

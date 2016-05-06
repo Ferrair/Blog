@@ -15,8 +15,11 @@ import wqh.blog.model.bean.Comment;
 import wqh.blog.presenter.download.BlogDownLoadPresenter;
 import wqh.blog.presenter.download.CommentDownLoadPresenter;
 import wqh.blog.presenter.download.DownLoadPresenter;
+import wqh.blog.presenter.upload.BlogUpLoadPresenter;
+import wqh.blog.presenter.upload.CommentUpLoadPresenter;
 import wqh.blog.ui.base.BaseActivity;
 import wqh.blog.util.IntentUtil;
+import wqh.blog.util.TimeUtil;
 import wqh.blog.view.LoadView;
 
 /**
@@ -35,8 +38,8 @@ public class BlogItemActivity extends BaseActivity {
     TextView mContentTextView;
     @Bind(R.id.abstractStr)
     TextView mDescriptionTextView;
-    @Bind(R.id.toolbar_layout)
-    CollapsingToolbarLayout mCollapsingToolbarLayout;
+    @Bind(R.id.title)
+    TextView mTitleTextView;
     /*
      * A Down-Load-Data Presenter,which means download data from server is it's function.
      * On the other hand,download-data action can't be found in this class
@@ -46,6 +49,11 @@ public class BlogItemActivity extends BaseActivity {
      */
     DownLoadPresenter<Blog> mBlogDownLoadPresenter = new BlogDownLoadPresenter();
     DownLoadPresenter<Comment> mCommentDownLoadPresenter = new CommentDownLoadPresenter();
+    /*
+     * A Up-Load-Data Presenter that add view-times for this blog.
+     * But it can tolerate error in this method.HaHa......
+     */
+    BlogUpLoadPresenter mBlogUpLoadPresenter = new BlogUpLoadPresenter();
     /*
      * A Down-Load-Data View,which means show downloaded-data is it's function.
      * And more,the downloaded-data is from DownLoadPresenter.
@@ -66,17 +74,12 @@ public class BlogItemActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //get data from Intent.And the title extra means CollapsingToolbarLayout will show title immediately.
+        //get data from Intent
         blogId = getIntent().getIntExtra("id", 0);
-        String title = getIntent().getStringExtra("title");
 
-        initView(title);
         mBlogDownLoadPresenter.loadById(blogId, mDefaultBlogLoadDataView);
         mCommentDownLoadPresenter.loadById(blogId, mDefaultCommentLoadDataView);
-    }
-
-    private void initView(String title) {
-        mCollapsingToolbarLayout.setTitle(title);
+        mBlogUpLoadPresenter.addTimes(blogId);
     }
 
     /*
@@ -103,11 +106,11 @@ public class BlogItemActivity extends BaseActivity {
         public void onSuccess(List<Blog> data) {
             Blog itemData = data.get(0);
             Log.i(TAG, itemData.toString());
-            mCollapsingToolbarLayout.setTitle(itemData.title);
+            mTitleTextView.setText(itemData.title);
             mTagTextView.setText(itemData.type);
             mTimesTextVIew.setText(String.valueOf(itemData.times));
-            mCreatedAtTextView.setText(itemData.createdAt.toString());
-            //mContentTextView.setText(itemData.content);
+            mCreatedAtTextView.setText(TimeUtil.date2time(itemData.createdAt.toString()));
+            mContentTextView.setText(itemData.content);
             mDescriptionTextView.setText(itemData.abstractStr);
         }
 

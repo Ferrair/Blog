@@ -2,6 +2,7 @@
   <dictionary name="Administrator">
     <words>
       <w>blogitem</w>
+      <w>customview</w>
       <w>gson</w>
       <w>itemblog</w>
     </words>
