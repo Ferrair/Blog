@@ -67,12 +67,14 @@ public class WorkListFragment extends ScrollFragment {
 
         @Override
         public void onSuccess(List<Work> data) {
+            mStateLayout.showContentView();
             mAdapter.addAll(data);
             mRecyclerView.setAdapter(mAdapter);
         }
 
         @Override
         public void onFail(int errorCode, String errorMsg) {
+            mStateLayout.showErrorView();
             Log.e(TAG, "ErrorCode-> " + errorCode + ", ErrorMsg-> " + errorMsg);
         }
     }

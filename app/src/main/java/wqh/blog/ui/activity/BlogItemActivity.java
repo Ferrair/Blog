@@ -18,6 +18,7 @@ import wqh.blog.presenter.download.DownLoadPresenter;
 import wqh.blog.presenter.upload.BlogUpLoadPresenter;
 import wqh.blog.presenter.upload.CommentUpLoadPresenter;
 import wqh.blog.ui.base.BaseActivity;
+import wqh.blog.ui.base.StateActivity;
 import wqh.blog.util.IntentUtil;
 import wqh.blog.util.TimeUtil;
 import wqh.blog.view.LoadView;
@@ -25,7 +26,7 @@ import wqh.blog.view.LoadView;
 /**
  * Created by WQH on 2016/4/24  20:45.
  */
-public class BlogItemActivity extends BaseActivity {
+public class BlogItemActivity extends StateActivity {
 
     private static final String TAG = "BlogItemActivity";
     @Bind(R.id.tag)
@@ -48,7 +49,6 @@ public class BlogItemActivity extends BaseActivity {
      * that is why the two Presenter will be existed in one Activity
      */
     DownLoadPresenter<Blog> mBlogDownLoadPresenter = new BlogDownLoadPresenter();
-    DownLoadPresenter<Comment> mCommentDownLoadPresenter = new CommentDownLoadPresenter();
     /*
      * A Up-Load-Data Presenter that add view-times for this blog.
      * But it can tolerate error in this method.HaHa......
@@ -102,6 +102,7 @@ public class BlogItemActivity extends BaseActivity {
 
         @Override
         public void onSuccess(List<Blog> data) {
+            mStateLayout.showContentView();
             Blog itemData = data.get(0);
             Log.i(TAG, itemData.toString());
             mTitleTextView.setText(itemData.title);
@@ -114,6 +115,7 @@ public class BlogItemActivity extends BaseActivity {
 
         @Override
         public void onFail(int errorCode, String errorMsg) {
+            mStateLayout.showErrorView();
             Log.e(TAG, "ErrorCode-> " + errorCode + ", ErrorMsg-> " + errorMsg);
         }
     }

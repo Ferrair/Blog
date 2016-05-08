@@ -16,7 +16,7 @@ import wqh.blog.R;
  * A Activity that have a SwipeRefreshLayout(with layout id swipeRefreshLayout) and a RecyclerView(with layout id recyclerView)
  * NOTE: in subclass's XML file,those layout's is MUST be the same as above.
  */
-public abstract class ScrollActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener {
+public abstract class ScrollActivity extends StateActivity implements SwipeRefreshLayout.OnRefreshListener {
     @Bind(R.id.swipeRefreshLayout)
     protected SwipeRefreshLayout mRefreshLayout;
 

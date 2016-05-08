@@ -16,7 +16,7 @@ import wqh.blog.R;
  * A Fragment that have a SwipeRefreshLayout(with layout id swipeRefreshLayout) and a RecyclerView(with layout id recyclerView)
  * NOTE: in subclass's XML file,those layout's is MUST be the same as above.
  */
-public abstract class ScrollFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
+public abstract class ScrollFragment extends StateFragment implements SwipeRefreshLayout.OnRefreshListener {
     @Bind(R.id.swipeRefreshLayout)
     protected SwipeRefreshLayout mRefreshLayout;
 

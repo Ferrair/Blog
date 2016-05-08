@@ -67,12 +67,14 @@ public class AllCommentsActivity extends ScrollActivity {
 
         @Override
         public void onSuccess(List<Comment> data) {
+            mStateLayout.showContentView();
             mAdapter.addAll(data);
             mRecyclerView.setAdapter(mAdapter);
         }
 
         @Override
         public void onFail(int errorCode, String errorMsg) {
+            mStateLayout.showErrorView();
             Log.e(TAG, "ErrorCode-> " + errorCode + ", ErrorMsg-> " + errorMsg);
         }
     }
