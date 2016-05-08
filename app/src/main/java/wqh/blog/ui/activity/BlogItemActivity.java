@@ -62,7 +62,6 @@ public class BlogItemActivity extends BaseActivity {
      * So,there are two LoadView,one for Blog and another for Comment which belongs to a Blog
      */
     DefaultBlogDownLoadView mDefaultBlogLoadDataView = new DefaultBlogDownLoadView();
-    DefaultCommentDownLoadView mDefaultCommentLoadDataView = new DefaultCommentDownLoadView();
 
     int blogId;
 
@@ -78,7 +77,6 @@ public class BlogItemActivity extends BaseActivity {
         blogId = getIntent().getIntExtra("id", 0);
 
         mBlogDownLoadPresenter.loadById(blogId, mDefaultBlogLoadDataView);
-        mCommentDownLoadPresenter.loadById(blogId, mDefaultCommentLoadDataView);
         mBlogUpLoadPresenter.addTimes(blogId);
     }
 
@@ -112,20 +110,6 @@ public class BlogItemActivity extends BaseActivity {
             mCreatedAtTextView.setText(TimeUtil.date2time(itemData.createdAt.toString()));
             mContentTextView.setText(itemData.content);
             mDescriptionTextView.setText(itemData.abstractStr);
-        }
-
-        @Override
-        public void onFail(int errorCode, String errorMsg) {
-            Log.e(TAG, "ErrorCode-> " + errorCode + ", ErrorMsg-> " + errorMsg);
-        }
-    }
-
-    private class DefaultCommentDownLoadView implements LoadView<Comment> {
-
-        @Override
-        public void onSuccess(List<Comment> data) {
-            for (Comment itemData : data)
-                Log.i(TAG, itemData.toString());
         }
 
         @Override

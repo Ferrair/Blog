@@ -1,14 +1,14 @@
 package wqh.blog.presenter.download;
 
-import java.util.List;
+import java.util.Arrays;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import wqh.blog.model.bean.Comment;
-import wqh.blog.model.bean.Holder;
 import wqh.blog.model.remote.CommentAPI;
 import wqh.blog.model.remote.RemoteManager;
+import wqh.blog.presenter.DefaultCallback;
+import wqh.blog.util.Json;
 import wqh.blog.view.LoadView;
 
 /**
@@ -16,7 +16,6 @@ import wqh.blog.view.LoadView;
  */
 public class CommentDownLoadPresenter extends DownLoadPresenter<Comment> {
     CommentAPI mCommentAPI;
-    private static final String TAG = "CommentDownLoadPresenter";
 
     @Override
     protected void initAPI() {
@@ -35,44 +34,23 @@ public class CommentDownLoadPresenter extends DownLoadPresenter<Comment> {
 
     @Override
     public void loadById(int blogId, LoadView<Comment> mLoadView) {
-        Call<Holder<Comment>> call = mCommentAPI.queryComment(blogId);
+        Call<ResponseBody> call = mCommentAPI.queryComment(blogId);
         doQuery(call, mLoadView);
     }
 
-
-    private void doQuery(Call<Holder<Comment>> call, LoadView<Comment> mLoadView) {
+    private void doQuery(Call<ResponseBody> call, LoadView<Comment> mLoadView) {
         call.enqueue(new CommentCallback(mLoadView));
     }
 
-    class CommentCallback implements Callback<Holder<Comment>> {
-
-        LoadView<Comment> mLoadView;
+    class CommentCallback extends DefaultCallback<Comment> {
 
         public CommentCallback(LoadView<Comment> mLoadView) {
-            this.mLoadView = mLoadView;
+            super(mLoadView);
         }
 
         @Override
-        public void onResponse(Call<Holder<Comment>> call, Response<Holder<Comment>> response) {
-            if (response.isSuccessful()) {
-                Holder<Comment> holder = response.body();
-                if (holder.Code == RemoteManager.OK) {
-                    List<Comment> mList = holder.dataList(Comment[].class);
-                    if (mList.size() != 0)
-                        mLoadView.onSuccess(mList);
-                    else
-                        mLoadView.onFail(101, "Can not find Object");
-                } else {
-                    mLoadView.onFail(holder.Code, "At " + TAG + "#onResponse-> " + holder.Msg);
-                }
-            } else {
-                mLoadView.onFail(RemoteManager.UNKNOWN, "At " + TAG + "#onResponse-> " + response.errorBody().toString());
-            }
-        }
-
-        @Override
-        public void onFailure(Call<Holder<Comment>> call, Throwable t) {
-            mLoadView.onFail(RemoteManager.UNKNOWN, "At " + TAG + "#onFailure-> " + t.toString());
+        protected void onParseResult(String result) {
+            mLoadView.onSuccess(Arrays.asList(Json.fromJson(result, Comment[].class)));
         }
     }
 }

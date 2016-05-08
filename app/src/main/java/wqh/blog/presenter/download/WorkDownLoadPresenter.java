@@ -1,14 +1,14 @@
 package wqh.blog.presenter.download;
 
-import java.util.List;
+import java.util.Arrays;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import wqh.blog.model.bean.Holder;
 import wqh.blog.model.bean.Work;
 import wqh.blog.model.remote.RemoteManager;
 import wqh.blog.model.remote.WorkAPI;
+import wqh.blog.presenter.DefaultCallback;
+import wqh.blog.util.Json;
 import wqh.blog.view.LoadView;
 
 /**
@@ -17,7 +17,6 @@ import wqh.blog.view.LoadView;
 public class WorkDownLoadPresenter extends DownLoadPresenter<Work> {
 
     WorkAPI mWorkAPI;
-    private static final String TAG = "WorkDownLoadPresenter";
 
     @Override
     protected void initAPI() {
@@ -26,13 +25,13 @@ public class WorkDownLoadPresenter extends DownLoadPresenter<Work> {
 
     @Override
     public void loadAll(LoadView<Work> mLoadView) {
-        Call<Holder<Work>> call = mWorkAPI.queryAll();
+        Call<ResponseBody> call = mWorkAPI.queryAll();
         doQuery(call, mLoadView);
     }
 
     @Override
     public void loadById(int id, LoadView<Work> mLoadView) {
-        Call<Holder<Work>> call = mWorkAPI.queryById(id);
+        Call<ResponseBody> call = mWorkAPI.queryById(id);
         doQuery(call, mLoadView);
     }
 
@@ -46,32 +45,23 @@ public class WorkDownLoadPresenter extends DownLoadPresenter<Work> {
     }
 
     protected void loadByTitle(String title) {
-        Call<Holder<Work>> call = mWorkAPI.queryByTitle(title);
+        Call<ResponseBody> call = mWorkAPI.queryByTitle(title);
         doQuery(call, mLoadView);
     }
 
-    private void doQuery(Call<Holder<Work>> call, LoadView<Work> mLoadView) {
-        call.enqueue(new Callback<Holder<Work>>() {
-            @Override
-            public void onResponse(Call<Holder<Work>> call, Response<Holder<Work>> response) {
-                if (response.isSuccessful()) {
-                    Holder<Work> holder = response.body();
-                    if (holder.Code == RemoteManager.OK) {
-                        List<Work> mList = holder.dataList(Work[].class);
-                        mLoadView.onSuccess(mList);
+    private void doQuery(Call<ResponseBody> call, LoadView<Work> mLoadView) {
+        call.enqueue(new WorkCallback(mLoadView));
+    }
 
-                    } else {
-                        mLoadView.onFail(holder.Code, "At " + TAG + "#onResponse-> " + holder.Msg);
-                    }
-                } else {
-                    mLoadView.onFail(RemoteManager.UNKNOWN, "At " + TAG + "#onResponse-> " + response.errorBody().toString());
-                }
-            }
+    private class WorkCallback extends DefaultCallback<Work> {
 
-            @Override
-            public void onFailure(Call<Holder<Work>> call, Throwable t) {
-                mLoadView.onFail(RemoteManager.UNKNOWN, "At " + TAG + "#onFailure-> " + t.toString());
-            }
-        });
+        public WorkCallback(LoadView<Work> mLoadView) {
+            super(mLoadView);
+        }
+
+        @Override
+        protected void onParseResult(String result) {
+            mLoadView.onSuccess(Arrays.asList(Json.fromJson(result, Work[].class)));
+        }
     }
 }

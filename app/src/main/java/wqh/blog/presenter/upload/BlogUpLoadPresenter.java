@@ -1,14 +1,6 @@
 package wqh.blog.presenter.upload;
 
-import android.util.Log;
-
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import wqh.blog.model.bean.Blog;
-import wqh.blog.model.bean.Holder;
 import wqh.blog.model.remote.BlogAPI;
 import wqh.blog.model.remote.RemoteManager;
 import wqh.blog.view.LoadView;

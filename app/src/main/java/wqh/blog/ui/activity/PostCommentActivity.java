@@ -69,8 +69,6 @@ public class PostCommentActivity extends BaseActivity {
     private class DefaultCommentUpLoadView implements LoadView<Comment> {
         @Override
         public void onSuccess(List<Comment> data) {
-            for (Comment itemData : data)
-                Log.i(TAG, itemData.toString());
             IntentUtil.goToOtherActivity(PostCommentActivity.this, AllCommentsActivity.class, "id", blogId);
             finish();
         }
