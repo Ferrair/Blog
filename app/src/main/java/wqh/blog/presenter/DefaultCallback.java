@@ -1,7 +1,5 @@
 package wqh.blog.presenter;
 
-import java.io.IOException;
-
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -35,12 +33,13 @@ public abstract class DefaultCallback<DataType> implements Callback<ResponseBody
                 } else {
                     mLoadView.onFail(holder.Code, holder.Msg);
                 }
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
-                mLoadView.onFail(RemoteManager.UNKNOWN, "At " + TAG + "#onResponse-> " + response.errorBody().toString());
+                // Can't Find Object.
+                mLoadView.onFail(RemoteManager.NO_OBJECT, "At " + TAG + "#onResponse-> Can't Find Object.");
             }
         } else {
-            mLoadView.onFail(RemoteManager.UNKNOWN, "At " + TAG + "#onResponse-> " + response.errorBody().toString());
+            mLoadView.onFail(RemoteManager.PARSE, "At " + TAG + "#onResponse-> " + response.errorBody().toString());
         }
     }
 
@@ -56,7 +55,7 @@ public abstract class DefaultCallback<DataType> implements Callback<ResponseBody
 
     @Override
     public void onFailure(Call<ResponseBody> call, Throwable t) {
-        mLoadView.onFail(RemoteManager.UNKNOWN, "At " + TAG + "#onFailure-> " + t.toString());
+        mLoadView.onFail(RemoteManager.PARSE, "At " + TAG + "#onFailure-> " + t.toString());
     }
 
 }

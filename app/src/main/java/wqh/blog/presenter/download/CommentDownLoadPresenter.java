@@ -1,6 +1,5 @@
 package wqh.blog.presenter.download;
 
-import java.util.Arrays;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -8,6 +7,7 @@ import wqh.blog.model.bean.Comment;
 import wqh.blog.model.remote.CommentAPI;
 import wqh.blog.model.remote.RemoteManager;
 import wqh.blog.presenter.DefaultCallback;
+import wqh.blog.util.CollectionUtil;
 import wqh.blog.util.Json;
 import wqh.blog.view.LoadView;
 
@@ -50,7 +50,7 @@ public class CommentDownLoadPresenter extends DownLoadPresenter<Comment> {
 
         @Override
         protected void onParseResult(String result) {
-            mLoadView.onSuccess(Arrays.asList(Json.fromJson(result, Comment[].class)));
+            mLoadView.onSuccess(CollectionUtil.asList(Json.fromJson(result, Comment[].class)));
         }
     }
 }

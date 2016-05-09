@@ -6,7 +6,6 @@ import android.util.Log;
 
 import java.util.List;
 
-import butterknife.Bind;
 import wqh.blog.R;
 import wqh.blog.presenter.download.DownLoadPresenter;
 import wqh.blog.ui.activity.BlogItemActivity;
@@ -14,7 +13,6 @@ import wqh.blog.ui.adapter.BlogAdapter;
 import wqh.blog.model.bean.Blog;
 import wqh.blog.presenter.download.BlogDownLoadPresenter;
 import wqh.blog.ui.base.ScrollFragment;
-import wqh.blog.ui.customview.StateLayout;
 import wqh.blog.util.IntentUtil;
 import wqh.blog.view.LoadView;
 

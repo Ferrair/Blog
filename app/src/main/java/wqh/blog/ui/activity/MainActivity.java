@@ -7,6 +7,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
@@ -23,6 +24,7 @@ import wqh.blog.ui.base.BaseActivity;
 import wqh.blog.ui.fragment.BlogListFragment;
 import wqh.blog.ui.fragment.WorkListFragment;
 import wqh.blog.ui.customview.DrawerDelegate;
+import wqh.blog.util.IntentUtil;
 
 /**
  * Created by WQH on 2016/4/11  17:11.
@@ -83,6 +85,17 @@ public class MainActivity extends BaseActivity implements DrawerDelegate.DrawerL
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_search:
+                IntentUtil.goToOtherActivity(this,SearchActivity.class);
+                break;
+        }
+        return true;
+    }
+
 
     @Override
     protected void onDestroy() {

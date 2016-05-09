@@ -5,6 +5,5 @@
     <string name="action_settings">Settings</string>
     <string name="loading">正在加载</string>
     <string name="error">出错了</string>
-    <string name="retry">轻触屏幕重试</string>
     <string name="empty">空空如也</string>
 </resources>

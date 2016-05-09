@@ -1,6 +1,5 @@
 package wqh.blog.presenter.download;
 
-import java.util.Arrays;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -8,6 +7,7 @@ import wqh.blog.model.bean.Work;
 import wqh.blog.model.remote.RemoteManager;
 import wqh.blog.model.remote.WorkAPI;
 import wqh.blog.presenter.DefaultCallback;
+import wqh.blog.util.CollectionUtil;
 import wqh.blog.util.Json;
 import wqh.blog.view.LoadView;
 
@@ -61,7 +61,7 @@ public class WorkDownLoadPresenter extends DownLoadPresenter<Work> {
 
         @Override
         protected void onParseResult(String result) {
-            mLoadView.onSuccess(Arrays.asList(Json.fromJson(result, Work[].class)));
+            mLoadView.onSuccess(CollectionUtil.asList(Json.fromJson(result, Work[].class)));
         }
     }
 }

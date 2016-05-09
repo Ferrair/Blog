@@ -8,6 +8,7 @@ import java.util.List;
 import butterknife.OnClick;
 import wqh.blog.R;
 import wqh.blog.model.bean.Comment;
+import wqh.blog.model.remote.RemoteManager;
 import wqh.blog.presenter.download.CommentDownLoadPresenter;
 import wqh.blog.presenter.download.DownLoadPresenter;
 import wqh.blog.ui.adapter.CommentsAdapter;
@@ -74,7 +75,12 @@ public class AllCommentsActivity extends ScrollActivity {
 
         @Override
         public void onFail(int errorCode, String errorMsg) {
-            mStateLayout.showErrorView();
+            if (errorCode == RemoteManager.PARSE) {
+                mStateLayout.showErrorView();
+            } else if (errorCode == RemoteManager.NO_OBJECT) {
+                mStateLayout.showEmptyView();
+            }
+
             Log.e(TAG, "ErrorCode-> " + errorCode + ", ErrorMsg-> " + errorMsg);
         }
     }

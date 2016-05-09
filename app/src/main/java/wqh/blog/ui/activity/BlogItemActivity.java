@@ -1,7 +1,6 @@
 package wqh.blog.ui.activity;
 
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -9,15 +8,12 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.OnClick;
+import us.feras.mdv.MarkdownView;
 import wqh.blog.R;
 import wqh.blog.model.bean.Blog;
-import wqh.blog.model.bean.Comment;
 import wqh.blog.presenter.download.BlogDownLoadPresenter;
-import wqh.blog.presenter.download.CommentDownLoadPresenter;
 import wqh.blog.presenter.download.DownLoadPresenter;
 import wqh.blog.presenter.upload.BlogUpLoadPresenter;
-import wqh.blog.presenter.upload.CommentUpLoadPresenter;
-import wqh.blog.ui.base.BaseActivity;
 import wqh.blog.ui.base.StateActivity;
 import wqh.blog.util.IntentUtil;
 import wqh.blog.util.TimeUtil;
@@ -36,7 +32,7 @@ public class BlogItemActivity extends StateActivity {
     @Bind(R.id.createdAt)
     TextView mCreatedAtTextView;
     @Bind(R.id.content)
-    TextView mContentTextView;
+    MarkdownView mContentMarkDown;
     @Bind(R.id.abstractStr)
     TextView mDescriptionTextView;
     @Bind(R.id.title)
@@ -109,7 +105,7 @@ public class BlogItemActivity extends StateActivity {
             mTagTextView.setText(itemData.type);
             mTimesTextVIew.setText(String.valueOf(itemData.times));
             mCreatedAtTextView.setText(TimeUtil.date2time(itemData.createdAt.toString()));
-            mContentTextView.setText(itemData.content);
+            mContentMarkDown.loadMarkdown(itemData.content);
             mDescriptionTextView.setText(itemData.abstractStr);
         }
 
