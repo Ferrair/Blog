@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import butterknife.Bind;
 import wqh.blog.R;
 
+//Todo: https://github.com/kodyan/SwipeRefreshLayout load-more and load-refresh
 /**
  * Created by WQH on 2016/5/3  21:38.
  *
@@ -51,5 +52,13 @@ public abstract class ScrollActivity extends StateActivity implements SwipeRefre
             onRefreshDelayed();
             mRefreshLayout.setRefreshing(false);
         }, 2000);
+    }
+
+    /**
+     * All the ScrollActivity can scroll to top when click the Toolbar.
+     */
+    @Override
+    protected void onToolbarClick() {
+        mRecyclerView.smoothScrollToPosition(0);
     }
 }

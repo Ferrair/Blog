@@ -68,5 +68,5 @@ dependencies {
     compile 'com.mikepenz:fontawesome-typeface:4.5.0.1@aar'
     //Removable
     compile 'com.orhanobut:logger:1.9'
-
+    compile files('libs/lite-orm-1.9.1.jar')
 }

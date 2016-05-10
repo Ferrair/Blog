@@ -1,4 +1,4 @@
-package wqh.blog.presenter.upload;
+package wqh.blog.presenter.remote.upload;
 
 
 import okhttp3.ResponseBody;
@@ -6,7 +6,7 @@ import retrofit2.Call;
 import wqh.blog.model.bean.Comment;
 import wqh.blog.model.remote.CommentAPI;
 import wqh.blog.model.remote.RemoteManager;
-import wqh.blog.presenter.DefaultCallback;
+import wqh.blog.presenter.remote.DefaultCallback;
 import wqh.blog.view.LoadView;
 
 /**

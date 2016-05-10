@@ -1,7 +1,9 @@
 package wqh.blog.ui.activity;
 
 import android.os.Bundle;
+import android.support.v4.widget.NestedScrollView;
 import android.util.Log;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -11,9 +13,10 @@ import butterknife.OnClick;
 import us.feras.mdv.MarkdownView;
 import wqh.blog.R;
 import wqh.blog.model.bean.Blog;
-import wqh.blog.presenter.download.BlogDownLoadPresenter;
-import wqh.blog.presenter.download.DownLoadPresenter;
-import wqh.blog.presenter.upload.BlogUpLoadPresenter;
+import wqh.blog.presenter.local.LocalPresenter;
+import wqh.blog.presenter.remote.download.BlogDownLoadPresenter;
+import wqh.blog.presenter.remote.download.DownLoadPresenter;
+import wqh.blog.presenter.remote.upload.BlogUpLoadPresenter;
 import wqh.blog.ui.base.StateActivity;
 import wqh.blog.util.IntentUtil;
 import wqh.blog.util.TimeUtil;
@@ -25,6 +28,8 @@ import wqh.blog.view.LoadView;
 public class BlogItemActivity extends StateActivity {
 
     private static final String TAG = "BlogItemActivity";
+    @Bind(R.id.scrollView)
+    NestedScrollView mScrollView;
     @Bind(R.id.tag)
     TextView mTagTextView;
     @Bind(R.id.times)
@@ -58,6 +63,10 @@ public class BlogItemActivity extends StateActivity {
      * So,there are two LoadView,one for Blog and another for Comment which belongs to a Blog
      */
     DefaultBlogDownLoadView mDefaultBlogLoadDataView = new DefaultBlogDownLoadView();
+    /**
+     * A Local-Data Presenter,that store data into local-database.
+     */
+    LocalPresenter mLocalPresenter = new LocalPresenter();
 
     int blogId;
 
@@ -69,10 +78,12 @@ public class BlogItemActivity extends StateActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //get data from Intent
+        //Get data from Intent
         blogId = getIntent().getIntExtra("id", 0);
-
+        //Load data.
+        showContent(mLocalPresenter.db().queryById(blogId, Blog.class));
         mBlogDownLoadPresenter.loadById(blogId, mDefaultBlogLoadDataView);
+        //Add view-times.
         mBlogUpLoadPresenter.addTimes(blogId);
     }
 
@@ -90,6 +101,24 @@ public class BlogItemActivity extends StateActivity {
         IntentUtil.goToOtherActivity(this, AllCommentsActivity.class, "id", blogId);
     }
 
+    @Override
+    protected void onToolbarClick() {
+        mScrollView.fullScroll(ScrollView.FOCUS_UP);
+    }
+
+    /**
+     * Show view by given data.
+     */
+    private void showContent(Blog itemData) {
+        Log.i(TAG, itemData.toString());
+        mTitleTextView.setText(itemData.title);
+        mTagTextView.setText(itemData.type);
+        mTimesTextVIew.setText(String.valueOf(itemData.times));
+        mCreatedAtTextView.setText(TimeUtil.date2time(itemData.createdAt.toString()));
+        mContentMarkDown.loadMarkdown(itemData.content);
+        mDescriptionTextView.setText(itemData.abstractStr);
+    }
+
     /*
      * The below class will show View after fetch data from server.
      * So see initView() method in this class.
@@ -100,13 +129,7 @@ public class BlogItemActivity extends StateActivity {
         public void onSuccess(List<Blog> data) {
             mStateLayout.showContentView();
             Blog itemData = data.get(0);
-            Log.i(TAG, itemData.toString());
-            mTitleTextView.setText(itemData.title);
-            mTagTextView.setText(itemData.type);
-            mTimesTextVIew.setText(String.valueOf(itemData.times));
-            mCreatedAtTextView.setText(TimeUtil.date2time(itemData.createdAt.toString()));
-            mContentMarkDown.loadMarkdown(itemData.content);
-            mDescriptionTextView.setText(itemData.abstractStr);
+            showContent(itemData);
         }
 
         @Override
@@ -115,4 +138,6 @@ public class BlogItemActivity extends StateActivity {
             Log.e(TAG, "ErrorCode-> " + errorCode + ", ErrorMsg-> " + errorMsg);
         }
     }
+
+
 }

@@ -40,7 +40,7 @@ public class BlogAdapter extends BaseAdapter<BlogAdapter.BlogHolder, Blog> {
         holder.tag.setText(itemData.tag);
         holder.times.setText(String.valueOf(itemData.times));
         holder.createdAt.setText(TimeUtil.date2time(itemData.createdAt.toString()));
-        //Todo: 怎么展示用户头像?
+        //Todo: How t show user's avatar?
     }
 
     @Override

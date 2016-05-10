@@ -1,4 +1,4 @@
-package wqh.blog.presenter;
+package wqh.blog.presenter.remote;
 
 import wqh.blog.view.LoadView;
 

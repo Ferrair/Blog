@@ -12,6 +12,7 @@ And the Fragments on TabLayout will be changed when the user scroll left or righ
     tools:context=".ui.activity.MainActivity">
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 

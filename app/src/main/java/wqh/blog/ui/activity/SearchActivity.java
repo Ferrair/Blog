@@ -38,7 +38,7 @@ public class SearchActivity extends StateActivity {
 
     public void search() {
         mStateLayout.showLoadingView();
-        mStateLayout.postDelayed(() -> ToastUtil.showToast(SearchActivity.this, "No Thing"), 1000);
+        mStateLayout.postDelayed(() -> ToastUtil.showToast("No Thing"), 1000);
     }
 
 }

@@ -13,7 +13,7 @@ import wqh.blog.ui.customview.StateLayout;
  * A Activity with four-states by <code>StateLayout</code>.
  * And LoadingView-State is it's init-state.So MUST call other's state after.
  */
-public abstract class StateActivity extends BaseActivity {
+public abstract class StateActivity extends ToolbarActivity {
 
     @Bind(R.id.stateLayout)
     protected StateLayout mStateLayout;

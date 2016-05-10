@@ -1,6 +1,7 @@
 package wqh.blog.model.remote;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -35,6 +36,7 @@ public class RemoteManager {
                 new OkHttpClient
                         .Builder()
                         .addNetworkInterceptor(new AutInterceptor())
+                        .readTimeout(10, TimeUnit.SECONDS)
                         /*.addInterceptor(loggingInterceptor)*/
                         .build();
 

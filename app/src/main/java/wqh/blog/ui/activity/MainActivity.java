@@ -20,7 +20,8 @@ import java.util.List;
 import butterknife.Bind;
 import wqh.blog.R;
 import wqh.blog.ui.adapter.FragmentAdapter;
-import wqh.blog.ui.base.BaseActivity;
+import wqh.blog.ui.base.ScrollFragment;
+import wqh.blog.ui.base.ToolbarActivity;
 import wqh.blog.ui.fragment.BlogListFragment;
 import wqh.blog.ui.fragment.WorkListFragment;
 import wqh.blog.ui.customview.DrawerDelegate;
@@ -28,9 +29,8 @@ import wqh.blog.util.IntentUtil;
 
 /**
  * Created by WQH on 2016/4/11  17:11.
- * 想办法把这个抽象到上层去
  */
-public class MainActivity extends BaseActivity implements DrawerDelegate.DrawerListener {
+public class MainActivity extends ToolbarActivity implements DrawerDelegate.DrawerListener {
 
     @Bind(R.id.tabLayout)
     TabLayout mTabLayout;
@@ -38,7 +38,14 @@ public class MainActivity extends BaseActivity implements DrawerDelegate.DrawerL
     @Bind(R.id.viewPager)
     ViewPager mViewPager;
 
+    /**
+     * A Delegate that holds Left-Drawer.
+     */
     private DrawerDelegate mDrawerDelegate;
+    /**
+     * A List that holds Fragment.
+     */
+    private List<Fragment> mContentList = new ArrayList<>();
 
     @Override
     protected int layoutId() {
@@ -59,10 +66,9 @@ public class MainActivity extends BaseActivity implements DrawerDelegate.DrawerL
     }
 
     private List<Fragment> getTabFragment() {
-        List<Fragment> list = new ArrayList<>();
-        list.add(new BlogListFragment());
-        list.add(new WorkListFragment());
-        return list;
+        mContentList.add(new BlogListFragment());
+        mContentList.add(new WorkListFragment());
+        return mContentList;
     }
 
     @Override
@@ -90,12 +96,24 @@ public class MainActivity extends BaseActivity implements DrawerDelegate.DrawerL
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_search:
-                IntentUtil.goToOtherActivity(this,SearchActivity.class);
+                IntentUtil.goToOtherActivity(this, SearchActivity.class);
                 break;
         }
         return true;
     }
 
+    /**
+     * Dispatch click action on <code>Toolbar</code> on each ScrollFragment.
+     */
+    @Override
+    protected void onToolbarClick() {
+        ((ScrollFragment) mContentList.get(mViewPager.getCurrentItem())).onToolbarClick();
+    }
+
+    @Override
+    protected boolean canBack() {
+        return false;
+    }
 
     @Override
     protected void onDestroy() {

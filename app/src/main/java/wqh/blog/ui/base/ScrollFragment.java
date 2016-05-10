@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import butterknife.Bind;
 import wqh.blog.R;
@@ -51,5 +52,9 @@ public abstract class ScrollFragment extends StateFragment implements SwipeRefre
             onRefreshDelayed();
             mRefreshLayout.setRefreshing(false);
         }, 2000);
+    }
+
+    public void onToolbarClick() {
+        mRecyclerView.smoothScrollToPosition(0);
     }
 }

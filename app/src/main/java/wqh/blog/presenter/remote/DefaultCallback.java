@@ -1,4 +1,4 @@
-package wqh.blog.presenter;
+package wqh.blog.presenter.remote;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;

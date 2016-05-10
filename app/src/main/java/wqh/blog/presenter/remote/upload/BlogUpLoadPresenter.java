@@ -1,4 +1,4 @@
-package wqh.blog.presenter.upload;
+package wqh.blog.presenter.remote.upload;
 
 import wqh.blog.model.bean.Blog;
 import wqh.blog.model.remote.BlogAPI;

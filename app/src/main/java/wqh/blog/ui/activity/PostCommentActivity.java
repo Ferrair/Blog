@@ -10,16 +10,16 @@ import butterknife.Bind;
 import butterknife.OnClick;
 import wqh.blog.R;
 import wqh.blog.model.bean.Comment;
-import wqh.blog.presenter.upload.CommentUpLoadPresenter;
-import wqh.blog.presenter.upload.UpLoadPresenter;
-import wqh.blog.ui.base.BaseActivity;
+import wqh.blog.presenter.remote.upload.CommentUpLoadPresenter;
+import wqh.blog.presenter.remote.upload.UpLoadPresenter;
+import wqh.blog.ui.base.ToolbarActivity;
 import wqh.blog.util.IntentUtil;
 import wqh.blog.util.ToastUtil;
 import wqh.blog.util.Validator;
 import wqh.blog.view.LoadView;
 
 
-public class PostCommentActivity extends BaseActivity {
+public class PostCommentActivity extends ToolbarActivity {
     private static final String TAG = "PostCommentActivity";
 
     @Bind(R.id.comment_content)
@@ -60,7 +60,7 @@ public class PostCommentActivity extends BaseActivity {
 
     private boolean isValid(String text) {
         if (Validator.isEmpty(text)) {
-            ToastUtil.showToast(this, "评论为空啊");
+            ToastUtil.showToast("评论为空啊");
             return false;
         }
         return true;

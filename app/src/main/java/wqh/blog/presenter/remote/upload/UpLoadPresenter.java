@@ -1,6 +1,6 @@
-package wqh.blog.presenter.upload;
+package wqh.blog.presenter.remote.upload;
 
-import wqh.blog.presenter.LoadPresenter;
+import wqh.blog.presenter.remote.LoadPresenter;
 import wqh.blog.view.LoadView;
 
 /**

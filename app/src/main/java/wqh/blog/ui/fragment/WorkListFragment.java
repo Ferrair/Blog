@@ -3,14 +3,12 @@ package wqh.blog.ui.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.view.View;
 
 import java.util.List;
 
-import me.drakeet.materialdialog.MaterialDialog;
 import wqh.blog.R;
-import wqh.blog.presenter.download.DownLoadPresenter;
-import wqh.blog.presenter.download.WorkDownLoadPresenter;
+import wqh.blog.presenter.remote.download.DownLoadPresenter;
+import wqh.blog.presenter.remote.download.WorkDownLoadPresenter;
 import wqh.blog.ui.adapter.WorkAdapter;
 import wqh.blog.model.bean.Work;
 import wqh.blog.ui.base.ScrollFragment;
@@ -25,7 +23,7 @@ public class WorkListFragment extends ScrollFragment {
     private static final String TAG = "WorkListFragment";
     WorkAdapter mAdapter;
     DownLoadPresenter<Work> mDownLoadPresenter = new WorkDownLoadPresenter();
-    DefaultLoadView mDefaultLoadView = new DefaultLoadView();
+    DefaultLoadView mDefaultLoadDataView = new DefaultLoadView();
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -33,7 +31,7 @@ public class WorkListFragment extends ScrollFragment {
         mAdapter = new WorkAdapter(getActivity());
         // Show Download Dialog here.
         mAdapter.setOnItemLongClickListener(R.id.item_work, (view, data) -> Dialog.create(getActivity(), "是否下载 '" + data.title + "'").setPositiveListener("下载", v -> doDownload(data)).show());
-        mDownLoadPresenter.loadAll(mDefaultLoadView);
+        mDownLoadPresenter.loadAll(mDefaultLoadDataView);
     }
 
 
@@ -49,13 +47,14 @@ public class WorkListFragment extends ScrollFragment {
 
     @Override
     protected void onRefreshDelayed() {
-
+        mDownLoadPresenter.loadAll(mDefaultLoadDataView);
     }
 
     /*
      * Download the Work by given URL.
      */
     private void doDownload(Work data) {
+        //Todo:Download Work from given URL.
     }
 
     /**
