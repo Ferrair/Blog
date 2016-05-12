@@ -7,14 +7,14 @@ import java.util.List;
 
 import butterknife.OnClick;
 import wqh.blog.R;
-import wqh.blog.model.bean.Comment;
-import wqh.blog.model.remote.RemoteManager;
-import wqh.blog.presenter.remote.download.CommentDownLoadPresenter;
-import wqh.blog.presenter.remote.download.DownLoadPresenter;
+import wqh.blog.mvp.model.bean.Comment;
+import wqh.blog.mvp.model.service.RemoteManager;
+import wqh.blog.mvp.presenter.remote.download.CommentDownLoadPresenter;
+import wqh.blog.mvp.presenter.remote.download.DownLoadPresenter;
 import wqh.blog.ui.adapter.CommentsAdapter;
 import wqh.blog.ui.base.ScrollActivity;
 import wqh.blog.util.IntentUtil;
-import wqh.blog.view.LoadView;
+import wqh.blog.mvp.view.LoadView;
 
 public class AllCommentsActivity extends ScrollActivity {
     private static final String TAG = "AllCommentsActivity";

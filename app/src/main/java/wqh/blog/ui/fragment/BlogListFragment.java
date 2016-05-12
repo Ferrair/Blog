@@ -7,15 +7,17 @@ import android.util.Log;
 import java.util.List;
 
 import wqh.blog.R;
-import wqh.blog.presenter.local.LocalPresenter;
-import wqh.blog.presenter.remote.download.DownLoadPresenter;
+import wqh.blog.mvp.presenter.local.LocalPresenter;
+import wqh.blog.mvp.presenter.remote.download.DownLoadPresenter;
 import wqh.blog.ui.activity.BlogItemActivity;
 import wqh.blog.ui.adapter.BlogAdapter;
-import wqh.blog.model.bean.Blog;
-import wqh.blog.presenter.remote.download.BlogDownLoadPresenter;
+import wqh.blog.mvp.model.bean.Blog;
+import wqh.blog.mvp.presenter.remote.download.BlogDownLoadPresenter;
 import wqh.blog.ui.base.ScrollFragment;
 import wqh.blog.util.IntentUtil;
-import wqh.blog.view.LoadView;
+import wqh.blog.util.StatusUtil;
+import wqh.blog.util.ToastUtil;
+import wqh.blog.mvp.view.LoadView;
 
 /**
  * Created by WQH on 2016/4/11  19:14.
@@ -54,7 +56,6 @@ public class BlogListFragment extends ScrollFragment {
         //Load data
         if (mLocalPresenter.db().queryCount(Blog.class) != 0)
             showContent(mLocalPresenter.db().query(Blog.class));
-        //Todo: run this code when the net is OK. Or will override previous Content-View.
         mDownLoadPresenter.loadAll(mDefaultLoadDataView);
 
     }
@@ -93,7 +94,12 @@ public class BlogListFragment extends ScrollFragment {
 
         @Override
         public void onFail(int errorCode, String errorMsg) {
-            mStateLayout.showErrorView();
+            //If no network will show local-data instead of error-view.
+            if (StatusUtil.isNetworkAvailable(getActivity())) {
+                mStateLayout.showErrorView();
+            } else {
+                ToastUtil.showToast("没有网络咯");
+            }
             Log.e(TAG, "ErrorCode-> " + errorCode + ", ErrorMsg-> " + errorMsg);
         }
     }

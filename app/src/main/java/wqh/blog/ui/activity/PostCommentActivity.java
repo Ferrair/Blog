@@ -9,14 +9,14 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.OnClick;
 import wqh.blog.R;
-import wqh.blog.model.bean.Comment;
-import wqh.blog.presenter.remote.upload.CommentUpLoadPresenter;
-import wqh.blog.presenter.remote.upload.UpLoadPresenter;
+import wqh.blog.mvp.model.bean.Comment;
+import wqh.blog.mvp.presenter.remote.upload.CommentUpLoadPresenter;
+import wqh.blog.mvp.presenter.remote.upload.UpLoadPresenter;
 import wqh.blog.ui.base.ToolbarActivity;
 import wqh.blog.util.IntentUtil;
 import wqh.blog.util.ToastUtil;
 import wqh.blog.util.Validator;
-import wqh.blog.view.LoadView;
+import wqh.blog.mvp.view.LoadView;
 
 
 public class PostCommentActivity extends ToolbarActivity {

@@ -12,15 +12,18 @@ import butterknife.Bind;
 import butterknife.OnClick;
 import us.feras.mdv.MarkdownView;
 import wqh.blog.R;
-import wqh.blog.model.bean.Blog;
-import wqh.blog.presenter.local.LocalPresenter;
-import wqh.blog.presenter.remote.download.BlogDownLoadPresenter;
-import wqh.blog.presenter.remote.download.DownLoadPresenter;
-import wqh.blog.presenter.remote.upload.BlogUpLoadPresenter;
+import wqh.blog.mvp.model.bean.Blog;
+import wqh.blog.mvp.presenter.local.LocalPresenter;
+import wqh.blog.mvp.presenter.remote.download.BlogDownLoadPresenter;
+import wqh.blog.mvp.presenter.remote.download.DownLoadPresenter;
+import wqh.blog.mvp.presenter.remote.upload.BlogUpLoadPresenter;
 import wqh.blog.ui.base.StateActivity;
 import wqh.blog.util.IntentUtil;
+import wqh.blog.util.ShareUtil;
+import wqh.blog.util.StatusUtil;
 import wqh.blog.util.TimeUtil;
-import wqh.blog.view.LoadView;
+import wqh.blog.util.ToastUtil;
+import wqh.blog.mvp.view.LoadView;
 
 /**
  * Created by WQH on 2016/4/24  20:45.
@@ -37,11 +40,13 @@ public class BlogItemActivity extends StateActivity {
     @Bind(R.id.createdAt)
     TextView mCreatedAtTextView;
     @Bind(R.id.content)
-    MarkdownView mContentMarkDown;
+    MarkdownView mContentMarkDown;  //Todo : Can show my own web.
     @Bind(R.id.abstractStr)
     TextView mDescriptionTextView;
     @Bind(R.id.title)
     TextView mTitleTextView;
+
+    Blog itemData;
     /*
      * A Down-Load-Data Presenter,which means download data from server is it's function.
      * On the other hand,download-data action can't be found in this class
@@ -81,7 +86,9 @@ public class BlogItemActivity extends StateActivity {
         //Get data from Intent
         blogId = getIntent().getIntExtra("id", 0);
         //Load data.
-        showContent(mLocalPresenter.db().queryById(blogId, Blog.class));
+        //Load data
+        if (mLocalPresenter.db().queryCount(Blog.class) != 0)
+            showContent(mLocalPresenter.db().queryById(blogId, Blog.class));
         mBlogDownLoadPresenter.loadById(blogId, mDefaultBlogLoadDataView);
         //Add view-times.
         mBlogUpLoadPresenter.addTimes(blogId);
@@ -99,6 +106,12 @@ public class BlogItemActivity extends StateActivity {
     @OnClick(R.id.all_comments)
     public void allComments() {
         IntentUtil.goToOtherActivity(this, AllCommentsActivity.class, "id", blogId);
+    }
+
+    @OnClick(R.id.share)
+    public void share() {
+        if (itemData != null)
+            ShareUtil.share(getApplicationContext(), itemData.title);
     }
 
     @Override
@@ -127,14 +140,19 @@ public class BlogItemActivity extends StateActivity {
 
         @Override
         public void onSuccess(List<Blog> data) {
+            mLocalPresenter.db().update(data);
             mStateLayout.showContentView();
-            Blog itemData = data.get(0);
+            itemData = data.get(0);
             showContent(itemData);
         }
 
         @Override
         public void onFail(int errorCode, String errorMsg) {
-            mStateLayout.showErrorView();
+            if (StatusUtil.isNetworkAvailable(BlogItemActivity.this)) {
+                mStateLayout.showErrorView();
+            } else {
+                ToastUtil.showToast("没有网络咯");
+            }
             Log.e(TAG, "ErrorCode-> " + errorCode + ", ErrorMsg-> " + errorMsg);
         }
     }

@@ -1,7 +1,6 @@
 package wqh.blog.ui.adapter;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,7 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import wqh.blog.R;
 import wqh.blog.ui.adapter.base.BaseAdapter;
-import wqh.blog.model.bean.Blog;
+import wqh.blog.mvp.model.bean.Blog;
 import wqh.blog.util.TimeUtil;
 
 /**

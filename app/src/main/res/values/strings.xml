@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Blog</string>
-    <string name="footer_behavior" translatable="false">wqh.blog.ui.customview.FooterBehavior</string>
+    <string name="footer_behavior" translatable="false">wqh.blog.ui.customview.behavior.FooterBehavior</string>
+    <string name="scale_behavior" translatable="false">wqh.blog.ui.customview.behavior.ScaleBehavior</string>
     <string name="search">Search</string>
     <string name="action_settings">Settings</string>
     <string name="loading">正在加载</string>

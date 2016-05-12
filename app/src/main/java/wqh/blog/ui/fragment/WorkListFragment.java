@@ -7,13 +7,13 @@ import android.util.Log;
 import java.util.List;
 
 import wqh.blog.R;
-import wqh.blog.presenter.remote.download.DownLoadPresenter;
-import wqh.blog.presenter.remote.download.WorkDownLoadPresenter;
+import wqh.blog.mvp.presenter.remote.download.DownLoadPresenter;
+import wqh.blog.mvp.presenter.remote.download.WorkDownLoadPresenter;
 import wqh.blog.ui.adapter.WorkAdapter;
-import wqh.blog.model.bean.Work;
+import wqh.blog.mvp.model.bean.Work;
 import wqh.blog.ui.base.ScrollFragment;
 import wqh.blog.ui.customview.Dialog;
-import wqh.blog.view.LoadView;
+import wqh.blog.mvp.view.LoadView;
 
 /**
  * Created by WQH on 2016/4/11  20:17.

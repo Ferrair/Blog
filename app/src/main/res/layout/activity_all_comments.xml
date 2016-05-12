@@ -35,6 +35,6 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         android:src="@android:drawable/ic_input_add"
-        app:layout_behavior="@string/footer_behavior"/>
+        app:layout_behavior="@string/scale_behavior"/>
 
 </android.support.design.widget.CoordinatorLayout>

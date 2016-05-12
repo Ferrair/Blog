@@ -3,8 +3,8 @@ package wqh.blog;
 import org.json.JSONException;
 import org.junit.Test;
 
-import wqh.blog.model.bean.Comment;
-import wqh.blog.model.bean.Holder;
+import wqh.blog.mvp.model.bean.Comment;
+import wqh.blog.mvp.model.bean.Holder;
 import wqh.blog.util.Json;
 
 /**

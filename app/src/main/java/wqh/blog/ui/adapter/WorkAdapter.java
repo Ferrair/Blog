@@ -1,8 +1,6 @@
 package wqh.blog.ui.adapter;
 
 import android.content.Context;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +13,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import wqh.blog.R;
 import wqh.blog.ui.adapter.base.BaseAdapter;
-import wqh.blog.model.bean.Work;
+import wqh.blog.mvp.model.bean.Work;
 
 /**
  * Created by WQH on 2016/4/11  23:43.

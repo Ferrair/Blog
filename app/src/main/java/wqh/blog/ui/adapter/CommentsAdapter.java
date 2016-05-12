@@ -11,7 +11,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import wqh.blog.R;
-import wqh.blog.model.bean.Comment;
+import wqh.blog.mvp.model.bean.Comment;
 import wqh.blog.ui.adapter.base.BaseAdapter;
 
 /**
