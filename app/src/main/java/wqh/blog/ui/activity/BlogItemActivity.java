@@ -14,9 +14,10 @@ import us.feras.mdv.MarkdownView;
 import wqh.blog.R;
 import wqh.blog.mvp.model.bean.Blog;
 import wqh.blog.mvp.presenter.local.LocalPresenter;
-import wqh.blog.mvp.presenter.remote.download.BlogDownLoadPresenter;
-import wqh.blog.mvp.presenter.remote.download.DownLoadPresenter;
-import wqh.blog.mvp.presenter.remote.upload.BlogUpLoadPresenter;
+import wqh.blog.mvp.presenter.remote.blog.BlogDownLoadPresenterImpl;
+import wqh.blog.mvp.presenter.remote.base.DownLoadPresenter;
+import wqh.blog.mvp.presenter.remote.blog.BlogUpLoadPresenter;
+import wqh.blog.mvp.presenter.remote.blog.BlogUpLoadPresenterImpl;
 import wqh.blog.ui.base.StateActivity;
 import wqh.blog.util.IntentUtil;
 import wqh.blog.util.ShareUtil;
@@ -54,12 +55,12 @@ public class BlogItemActivity extends StateActivity {
      * And this below two class is a Presenter for Blog,and a Presenter for Comment which belongs to a Blog.
      * that is why the two Presenter will be existed in one Activity
      */
-    DownLoadPresenter<Blog> mBlogDownLoadPresenter = new BlogDownLoadPresenter();
+    DownLoadPresenter<Blog> mBlogDownLoadPresenter = new BlogDownLoadPresenterImpl();
     /*
      * A Up-Load-Data Presenter that add view-times for this blog.
      * But it can tolerate error in this method.HaHa......
      */
-    BlogUpLoadPresenter mBlogUpLoadPresenter = new BlogUpLoadPresenter();
+    BlogUpLoadPresenter mBlogUpLoadPresenter = new BlogUpLoadPresenterImpl();
     /*
      * A Down-Load-Data View,which means show downloaded-data is it's function.
      * And more,the downloaded-data is from DownLoadPresenter.

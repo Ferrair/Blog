@@ -1,4 +1,4 @@
-package wqh.blog.mvp.presenter.remote.upload;
+package wqh.blog.mvp.presenter.remote.comment;
 
 
 import okhttp3.ResponseBody;
@@ -6,13 +6,15 @@ import retrofit2.Call;
 import wqh.blog.mvp.model.bean.Comment;
 import wqh.blog.mvp.model.service.CommentAPI;
 import wqh.blog.mvp.model.service.RemoteManager;
-import wqh.blog.mvp.presenter.remote.DefaultCallback;
+import wqh.blog.mvp.presenter.remote.base.DefaultCallback;
+import wqh.blog.mvp.presenter.remote.base.LoadPresenter;
+import wqh.blog.mvp.presenter.remote.base.UpLoadPresenter;
 import wqh.blog.mvp.view.LoadView;
 
 /**
  * Created by WQH on 2016/5/2  18:52.
  */
-public class CommentUpLoadPresenter extends UpLoadPresenter<Comment> {
+public class CommentUpLoadPresenterImpl extends LoadPresenter<Comment> implements UpLoadPresenter<Comment> {
     CommentAPI mCommentAPI;
 
     @Override

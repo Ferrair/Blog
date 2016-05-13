@@ -10,8 +10,8 @@ import butterknife.Bind;
 import butterknife.OnClick;
 import wqh.blog.R;
 import wqh.blog.mvp.model.bean.Comment;
-import wqh.blog.mvp.presenter.remote.upload.CommentUpLoadPresenter;
-import wqh.blog.mvp.presenter.remote.upload.UpLoadPresenter;
+import wqh.blog.mvp.presenter.remote.comment.CommentUpLoadPresenterImpl;
+import wqh.blog.mvp.presenter.remote.base.UpLoadPresenter;
 import wqh.blog.ui.base.ToolbarActivity;
 import wqh.blog.util.IntentUtil;
 import wqh.blog.util.ToastUtil;
@@ -26,7 +26,7 @@ public class PostCommentActivity extends ToolbarActivity {
     EditText mCommentContent;
 
     int blogId;
-    UpLoadPresenter<Comment> mCommentUpLoadPresenter = new CommentUpLoadPresenter();
+    UpLoadPresenter<Comment> mCommentUpLoadPresenter = new CommentUpLoadPresenterImpl();
 
     @Override
     protected int layoutId() {

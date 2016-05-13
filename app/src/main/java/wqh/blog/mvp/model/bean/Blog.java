@@ -15,7 +15,7 @@ import java.util.Date;
 public class Blog {
 
     @PrimaryKey(AssignType.BY_MYSELF)
-    public int id;
+    public Integer id;
     @Column("title")
     public String title;
     @Column("type")

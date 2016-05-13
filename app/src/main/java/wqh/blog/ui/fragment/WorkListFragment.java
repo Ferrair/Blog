@@ -7,8 +7,8 @@ import android.util.Log;
 import java.util.List;
 
 import wqh.blog.R;
-import wqh.blog.mvp.presenter.remote.download.DownLoadPresenter;
-import wqh.blog.mvp.presenter.remote.download.WorkDownLoadPresenter;
+import wqh.blog.mvp.presenter.remote.base.DownLoadPresenter;
+import wqh.blog.mvp.presenter.remote.work.WorkDownLoadPresenterImpl;
 import wqh.blog.ui.adapter.WorkAdapter;
 import wqh.blog.mvp.model.bean.Work;
 import wqh.blog.ui.base.ScrollFragment;
@@ -22,7 +22,7 @@ public class WorkListFragment extends ScrollFragment {
 
     private static final String TAG = "WorkListFragment";
     WorkAdapter mAdapter;
-    DownLoadPresenter<Work> mDownLoadPresenter = new WorkDownLoadPresenter();
+    DownLoadPresenter<Work> mDownLoadPresenter = new WorkDownLoadPresenterImpl();
     DefaultLoadView mDefaultLoadDataView = new DefaultLoadView();
 
     @Override

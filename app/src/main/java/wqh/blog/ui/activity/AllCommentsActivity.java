@@ -9,8 +9,8 @@ import butterknife.OnClick;
 import wqh.blog.R;
 import wqh.blog.mvp.model.bean.Comment;
 import wqh.blog.mvp.model.service.RemoteManager;
-import wqh.blog.mvp.presenter.remote.download.CommentDownLoadPresenter;
-import wqh.blog.mvp.presenter.remote.download.DownLoadPresenter;
+import wqh.blog.mvp.presenter.remote.comment.CommentDownLoadPresenterImpl;
+import wqh.blog.mvp.presenter.remote.base.DownLoadPresenter;
 import wqh.blog.ui.adapter.CommentsAdapter;
 import wqh.blog.ui.base.ScrollActivity;
 import wqh.blog.util.IntentUtil;
@@ -24,7 +24,7 @@ public class AllCommentsActivity extends ScrollActivity {
      * A Load-Data Presenter,which means load data from server is it's function.
      * On the other hand,load-data can't be found in this class
      */
-    DownLoadPresenter<Comment> mDownLoadCommentPresenter = new CommentDownLoadPresenter();
+    DownLoadPresenter<Comment> mDownLoadCommentPresenter = new CommentDownLoadPresenterImpl();
     /**
      * A Load-Data View,which means show loaded-data is it's function.
      * What's more,the loaded-data is from DownLoadPresenter.

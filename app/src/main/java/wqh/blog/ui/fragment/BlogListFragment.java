@@ -8,11 +8,11 @@ import java.util.List;
 
 import wqh.blog.R;
 import wqh.blog.mvp.presenter.local.LocalPresenter;
-import wqh.blog.mvp.presenter.remote.download.DownLoadPresenter;
+import wqh.blog.mvp.presenter.remote.base.DownLoadPresenter;
 import wqh.blog.ui.activity.BlogItemActivity;
 import wqh.blog.ui.adapter.BlogAdapter;
 import wqh.blog.mvp.model.bean.Blog;
-import wqh.blog.mvp.presenter.remote.download.BlogDownLoadPresenter;
+import wqh.blog.mvp.presenter.remote.blog.BlogDownLoadPresenterImpl;
 import wqh.blog.ui.base.ScrollFragment;
 import wqh.blog.util.IntentUtil;
 import wqh.blog.util.StatusUtil;
@@ -30,7 +30,7 @@ public class BlogListFragment extends ScrollFragment {
      * A Load-Data Presenter,which means load data from server is it's function.
      * On the other hand,load-data can't be found in this class
      */
-    DownLoadPresenter<Blog> mDownLoadPresenter = new BlogDownLoadPresenter();
+    DownLoadPresenter<Blog> mDownLoadPresenter = new BlogDownLoadPresenterImpl();
     /**
      * A Load-Data View,which means show loaded-data is it's function.
      * What's more,the loaded-data is from DownLoadPresenter.

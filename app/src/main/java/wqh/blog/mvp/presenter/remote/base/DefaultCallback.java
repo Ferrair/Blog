@@ -1,4 +1,4 @@
-package wqh.blog.mvp.presenter.remote;
+package wqh.blog.mvp.presenter.remote.base;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;

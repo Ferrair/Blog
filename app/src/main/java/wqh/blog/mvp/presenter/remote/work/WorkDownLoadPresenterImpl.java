@@ -1,4 +1,4 @@
-package wqh.blog.mvp.presenter.remote.download;
+package wqh.blog.mvp.presenter.remote.work;
 
 
 import okhttp3.ResponseBody;
@@ -6,7 +6,9 @@ import retrofit2.Call;
 import wqh.blog.mvp.model.bean.Work;
 import wqh.blog.mvp.model.service.RemoteManager;
 import wqh.blog.mvp.model.service.WorkAPI;
-import wqh.blog.mvp.presenter.remote.DefaultCallback;
+import wqh.blog.mvp.presenter.remote.base.DefaultCallback;
+import wqh.blog.mvp.presenter.remote.base.DownLoadPresenter;
+import wqh.blog.mvp.presenter.remote.base.LoadPresenter;
 import wqh.blog.util.CollectionUtil;
 import wqh.blog.util.Json;
 import wqh.blog.mvp.view.LoadView;
@@ -14,7 +16,7 @@ import wqh.blog.mvp.view.LoadView;
 /**
  * Created by WQH on 2016/4/16  19:58.
  */
-public class WorkDownLoadPresenter extends DownLoadPresenter<Work> {
+public class WorkDownLoadPresenterImpl extends LoadPresenter<Work> implements DownLoadPresenter<Work> {
 
     WorkAPI mWorkAPI;
 

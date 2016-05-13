@@ -6,6 +6,7 @@ import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
@@ -19,8 +20,16 @@ public interface CommentAPI {
     /**
      * Post a comment.
      * Using<code>@FormUrlEncoded</code> , <code> @POST</code> and <code>@Field</code>.
+     *
+     * And MUST holds a Token in HTTP's Header.
      */
     @FormUrlEncoded
     @POST("blog/appendComment")
-    Call<ResponseBody> postComment(@Field("belongTo") int belongTo, @Field("content") String content, @Field("createdBy") String createdBy);
+    Call<ResponseBody> postComment(
+            @Field("belongTo") int belongTo,
+            @Field("content") String content,
+            @Field("createdBy") String createdBy/*,
+            @Header("userID") String userID,
+            @Header("token") String token*/
+    );
 }
