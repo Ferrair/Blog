@@ -31,7 +31,7 @@ public class CommentsAdapter extends BaseAdapter<CommentsAdapter.CommentsHolder,
     protected void onBindItemDataToView(CommentsHolder holder, Comment itemData) {
         holder.content.setText(itemData.content);
         holder.createdAt.setText(itemData.createdAt.toString());
-        holder.createdBy.setText(itemData.createdBy);
+        holder.createdBy.setText(String.valueOf(itemData.createdBy));
     }
 
     @Override

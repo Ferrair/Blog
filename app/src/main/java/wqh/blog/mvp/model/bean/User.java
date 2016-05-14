@@ -8,5 +8,10 @@ public class User {
     public String username;
     public String passwork;
     public String token;
+    public String avatarUrl;
 
+    @Override
+    public String toString() {
+        return "User=> ID->" + id + " Name->" + username + " Token->" + token;
+    }
 }

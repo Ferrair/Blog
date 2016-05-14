@@ -1,7 +1,5 @@
 package wqh.blog.mvp.presenter.remote.user;
 
-import android.support.annotation.NonNull;
-
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import wqh.blog.mvp.model.bean.User;
@@ -31,14 +29,14 @@ public class UserPresenterImpl extends LoadPresenter<User> implements UserPresen
         doAction(call, mLoadView);
     }
 
-    private void doAction(Call<ResponseBody> call, LoadView<User> mLoadView) {
-        call.enqueue(new UserCallback(mLoadView));
-    }
-
     @Override
     public void register(String username, String password, LoadView<User> mLoadView) {
         Call<ResponseBody> call = mUserAPI.register(username, password);
         doAction(call, mLoadView);
+    }
+
+    private void doAction(Call<ResponseBody> call, LoadView<User> mLoadView) {
+        call.enqueue(new UserCallback(mLoadView));
     }
 
     @Override

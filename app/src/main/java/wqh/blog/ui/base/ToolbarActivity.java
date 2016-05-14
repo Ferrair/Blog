@@ -27,7 +27,7 @@ public abstract class ToolbarActivity extends BaseActivity {
 
     // A hook method that do something when click the Toolbar.
     protected void onToolbarClick() {
-        ToastUtil.showToast("Tool bar OnClick");
+        //Do nothing here.
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -35,7 +35,7 @@ public abstract class ToolbarActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) throws RuntimeException {
         super.onCreate(savedInstanceState);
         if (mToolbar == null) {
-            throw new RuntimeException("Toolbar must be set");
+            throw new RuntimeException("Toolbar must be set at id(toolbar)");
         }
         setSupportActionBar(mToolbar);
         mToolbar.setOnClickListener(view -> onToolbarClick());

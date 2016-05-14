@@ -18,10 +18,16 @@ import wqh.blog.util.ToastUtil;
 public class WQHApplication extends Application {
 
     public static LiteOrm mDB;
+    private static WQHApplication mApp;
+
+    public static Application getmApp() {
+        return mApp;
+    }
 
     @Override
     public void onCreate() {
         super.onCreate();
+        mApp = this;
         initImageLoader();
         initToast();
         initDB();

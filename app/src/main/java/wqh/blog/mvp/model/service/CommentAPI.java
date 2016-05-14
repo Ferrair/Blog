@@ -15,7 +15,7 @@ import retrofit2.http.Query;
  */
 public interface CommentAPI {
     @GET("blog/queryComment")
-    Call<ResponseBody> queryComment(@Query("id") int blogId);
+    Call<ResponseBody> queryComment(@Query("belongTo") int blogId);
 
     /**
      * Post a comment.
@@ -28,8 +28,8 @@ public interface CommentAPI {
     Call<ResponseBody> postComment(
             @Field("belongTo") int belongTo,
             @Field("content") String content,
-            @Field("createdBy") String createdBy/*,
-            @Header("userID") String userID,
-            @Header("token") String token*/
+            @Field("createdBy") int createdBy,
+            @Header("userID") int userID,
+            @Header("token") String token
     );
 }

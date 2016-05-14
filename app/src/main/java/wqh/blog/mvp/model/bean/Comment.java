@@ -9,7 +9,7 @@ import java.sql.Date;
 public class Comment {
     public Integer id;
     public String content;
-    public String createdBy;
+    public Integer createdBy;
     public Date createdAt;
     public Integer belongTo;
 

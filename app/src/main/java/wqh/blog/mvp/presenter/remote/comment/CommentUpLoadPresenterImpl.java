@@ -4,8 +4,10 @@ package wqh.blog.mvp.presenter.remote.comment;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import wqh.blog.mvp.model.bean.Comment;
+import wqh.blog.mvp.model.bean.User;
 import wqh.blog.mvp.model.service.CommentAPI;
 import wqh.blog.mvp.model.service.RemoteManager;
+import wqh.blog.mvp.model.service.UserManager;
 import wqh.blog.mvp.presenter.remote.base.DefaultCallback;
 import wqh.blog.mvp.presenter.remote.base.LoadPresenter;
 import wqh.blog.mvp.presenter.remote.base.UpLoadPresenter;
@@ -24,7 +26,8 @@ public class CommentUpLoadPresenterImpl extends LoadPresenter<Comment> implement
 
     @Override
     public void publish(Comment aData, LoadView<Comment> mLoadView) {
-        Call<ResponseBody> call = mCommentAPI.postComment(aData.belongTo, aData.content, aData.createdBy);
+        User currentUser = UserManager.instance().currentUser();
+        Call<ResponseBody> call = mCommentAPI.postComment(aData.belongTo, aData.content, aData.createdBy, currentUser.id, currentUser.token);
         doPublish(call, mLoadView);
     }
 
