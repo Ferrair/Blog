@@ -1,6 +1,8 @@
 package wqh.blog.util;
 
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -14,8 +16,16 @@ public class CollectionUtil {
     @SafeVarargs
     public static <T> List<T> asList(T... arrayData) {
         List<T> mList = new ArrayList<>();
-        for (T itemData : arrayData)
-            mList.add(itemData);
+        Collections.addAll(mList, arrayData);
         return mList;
+    }
+
+
+    public static <T> void addAllDistinct(List<T> src, List<T> des) {
+        for (T item : des) {
+            if (!src.contains(item)) {
+                src.add(item);
+            }
+        }
     }
 }

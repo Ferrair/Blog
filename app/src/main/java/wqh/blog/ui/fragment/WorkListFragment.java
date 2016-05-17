@@ -31,7 +31,7 @@ public class WorkListFragment extends ScrollFragment {
         mAdapter = new WorkAdapter(getActivity());
         // Show Download Dialog here.
         mAdapter.setOnItemLongClickListener(R.id.item_work, (view, data) -> Dialog.create(getActivity(), "是否下载 '" + data.title + "'").setPositiveListener("下载", v -> doDownload(data)).show());
-        mDownLoadPresenter.loadAll(mDefaultLoadDataView);
+        mDownLoadPresenter.loadAll(1, mDefaultLoadDataView);
     }
 
 
@@ -46,8 +46,13 @@ public class WorkListFragment extends ScrollFragment {
     }
 
     @Override
-    protected void onRefreshDelayed() {
-        mDownLoadPresenter.loadAll(mDefaultLoadDataView);
+    public void onRefreshDelayed() {
+        mDownLoadPresenter.loadAll(1, mDefaultLoadDataView);
+    }
+
+    @Override
+    public void onLoadMoreDelayed(int toToLoadPage) {
+        // Do nothing.
     }
 
     /*

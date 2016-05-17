@@ -15,7 +15,7 @@ import retrofit2.http.Query;
  */
 public interface CommentAPI {
     @GET("blog/queryComment")
-    Call<ResponseBody> queryComment(@Query("belongTo") int blogId);
+    Call<ResponseBody> queryComment(@Query("belongTo") int blogId, @Query("pageNum") int pageNum);
 
     /**
      * Post a comment.

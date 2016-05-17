@@ -11,6 +11,7 @@ import butterknife.Bind;
 import butterknife.OnClick;
 import wqh.blog.R;
 import wqh.blog.mvp.model.bean.Comment;
+import wqh.blog.mvp.model.service.UserManager;
 import wqh.blog.mvp.presenter.remote.comment.CommentUpLoadPresenterImpl;
 import wqh.blog.mvp.presenter.remote.base.UpLoadPresenter;
 import wqh.blog.ui.base.ToolbarActivity;
@@ -53,7 +54,7 @@ public class PostCommentActivity extends ToolbarActivity {
         Comment aComment = new Comment();
         aComment.belongTo = blogId;
         aComment.content = comment;
-        aComment.createdBy = 1;
+        aComment.createdBy = UserManager.instance().currentUser().id;
 
         mCommentUpLoadPresenter.publish(aComment, new DefaultCommentUpLoadView());
     }

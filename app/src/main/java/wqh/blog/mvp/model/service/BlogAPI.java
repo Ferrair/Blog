@@ -26,8 +26,8 @@ public interface BlogAPI {
     Call<ResponseBody> queryByType(@Query("type") String type);
 
     //Request to BlogController#index() in server
-    @GET("blog/")
-    Call<ResponseBody> queryAll();
+    @GET("blog")
+    Call<ResponseBody> queryAll(@Query("pageNum") int pageNum);
 
     @GET("blog/addTimes")
     Call<ResponseBody> addTimes(@Query("id") int id);

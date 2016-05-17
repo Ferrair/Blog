@@ -1,6 +1,8 @@
 package wqh.blog.mvp.presenter.remote.comment;
 
 
+import android.util.Log;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import wqh.blog.mvp.model.bean.Comment;
@@ -28,6 +30,7 @@ public class CommentUpLoadPresenterImpl extends LoadPresenter<Comment> implement
     public void publish(Comment aData, LoadView<Comment> mLoadView) {
         User currentUser = UserManager.instance().currentUser();
         Call<ResponseBody> call = mCommentAPI.postComment(aData.belongTo, aData.content, aData.createdBy, currentUser.id, currentUser.token);
+        Log.i("USer", currentUser.toString());
         doPublish(call, mLoadView);
     }
 

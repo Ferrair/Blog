@@ -35,4 +35,9 @@ public class Blog {
     public String toString() {
         return "Blog@" + id + "-->" + title;
     }
+
+    @Override
+    public boolean equals(Object other) {
+        return other instanceof Blog && ((Blog) other).id.equals(id);
+    }
 }

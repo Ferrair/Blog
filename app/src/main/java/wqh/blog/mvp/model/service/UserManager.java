@@ -35,7 +35,7 @@ public class UserManager {
     }
 
     public boolean isLogged() {
-        return currentUser == null;
+        return currentUser != null;
     }
 
 }

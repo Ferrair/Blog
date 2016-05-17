@@ -5,9 +5,10 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+
 import butterknife.Bind;
 import wqh.blog.R;
-import wqh.blog.util.ToastUtil;
+import wqh.blog.ui.customview.swipeback.SwipeBackLayout;
 
 /**
  * Created by WQH on 2016/4/11  17:01.
@@ -17,6 +18,8 @@ public abstract class ToolbarActivity extends BaseActivity {
 
     @Bind(R.id.toolbar)
     protected Toolbar mToolbar;
+
+    protected SwipeBackLayout mSwipeBackLayout;
 
     /*
      * Whether this Activity can back by click left-top back-button.
@@ -34,14 +37,21 @@ public abstract class ToolbarActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) throws RuntimeException {
         super.onCreate(savedInstanceState);
+        //Toolbar
         if (mToolbar == null) {
             throw new RuntimeException("Toolbar must be set at id(toolbar)");
         }
         setSupportActionBar(mToolbar);
         mToolbar.setOnClickListener(view -> onToolbarClick());
 
+        //SwipeBack
+        setSwipeBackEnable(canBack());
         if (canBack()) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            // Set SwipeBack Action.
+            mSwipeBackLayout = getSwipeBackLayout();
+            mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
+
         }
     }
 

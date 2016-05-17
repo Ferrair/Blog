@@ -2,16 +2,16 @@ package wqh.blog.ui.base;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 
 import butterknife.ButterKnife;
+import wqh.blog.ui.customview.swipeback.SwipeBackActivity;
 
 /**
  * Created by WQH on 2016/5/9  23:13.
  *
  * BaseActivity for all activities,provides an abstract method that return a layout ID in /res/layout dir
  */
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends SwipeBackActivity {
 
     protected abstract int layoutId();
 

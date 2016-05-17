@@ -124,7 +124,7 @@ public class BlogItemActivity extends StateActivity {
      * Show view by given data.
      */
     private void showContent(Blog itemData) {
-        Log.i(TAG, itemData.toString());
+        mStateLayout.showContentView();
         mTitleTextView.setText(itemData.title);
         mTagTextView.setText(itemData.type);
         mTimesTextVIew.setText(String.valueOf(itemData.times));
@@ -141,9 +141,8 @@ public class BlogItemActivity extends StateActivity {
 
         @Override
         public void onSuccess(List<Blog> data) {
-            mLocalPresenter.db().update(data);
-            mStateLayout.showContentView();
             itemData = data.get(0);
+            mLocalPresenter.db().save(itemData);
             showContent(itemData);
         }
 

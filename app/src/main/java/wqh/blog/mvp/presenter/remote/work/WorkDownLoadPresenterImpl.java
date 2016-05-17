@@ -26,7 +26,8 @@ public class WorkDownLoadPresenterImpl extends LoadPresenter<Work> implements Do
     }
 
     @Override
-    public void loadAll(LoadView<Work> mLoadView) {
+    public void loadAll(int pageNum, LoadView<Work> mLoadView) {
+        //Do nothing with param pageNum here.
         Call<ResponseBody> call = mWorkAPI.queryAll();
         doQuery(call, mLoadView);
     }

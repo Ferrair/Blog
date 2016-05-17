@@ -7,12 +7,15 @@ import java.util.List;
 
 import butterknife.OnClick;
 import wqh.blog.R;
+import wqh.blog.mvp.model.bean.Blog;
 import wqh.blog.mvp.model.bean.Comment;
 import wqh.blog.mvp.model.service.RemoteManager;
+import wqh.blog.mvp.model.service.UserManager;
+import wqh.blog.mvp.presenter.remote.comment.CommentDownLoadPresenter;
 import wqh.blog.mvp.presenter.remote.comment.CommentDownLoadPresenterImpl;
-import wqh.blog.mvp.presenter.remote.base.DownLoadPresenter;
 import wqh.blog.ui.adapter.CommentsAdapter;
 import wqh.blog.ui.base.ScrollActivity;
+import wqh.blog.ui.customview.Dialog;
 import wqh.blog.util.IntentUtil;
 import wqh.blog.mvp.view.LoadView;
 
@@ -24,7 +27,7 @@ public class AllCommentsActivity extends ScrollActivity {
      * A Load-Data Presenter,which means load data from server is it's function.
      * On the other hand,load-data can't be found in this class
      */
-    DownLoadPresenter<Comment> mDownLoadCommentPresenter = new CommentDownLoadPresenterImpl();
+    CommentDownLoadPresenter mDownLoadCommentPresenter = new CommentDownLoadPresenterImpl();
     /**
      * A Load-Data View,which means show loaded-data is it's function.
      * What's more,the loaded-data is from DownLoadPresenter.
@@ -42,12 +45,17 @@ public class AllCommentsActivity extends ScrollActivity {
         super.onCreate(savedInstanceState);
         belongTo = getIntent().getIntExtra("id", 0);
         mAdapter = new CommentsAdapter(this);
-        mDownLoadCommentPresenter.loadById(belongTo, mDefaultLoadDataView);
+        mDownLoadCommentPresenter.loadById(belongTo, 1, mDefaultLoadDataView);
     }
 
     @Override
-    protected void onRefreshDelayed() {
-        mDownLoadCommentPresenter.loadAll(mDefaultLoadDataView);
+    public void onRefreshDelayed() {
+        mDownLoadCommentPresenter.loadById(belongTo, 1, mDefaultLoadDataView);
+    }
+
+    @Override
+    public void onLoadMoreDelayed(int toToLoadPage) {
+        mDownLoadCommentPresenter.loadById(belongTo, toToLoadPage, mDefaultLoadDataView);
     }
 
     /*
@@ -56,7 +64,22 @@ public class AllCommentsActivity extends ScrollActivity {
      */
     @OnClick(R.id.post_comment)
     public void postComment() {
-        IntentUtil.goToOtherActivity(this, PostCommentActivity.class, "id", belongTo);
+        if (UserManager.instance().isLogged()) {
+            IntentUtil.goToOtherActivity(this, PostCommentActivity.class, "id", belongTo);
+        } else {
+            Dialog.create(this, "只有登陆才可以发表评论咯，是否登陆???").setPositiveListener(
+                    "前去登陆",
+                    v -> IntentUtil.goToOtherActivity(AllCommentsActivity.this, LoginActivity.class)).show();
+        }
+    }
+
+    /**
+     * Show view by given data.
+     */
+    private void showContent(List<Comment> data) {
+        mStateLayout.showContentView();
+        mAdapter.addAll(data);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     /**
@@ -68,9 +91,7 @@ public class AllCommentsActivity extends ScrollActivity {
 
         @Override
         public void onSuccess(List<Comment> data) {
-            mStateLayout.showContentView();
-            mAdapter.addAll(data);
-            mRecyclerView.setAdapter(mAdapter);
+            showContent(data);
         }
 
         @Override

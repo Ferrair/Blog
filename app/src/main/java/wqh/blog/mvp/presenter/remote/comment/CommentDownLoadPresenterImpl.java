@@ -16,7 +16,7 @@ import wqh.blog.mvp.view.LoadView;
 /**
  * Created by WQH on 2016/5/1  20:49.
  */
-public class CommentDownLoadPresenterImpl extends LoadPresenter<Comment> implements DownLoadPresenter<Comment> {
+public class CommentDownLoadPresenterImpl extends LoadPresenter<Comment> implements CommentDownLoadPresenter {
     CommentAPI mCommentAPI;
 
     @Override
@@ -24,19 +24,8 @@ public class CommentDownLoadPresenterImpl extends LoadPresenter<Comment> impleme
         mCommentAPI = RemoteManager.create(CommentAPI.class);
     }
 
-    @Override
-    public void loadAll(LoadView<Comment> mLoadView) {
-        //do nothing here
-    }
-
-    @Override
-    public void loadByCondition(String condition, Type type, LoadView<Comment> mLoadView) {
-        //do nothing here
-    }
-
-    @Override
-    public void loadById(int blogId, LoadView<Comment> mLoadView) {
-        Call<ResponseBody> call = mCommentAPI.queryComment(blogId);
+    public void loadById(int blogId, int pageNum, LoadView<Comment> mLoadView) {
+        Call<ResponseBody> call = mCommentAPI.queryComment(blogId, pageNum);
         doQuery(call, mLoadView);
     }
 

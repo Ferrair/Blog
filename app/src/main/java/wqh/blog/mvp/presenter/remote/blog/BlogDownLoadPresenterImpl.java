@@ -25,8 +25,8 @@ public class BlogDownLoadPresenterImpl extends LoadPresenter<Blog> implements Do
     }
 
     @Override
-    public void loadAll(LoadView<Blog> mLoadView) {
-        Call<ResponseBody> call = mBlogAPI.queryAll();
+    public void loadAll(int pageNum, LoadView<Blog> mLoadView) {
+        Call<ResponseBody> call = mBlogAPI.queryAll(pageNum);
         doQuery(call, mLoadView);
     }
 

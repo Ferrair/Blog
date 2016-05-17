@@ -17,6 +17,7 @@ import wqh.blog.mvp.presenter.remote.user.UserPresenter;
 import wqh.blog.mvp.presenter.remote.user.UserPresenterImpl;
 import wqh.blog.mvp.view.LoadView;
 import wqh.blog.ui.base.ToolbarActivity;
+import wqh.blog.util.IntentUtil;
 import wqh.blog.util.ToastUtil;
 
 public class LoginActivity extends ToolbarActivity {
@@ -63,7 +64,7 @@ public class LoginActivity extends ToolbarActivity {
             }
             UserManager.instance().saveUser(data.get(0));
             ToastUtil.showToast("登陆成功");
-            finish();
+            IntentUtil.goToOtherActivity(LoginActivity.this,MainActivity.class);
         }
 
         @Override

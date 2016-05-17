@@ -7,6 +7,7 @@ import android.util.Log;
 import java.util.List;
 
 import wqh.blog.R;
+import wqh.blog.mvp.model.service.RemoteManager;
 import wqh.blog.mvp.presenter.local.LocalPresenter;
 import wqh.blog.mvp.presenter.remote.base.DownLoadPresenter;
 import wqh.blog.ui.activity.BlogItemActivity;
@@ -36,15 +37,6 @@ public class BlogListFragment extends ScrollFragment {
      * What's more,the loaded-data is from DownLoadPresenter.
      */
     DefaultLoadView mDefaultLoadDataView = new DefaultLoadView();
-    /**
-     * A Local-Data Presenter,that store data into local-database.
-     */
-    LocalPresenter mLocalPresenter = new LocalPresenter();
-
-    @Override
-    protected void onRefreshDelayed() {
-        mDownLoadPresenter.loadAll(mDefaultLoadDataView);
-    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -53,11 +45,18 @@ public class BlogListFragment extends ScrollFragment {
         mAdapter = new BlogAdapter(getActivity());
         mAdapter.setOnItemClickListener(R.id.item_blog, (view, data) -> IntentUtil.goToOtherActivity(getActivity(), BlogItemActivity.class, "id", data.id));
 
-        //Load data
-        if (mLocalPresenter.db().queryCount(Blog.class) != 0)
-            showContent(mLocalPresenter.db().query(Blog.class));
-        mDownLoadPresenter.loadAll(mDefaultLoadDataView);
+        mDownLoadPresenter.loadAll(1, mDefaultLoadDataView);
 
+    }
+
+    @Override
+    public void onRefreshDelayed() {
+        mDownLoadPresenter.loadAll(1, mDefaultLoadDataView);
+    }
+
+    @Override
+    public void onLoadMoreDelayed(int toToLoadPage) {
+        mDownLoadPresenter.loadAll(toToLoadPage, mDefaultLoadDataView);
     }
 
     /**
@@ -89,16 +88,14 @@ public class BlogListFragment extends ScrollFragment {
         @Override
         public void onSuccess(List<Blog> data) {
             showContent(data);
-            mLocalPresenter.db().save(data);
         }
 
         @Override
         public void onFail(int errorCode, String errorMsg) {
             //If no network will show local-data instead of error-view.
-            if (StatusUtil.isNetworkAvailable(getActivity())) {
-                mStateLayout.showErrorView();
-            } else {
+            if (!StatusUtil.isNetworkAvailable(getActivity())) {
                 ToastUtil.showToast("没有网络咯");
+                mStateLayout.showErrorView();
             }
             Log.e(TAG, "ErrorCode-> " + errorCode + ", ErrorMsg-> " + errorMsg);
         }

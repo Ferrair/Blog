@@ -10,6 +10,7 @@ import java.util.List;
 
 import wqh.blog.ui.adapter.event.OnItemClickListener;
 import wqh.blog.ui.adapter.event.OnItemLongClickListener;
+import wqh.blog.util.CollectionUtil;
 
 /**
  * Created by WQH on 2016/4/11  21:07.
@@ -102,7 +103,9 @@ public abstract class BaseAdapter<Holder extends BaseAdapter.BaseHolder, DataTyp
         if (this.mListData == null) {
             this.mListData = newData;
         } else {
-            refresh(newData);
+            int prePosition = mListData.size();
+            CollectionUtil.addAllDistinct(mListData, newData);
+            notifyItemRangeChanged(prePosition, mListData.size() - 1);
         }
     }
 

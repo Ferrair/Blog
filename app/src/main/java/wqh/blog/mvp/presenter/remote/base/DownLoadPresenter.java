@@ -6,11 +6,12 @@ import wqh.blog.mvp.view.LoadView;
  * Created by WQH on 2016/4/12  23:44.
  * <p>
  * Load Presenter for download data from server.
+ * Other class CAN implements it or implements their own Presenter.
  */
 public interface DownLoadPresenter<DataType> {
 
-    //Load all data
-    void loadAll(LoadView<DataType> mLoadView);
+    //Load all data paginate.
+    void loadAll(int pageNum, LoadView<DataType> mLoadView);
 
     //Load data by id
     void loadById(int id, LoadView<DataType> mLoadView);

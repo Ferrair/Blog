@@ -17,4 +17,9 @@ public class Comment {
     public String toString() {
         return "Comment@" + id + " :BelongTo-> " + belongTo + " :Content-> " + content;
     }
+
+    @Override
+    public boolean equals(Object other) {
+        return other instanceof Comment && ((Comment) other).id.equals(id);
+    }
 }
