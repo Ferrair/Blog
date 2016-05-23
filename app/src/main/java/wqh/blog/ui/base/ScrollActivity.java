@@ -9,8 +9,6 @@ import android.support.v7.widget.RecyclerView;
 
 import butterknife.Bind;
 import wqh.blog.R;
-import wqh.blog.ui.adapter.event.LoadMoreLayoutListener;
-import wqh.blog.ui.adapter.event.OnBottomListener;
 
 /**
  * Created by WQH on 2016/5/3  21:38.
@@ -25,15 +23,8 @@ public abstract class ScrollActivity extends StateActivity implements CanScroll 
     @Bind(R.id.recyclerView)
     protected RecyclerView mRecyclerView;
 
-    protected LoadMoreLayoutListener mLoadMoreListener;
-
     @Override
     public boolean canRefresh() {
-        return true;
-    }
-
-    @Override
-    public boolean canLoadMore() {
         return true;
     }
 
@@ -43,11 +34,6 @@ public abstract class ScrollActivity extends StateActivity implements CanScroll 
         mRefreshLayout.setEnabled(canRefresh());
         mRefreshLayout.setOnRefreshListener(this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        if (canLoadMore()) {
-            mLoadMoreListener = new LoadMoreLayoutListener((LinearLayoutManager) mRecyclerView.getLayoutManager(), this);
-            mRecyclerView.addOnScrollListener(mLoadMoreListener);
-        }
     }
 
     @Override
@@ -56,16 +42,6 @@ public abstract class ScrollActivity extends StateActivity implements CanScroll 
             new Handler().postDelayed(() -> {
                 onRefreshDelayed();
                 mRefreshLayout.setRefreshing(false);
-            }, 2000);
-        }
-    }
-
-    @Override
-    public void onLoadMore(int toToLoadPage) {
-        if (canLoadMore()) {
-            new Handler().postDelayed(() -> {
-                onLoadMoreDelayed(toToLoadPage);
-                mLoadMoreListener.setLoading(false);
             }, 2000);
         }
     }

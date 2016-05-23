@@ -8,12 +8,13 @@ import java.util.List;
 
 import wqh.blog.R;
 import wqh.blog.mvp.model.service.RemoteManager;
-import wqh.blog.mvp.presenter.local.LocalPresenter;
 import wqh.blog.mvp.presenter.remote.base.DownLoadPresenter;
 import wqh.blog.ui.activity.BlogItemActivity;
 import wqh.blog.ui.adapter.BlogAdapter;
 import wqh.blog.mvp.model.bean.Blog;
 import wqh.blog.mvp.presenter.remote.blog.BlogDownLoadPresenterImpl;
+import wqh.blog.ui.adapter.animation.AnimationManager;
+import wqh.blog.ui.adapter.event.LayoutState;
 import wqh.blog.ui.base.ScrollFragment;
 import wqh.blog.util.IntentUtil;
 import wqh.blog.util.StatusUtil;
@@ -44,6 +45,8 @@ public class BlogListFragment extends ScrollFragment {
         //init Adapter,and set listener
         mAdapter = new BlogAdapter(getActivity());
         mAdapter.setOnItemClickListener(R.id.item_blog, (view, data) -> IntentUtil.goToOtherActivity(getActivity(), BlogItemActivity.class, "id", data.id));
+        mAdapter.openAnimation(AnimationManager.EnterInRight);
+        mAdapter.setOnBottomListener(this);
 
         mDownLoadPresenter.loadAll(1, mDefaultLoadDataView);
 
@@ -55,7 +58,8 @@ public class BlogListFragment extends ScrollFragment {
     }
 
     @Override
-    public void onLoadMoreDelayed(int toToLoadPage) {
+    public void onLoadMore(int toToLoadPage) {
+        Log.i(TAG, String.valueOf(toToLoadPage));
         mDownLoadPresenter.loadAll(toToLoadPage, mDefaultLoadDataView);
     }
 
@@ -92,6 +96,9 @@ public class BlogListFragment extends ScrollFragment {
 
         @Override
         public void onFail(int errorCode, String errorMsg) {
+            if (errorCode == RemoteManager.NO_MORE) {
+                mAdapter.setLoadState(LayoutState.FINISHED);
+            }
             //If no network will show local-data instead of error-view.
             if (!StatusUtil.isNetworkAvailable(getActivity())) {
                 ToastUtil.showToast("没有网络咯");

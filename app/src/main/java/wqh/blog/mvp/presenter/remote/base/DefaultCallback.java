@@ -36,7 +36,7 @@ public abstract class DefaultCallback<DataType> implements Callback<ResponseBody
             } catch (Exception e) {
                 e.printStackTrace();
                 // Can't Find Object.
-                mLoadView.onFail(RemoteManager.NO_OBJECT, "At " + TAG + "#onResponse-> Can't Find Object.Because JSONNull");
+                mLoadView.onFail(RemoteManager.SYNTAX, "At " + TAG + "#onResponse-> Can't Find Object.Because JSONNull");
             }
         } else {
             mLoadView.onFail(RemoteManager.PARSE, "At " + TAG + "#onResponse-> " + response.errorBody().toString());
@@ -57,5 +57,4 @@ public abstract class DefaultCallback<DataType> implements Callback<ResponseBody
     public void onFailure(Call<ResponseBody> call, Throwable t) {
         mLoadView.onFail(RemoteManager.PARSE, "At " + TAG + "#onFailure-> " + t.toString());
     }
-
 }

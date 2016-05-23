@@ -1,6 +1,7 @@
 package wqh.blog.mvp.model.bean;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -19,5 +20,5 @@ public class Holder {
     @SerializedName(value = "Msg")
     public String Msg;
     @SerializedName(value = "Result")
-    public JsonArray Result;
+    public JsonElement Result;
 }

@@ -37,7 +37,7 @@ public class WorkAdapter extends BaseAdapter<WorkAdapter.WorkHolder, Work> {
     }
 
     @Override
-    public WorkHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public WorkHolder onCreateHolder(ViewGroup parent, int viewType) {
         return new WorkHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_work, parent, false));
     }
 

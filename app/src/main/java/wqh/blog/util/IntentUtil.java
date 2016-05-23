@@ -31,4 +31,10 @@ public class IntentUtil {
         intent.putExtra(key, value);
         mContext.startActivity(intent);
     }
+
+
+    public static void startService(Context mContext, Class<?> cla) {
+        Intent intent = new Intent(mContext, cla);
+        mContext.startService(intent);
+    }
 }

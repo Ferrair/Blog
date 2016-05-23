@@ -7,13 +7,13 @@ import java.util.List;
 
 import butterknife.OnClick;
 import wqh.blog.R;
-import wqh.blog.mvp.model.bean.Blog;
 import wqh.blog.mvp.model.bean.Comment;
 import wqh.blog.mvp.model.service.RemoteManager;
 import wqh.blog.mvp.model.service.UserManager;
 import wqh.blog.mvp.presenter.remote.comment.CommentDownLoadPresenter;
 import wqh.blog.mvp.presenter.remote.comment.CommentDownLoadPresenterImpl;
 import wqh.blog.ui.adapter.CommentsAdapter;
+import wqh.blog.ui.adapter.event.LayoutState;
 import wqh.blog.ui.base.ScrollActivity;
 import wqh.blog.ui.customview.Dialog;
 import wqh.blog.util.IntentUtil;
@@ -45,6 +45,8 @@ public class AllCommentsActivity extends ScrollActivity {
         super.onCreate(savedInstanceState);
         belongTo = getIntent().getIntExtra("id", 0);
         mAdapter = new CommentsAdapter(this);
+        mAdapter.setOnBottomListener(this);
+
         mDownLoadCommentPresenter.loadById(belongTo, 1, mDefaultLoadDataView);
     }
 
@@ -54,7 +56,8 @@ public class AllCommentsActivity extends ScrollActivity {
     }
 
     @Override
-    public void onLoadMoreDelayed(int toToLoadPage) {
+    public void onLoadMore(int toToLoadPage) {
+        Log.i(TAG, String.valueOf(toToLoadPage));
         mDownLoadCommentPresenter.loadById(belongTo, toToLoadPage, mDefaultLoadDataView);
     }
 
@@ -91,6 +94,9 @@ public class AllCommentsActivity extends ScrollActivity {
 
         @Override
         public void onSuccess(List<Comment> data) {
+           /* if (data.size() != 10) {
+                mAdapter.setLoadState(LayoutState.FINISHED);
+            }*/
             showContent(data);
         }
 
@@ -98,8 +104,10 @@ public class AllCommentsActivity extends ScrollActivity {
         public void onFail(int errorCode, String errorMsg) {
             if (errorCode == RemoteManager.PARSE) {
                 mStateLayout.showErrorView();
-            } else if (errorCode == RemoteManager.NO_OBJECT) {
+            } else if (errorCode == RemoteManager.SYNTAX) {
                 mStateLayout.showEmptyView();
+            } else if (errorCode == RemoteManager.NO_MORE) {
+                mAdapter.setLoadState(LayoutState.FINISHED);
             }
 
             Log.e(TAG, "ErrorCode-> " + errorCode + ", ErrorMsg-> " + errorMsg);

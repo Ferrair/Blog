@@ -7,13 +7,18 @@ import android.util.Log;
 import java.util.List;
 
 import wqh.blog.R;
+import wqh.blog.download.DownLoadHelper;
+import wqh.blog.download.WorkDownLoadService;
+import wqh.blog.mvp.model.service.RemoteManager;
 import wqh.blog.mvp.presenter.remote.base.DownLoadPresenter;
 import wqh.blog.mvp.presenter.remote.work.WorkDownLoadPresenterImpl;
 import wqh.blog.ui.adapter.WorkAdapter;
 import wqh.blog.mvp.model.bean.Work;
+import wqh.blog.ui.adapter.event.LayoutState;
 import wqh.blog.ui.base.ScrollFragment;
 import wqh.blog.ui.customview.Dialog;
 import wqh.blog.mvp.view.LoadView;
+import wqh.blog.util.IntentUtil;
 
 /**
  * Created by WQH on 2016/4/11  20:17.
@@ -29,8 +34,11 @@ public class WorkListFragment extends ScrollFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mAdapter = new WorkAdapter(getActivity());
+        mAdapter.setOnBottomListener(this);
+
         // Show Download Dialog here.
         mAdapter.setOnItemLongClickListener(R.id.item_work, (view, data) -> Dialog.create(getActivity(), "是否下载 '" + data.title + "'").setPositiveListener("下载", v -> doDownload(data)).show());
+
         mDownLoadPresenter.loadAll(1, mDefaultLoadDataView);
     }
 
@@ -51,7 +59,7 @@ public class WorkListFragment extends ScrollFragment {
     }
 
     @Override
-    public void onLoadMoreDelayed(int toToLoadPage) {
+    public void onLoadMore(int toToLoadPage) {
         // Do nothing.
     }
 
@@ -59,7 +67,9 @@ public class WorkListFragment extends ScrollFragment {
      * Download the Work by given URL.
      */
     private void doDownload(Work data) {
-        //Todo:Download Work from given URL.
+        DownLoadHelper.instance().offer(data.fileName);
+
+        IntentUtil.startService(getActivity(), WorkDownLoadService.class);
     }
 
     /**
@@ -78,6 +88,10 @@ public class WorkListFragment extends ScrollFragment {
 
         @Override
         public void onFail(int errorCode, String errorMsg) {
+            if (errorCode == RemoteManager.NO_MORE) {
+                mAdapter.setLoadState(LayoutState.FINISHED);
+            }
+
             mStateLayout.showErrorView();
             Log.e(TAG, "ErrorCode-> " + errorCode + ", ErrorMsg-> " + errorMsg);
         }

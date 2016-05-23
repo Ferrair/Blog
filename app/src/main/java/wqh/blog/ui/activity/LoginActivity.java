@@ -9,7 +9,6 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.OnClick;
-import me.drakeet.materialdialog.MaterialDialog;
 import wqh.blog.R;
 import wqh.blog.mvp.model.bean.User;
 import wqh.blog.mvp.model.service.UserManager;
