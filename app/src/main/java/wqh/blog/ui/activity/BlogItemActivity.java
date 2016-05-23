@@ -87,9 +87,9 @@ public class BlogItemActivity extends StateActivity {
         //Get data from Intent
         blogId = getIntent().getIntExtra("id", 0);
         //Load data.
-        //Load data
-        if (mLocalPresenter.db().queryCount(Blog.class) != 0)
-            showContent(mLocalPresenter.db().queryById(blogId, Blog.class));
+        Blog localBlog = mLocalPresenter.db().queryById(blogId, Blog.class);
+        if (localBlog != null)
+            showContent(localBlog);
         mBlogDownLoadPresenter.loadById(blogId, mDefaultBlogLoadDataView);
         //Add view-times.
         mBlogUpLoadPresenter.addTimes(blogId);
