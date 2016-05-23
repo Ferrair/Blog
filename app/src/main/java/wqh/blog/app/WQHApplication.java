@@ -20,7 +20,7 @@ public class WQHApplication extends Application {
     public static LiteOrm mDB;
     private static WQHApplication mApp;
 
-    public static Application getmApp() {
+    public static Application getApp() {
         return mApp;
     }
 

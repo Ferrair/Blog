@@ -17,7 +17,7 @@ public class SharePreferenceUtil {
     }
 
     private SharePreferenceUtil() {
-        sharedPreferences = WQHApplication.getmApp().getSharedPreferences("SharedPreferences", Context.MODE_PRIVATE);
+        sharedPreferences = WQHApplication.getApp().getSharedPreferences("SharedPreferences", Context.MODE_PRIVATE);
     }
 
     /**

@@ -43,7 +43,7 @@ public class BlogAdapter extends BaseAdapter<BlogAdapter.BlogHolder, Blog> {
     }
 
     @Override
-    public BlogAdapter.BlogHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public BlogAdapter.BlogHolder onCreateHolder(ViewGroup parent, int viewType) {
         return new BlogHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_blog, parent, false));
     }
 

@@ -1,13 +1,27 @@
 package wqh.blog.ui.adapter.base;
 
+import android.animation.Animator;
 import android.content.Context;
 import android.support.annotation.IdRes;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.SparseArray;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.LinearInterpolator;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import wqh.blog.R;
+import wqh.blog.ui.adapter.animation.AnimationManager;
+import wqh.blog.ui.adapter.animation.BaseAnimation;
+import wqh.blog.ui.adapter.event.LayoutState;
+import wqh.blog.ui.adapter.event.OnBottomListener;
 import wqh.blog.ui.adapter.event.OnItemClickListener;
 import wqh.blog.ui.adapter.event.OnItemLongClickListener;
 import wqh.blog.util.CollectionUtil;
@@ -22,7 +36,24 @@ public abstract class BaseAdapter<Holder extends BaseAdapter.BaseHolder, DataTyp
     protected Context mContext;
     protected List<DataType> mListData;
 
+    private boolean isOpenAnimation;
+    private int mLastPosition;
 
+    private BaseAnimation mBaseAnimation;
+    private FooterViewHolder mFooterViewHolder;
+    private OnBottomListener mOnBottomListener;
+
+    /**
+     * The current data page in RecyclerView.And will increase when the user scroll and loadMore.
+     */
+    private static int mCurrentPage = 1;
+    /**
+     * The current state of FooterView.
+     */
+    private int mState = LayoutState.LOAD;
+
+    public static final int ITEM_TYPE_FOOTER = 0;
+    public static final int ITEM_TYPE_NORMAL = 1;
     /**
      * a SparseArray that stores a pair.
      * key is resId of a view.
@@ -42,21 +73,68 @@ public abstract class BaseAdapter<Holder extends BaseAdapter.BaseHolder, DataTyp
      */
     protected abstract void onBindItemDataToView(Holder holder, DataType itemData);
 
+    /**
+     * Create normal data ViewHolder in subclass.
+     */
+    protected abstract Holder onCreateHolder(ViewGroup parent, int viewType);
 
     public BaseAdapter(Context mContext, List<DataType> mListData) {
         this.mContext = mContext;
         this.mListData = mListData;
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (ITEM_TYPE_FOOTER == viewType) {
+            if (mFooterViewHolder == null) {
+                mFooterViewHolder = new FooterViewHolder(LayoutInflater.from(mContext).inflate(R.layout.item_footer_load_more, parent, false));
+            }
+            return (Holder) mFooterViewHolder;
+        }
+        return onCreateHolder(parent, viewType);
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (position == mListData.size()) {
+            return ITEM_TYPE_FOOTER;
+        }
+        return ITEM_TYPE_NORMAL;
+    }
+
     @Override
     public final void onBindViewHolder(Holder holder, int position) {
-        final DataType itemData = mListData.get(position);
-        onBindItemDataToView(holder, itemData);
-        bindListener(holder, itemData);
+        if (position == mListData.size()) {
+            mFooterViewHolder.bind();
+        } else {
+            final DataType itemData = mListData.get(position);
+            onBindItemDataToView(holder, itemData);
+            bindListener(holder, itemData);
+            bindAnimation(holder);
+        }
     }
 
     /**
-     * Add OnItemClickListener and OnItemLongClickListener on the holder if exists
+     * Bind animation to item view when the isOpenAnimation is ON.
+     *
+     * @param holder a RecyclerView.ViewHolder that hold the view.That's means the
+     *               holder can add animation.
+     */
+    private void bindAnimation(Holder holder) {
+        if (isOpenAnimation) {
+            if (holder.getLayoutPosition() > mLastPosition) {
+                for (Animator anim : mBaseAnimation.getAnimators(holder.itemView)) {
+                    anim.setDuration(500).start();
+                    anim.setInterpolator(new LinearInterpolator());
+                }
+                mLastPosition = holder.getLayoutPosition();
+            }
+        }
+    }
+
+    /**
+     * Bind OnItemClickListener and OnItemLongClickListener on the holder if exists
      *
      * @param holder   a RecyclerView.ViewHolder that hold the view.That's means the
      *                 holder can add Listener
@@ -78,11 +156,22 @@ public abstract class BaseAdapter<Holder extends BaseAdapter.BaseHolder, DataTyp
         }
     }
 
+    /**
+     * When the adapter add/delete a item,animate to user by the param <param>type<param> in <code>@AnimationManager.AnimationType</code>
+     */
+    public void openAnimation(@AnimationManager.AnimationType int type) {
+        this.isOpenAnimation = true;
+        mBaseAnimation = AnimationManager.get(type);
+    }
+
+    /**
+     * Because of the Footer-View,So the count MUST contains the Footer-View.
+     */
     @Override
     public int getItemCount() {
         if (mListData == null)
             return 0;
-        return mListData.size();
+        return mListData.size() + 1;
     }
 
     @Override
@@ -163,6 +252,16 @@ public abstract class BaseAdapter<Holder extends BaseAdapter.BaseHolder, DataTyp
         mLongItemClickListener.append(resId, mOnItemLongClickListener);
     }
 
+    public void setOnBottomListener(OnBottomListener mOnBottomListener) {
+        this.mOnBottomListener = mOnBottomListener;
+    }
+
+    public void setLoadState(@LayoutState.State int state) {
+        this.mState = state;
+        if (mFooterViewHolder != null)
+            mFooterViewHolder.bind();
+    }
+
     public abstract static class BaseHolder extends RecyclerView.ViewHolder {
 
         public BaseHolder(View itemView) {
@@ -175,6 +274,70 @@ public abstract class BaseAdapter<Holder extends BaseAdapter.BaseHolder, DataTyp
         @SuppressWarnings("unchecked")
         public <T extends View> T getView(@IdRes int resId) {
             return (T) itemView.findViewById(resId);
+        }
+    }
+
+    /**
+     * A Footer-View holds in recyclerView's footer.
+     * This view can show 3 states:
+     * -- LayoutState.LOAD : the data is loading from server.
+     * -- LayoutState.FINISHED : the data have loaded from server.
+     * --  LayoutState.GONE : don't show this view.
+     */
+    public class FooterViewHolder extends BaseHolder {
+        @Bind(R.id.footerText)
+        TextView footerText;
+        @Bind(R.id.footerProgressBar)
+        ProgressBar footerProgressBar;
+
+        public FooterViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+        }
+
+        public void bind() {
+            switch (mState) {
+                case LayoutState.LOAD:
+                    loadMore();
+                    if (mOnBottomListener != null) {
+                        mOnBottomListener.onLoadMore(++mCurrentPage);
+                    }
+                    break;
+                case LayoutState.FINISHED:
+                    noMore();
+                    break;
+                case LayoutState.GONE:
+                    hide();
+                    break;
+            }
+        }
+
+        private void loadMore() {
+            show();
+            if (footerProgressBar.getVisibility() != View.VISIBLE) {
+                footerProgressBar.setVisibility(View.VISIBLE);
+            }
+            footerText.setText("Load");
+        }
+
+        private void noMore() {
+            show();
+            if (footerProgressBar.getVisibility() != View.GONE) {
+                footerProgressBar.setVisibility(View.GONE);
+            }
+            footerText.setText("End");
+        }
+
+        private void hide() {
+            if (itemView.getVisibility() != View.GONE) {
+                itemView.setVisibility(View.GONE);
+            }
+        }
+
+        private void show() {
+            if (itemView.getVisibility() != View.VISIBLE) {
+                itemView.setVisibility(View.VISIBLE);
+            }
         }
     }
 }

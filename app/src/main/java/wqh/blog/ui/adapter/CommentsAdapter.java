@@ -35,7 +35,7 @@ public class CommentsAdapter extends BaseAdapter<CommentsAdapter.CommentsHolder,
     }
 
     @Override
-    public CommentsHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public CommentsHolder onCreateHolder(ViewGroup parent, int viewType) {
         return new CommentsHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_comments, parent, false));
     }
 

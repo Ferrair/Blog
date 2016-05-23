@@ -9,4 +9,9 @@ public class Work {
     public String description;
     public String fileName;
     public String logoUrl;
+
+    @Override
+    public boolean equals(Object other) {
+        return other instanceof Work && ((Work) other).id.equals(id);
+    }
 }

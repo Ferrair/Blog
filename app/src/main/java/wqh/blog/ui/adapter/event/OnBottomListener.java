@@ -5,5 +5,8 @@ package wqh.blog.ui.adapter.event;
  * Call when RecyclerView scroll to bottom.
  */
 public interface OnBottomListener {
+    /**
+     * @param toToLoadPage the page to be load.
+     */
     void onLoadMore(int toToLoadPage);
 }
