@@ -17,5 +17,5 @@ public interface WorkAPI {
     Call<ResponseBody> queryByTitle(@Query("title") String title);
 
     @GET("work/")
-    Call<ResponseBody> queryAll();
+    Call<ResponseBody> queryAll(@Query("pageNum") int pageNum);
 }

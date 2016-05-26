@@ -2,6 +2,7 @@ package wqh.blog.app;
 
 import android.app.Application;
 
+import com.github.moduth.blockcanary.BlockCanary;
 import com.litesuits.orm.LiteOrm;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
@@ -9,6 +10,7 @@ import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.squareup.leakcanary.LeakCanary;
 
 import wqh.blog.util.ToastUtil;
 
@@ -31,6 +33,8 @@ public class WQHApplication extends Application {
         initImageLoader();
         initToast();
         initDB();
+        LeakCanary.install(this);
+        BlockCanary.install(this, new AppBlockCanaryContext()).start();
     }
 
     private void initDB() {

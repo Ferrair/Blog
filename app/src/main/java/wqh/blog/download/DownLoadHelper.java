@@ -41,28 +41,29 @@ public class DownLoadHelper {
         return ClassHolder.INSTANCE;
     }
 
-    public void offer(String fileName) {
-        DownLoadBean aDownLoad = new DownLoadBean(fileName);
-        if (mDownLoadQueue.contains(aDownLoad)) {
+    public void offer(String fileName, String title) {
+        DownLoadBean aDownLoad = new DownLoadBean(fileName, title);
+      /*  if (mDownLoadQueue.contains(aDownLoad)) {
             // Callback
             ToastUtil.showToast("该文件已在下载目录里面了");
-        } else {
+        } else {*/
             mDownLoadQueue.offer(aDownLoad);
-            // Callback
-            ToastUtil.showToast("已添加到下载目录");
-        }
+        //}
     }
 
-    public DownLoadBean poll() {
-        return mDownLoadQueue.poll();
+    /**
+     * Peek the element from the head of the queue.
+     */
+    public DownLoadBean peek() {
+        return mDownLoadQueue.peek();
     }
 
     public ExecutorService servicePool() {
         return mService;
     }
 
-    public void dispatchFailEvent(String fileName, String errorMsg) {
-        mDownLoadEventList.get(fileName).onFail(errorMsg);
+    public void dispatchFailEvent(String fileName) {
+        mDownLoadEventList.get(fileName).onFail();
     }
 
     public void dispatchStartEvent(String fileName, String targetTitle) {
@@ -75,22 +76,31 @@ public class DownLoadHelper {
     }
 
 
-    public void dispatchPregressEvent(String fileName, int percent) {
+    public void dispatchProgressEvent(String fileName, int percent) {
         mDownLoadEventList.get(fileName).onProgress(percent);
     }
 
+    /**
+     * Add a LoadEvent listener in download progress.
+     * by add this,some dispatch* method that can work.
+     *
+     * @param fileName       the key
+     * @param aDownLoadEvent the listener
+     */
     public void addDownLoadEvent(String fileName, DownLoadEvent aDownLoadEvent) {
         mDownLoadEventList.put(fileName, aDownLoadEvent);
     }
 
     public static class DownLoadBean {
-        String fileName;
+        String fileName; // The apk fileName
+        String title;    // the title that shown to user.
         @DownLoadStatus
         int status;
 
-        public DownLoadBean(String fileName) {
+        public DownLoadBean(String fileName, String title) {
             this.fileName = fileName;
             this.status = BEFORE;
+            this.title = title;
         }
 
         @Override
@@ -104,26 +114,30 @@ public class DownLoadHelper {
 
         void onSuccess(String filePath);
 
-        void onFail(String errorMsg);
+        void onFail();
 
         void onProgress(int percent);
     }
 
-    public class DownLoadEventAdapter implements DownLoadEvent {
+    /**
+     * A Simple implements of DownLoadEvent.
+     * Provided some Toast.
+     */
+    public static class DownLoadEventAdapter implements DownLoadEvent {
 
         @Override
         public void onStart(String targetTitle) {
-
+            ToastUtil.showToast(targetTitle + " 加入下载队列");
         }
 
         @Override
         public void onSuccess(String filePath) {
-
+            ToastUtil.showToast("已保存到->" + filePath);
         }
 
         @Override
-        public void onFail(String errorMsg) {
-
+        public void onFail() {
+            ToastUtil.showToast("下载失败");
         }
 
         @Override

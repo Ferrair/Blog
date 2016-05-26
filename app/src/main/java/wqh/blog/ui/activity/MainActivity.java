@@ -1,10 +1,14 @@
 package wqh.blog.ui.activity;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,9 +27,10 @@ import wqh.blog.ui.adapter.FragmentAdapter;
 import wqh.blog.ui.base.ScrollFragment;
 import wqh.blog.ui.base.ToolbarActivity;
 import wqh.blog.ui.fragment.BlogListFragment;
-import wqh.blog.ui.fragment.WorkListFragment;
 import wqh.blog.ui.customview.DrawerDelegate;
+import wqh.blog.ui.fragment.WorkListFragment;
 import wqh.blog.util.IntentUtil;
+import wqh.blog.util.ToastUtil;
 
 /**
  * Created by WQH on 2016/4/11  17:11.
@@ -74,6 +79,10 @@ public class MainActivity extends ToolbarActivity implements DrawerDelegate.Draw
 
     @Override
     public boolean onDrawerMenuSelected(View view, int position, IDrawerItem drawerItem) {
+        switch (position) {
+            case 1:
+                break;
+        }
         return false;
     }
 
@@ -81,9 +90,7 @@ public class MainActivity extends ToolbarActivity implements DrawerDelegate.Draw
     @Override
     public List<IDrawerItem> onDrawerMenuCreate() {
         List<IDrawerItem> list = new ArrayList<>();
-        list.add(new PrimaryDrawerItem().withName("Windows").withIcon(FontAwesome.Icon.faw_windows));
-        list.add(new PrimaryDrawerItem().withName("Linux").withIcon(FontAwesome.Icon.faw_linux));
-        list.add(new PrimaryDrawerItem().withName("Apple").withIcon(FontAwesome.Icon.faw_apple));
+        list.add(new PrimaryDrawerItem().withName("下载队列").withIcon(FontAwesome.Icon.faw_download));
         return list;
     }
 

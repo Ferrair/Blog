@@ -100,6 +100,7 @@ public class AllCommentsActivity extends ScrollActivity {
             showContent(data);
         }
 
+        // Todo : handle the errorCode. Why can find data return 107???
         @Override
         public void onFail(int errorCode, String errorMsg) {
             if (errorCode == RemoteManager.PARSE) {

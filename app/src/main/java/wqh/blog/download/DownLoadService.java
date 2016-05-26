@@ -13,8 +13,9 @@ import okhttp3.OkHttpClient;
  * Created by WQH on 2016/5/22  19:44.
  */
 public abstract class DownLoadService extends Service {
-    OkHttpClient okHttpClient;
-    Handler handler;
+    protected OkHttpClient mOkHttpClient;
+    protected Handler mHandler;
+
 
     @Nullable
     @Override
@@ -38,11 +39,11 @@ public abstract class DownLoadService extends Service {
     }
 
     private void init() {
-        if (okHttpClient == null) {
-            okHttpClient = new OkHttpClient.Builder().build();
+        if (mOkHttpClient == null) {
+            mOkHttpClient = new OkHttpClient.Builder().build();
         }
-        if (handler == null) {
-            handler = new Handler(Looper.getMainLooper());
+        if (mHandler == null) {
+            mHandler = new Handler(Looper.getMainLooper());
         }
     }
 }

@@ -1,12 +1,12 @@
 package wqh.blog.download;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 import okhttp3.Request;
 import okhttp3.Response;
@@ -17,16 +17,14 @@ import wqh.blog.util.FileUtil;
  * Created by WQH on 2016/5/22  20:21.
  */
 public class WorkDownLoadService extends DownLoadService {
-    private static final String TAG = "WorkDownLoadService";
 
     @Override
     protected void startDownLoad() {
-        DownLoadHelper.DownLoadBean toDownLoad = DownLoadHelper.instance().poll();
+        DownLoadHelper.DownLoadBean toDownLoad = DownLoadHelper.instance().peek();
         if (toDownLoad != null && toDownLoad.status != DownLoadHelper.DOWNLOAD) {
             DownLoadHelper.instance().servicePool().execute(new DownloadThread(toDownLoad));
         }
     }
-
 
     private class DownloadThread extends Thread {
         DownLoadHelper.DownLoadBean toDownLoad;
@@ -38,17 +36,14 @@ public class WorkDownLoadService extends DownLoadService {
         public void run() {
             final File file = FileUtil.makeFile(Config.FILE_DIR, toDownLoad.fileName);
             if (file == null) {
-                Log.i(TAG, "File Is Null");
                 return;
             }
-            Log.i(TAG, "FilePath-> " + file.getAbsolutePath());
-
             final Request request = new Request.Builder().url("http://wangqihang.cn:8080/Blog/work/download?fileName=" + toDownLoad.fileName).build();
-            FileOutputStream fos = null;
+            OutputStream fos = null;
             InputStream is = null;
-
+            mHandler.post(() -> DownLoadHelper.instance().dispatchStartEvent(toDownLoad.fileName, toDownLoad.title));
             try {
-                Response response = okHttpClient.newCall(request).execute();
+                Response response = mOkHttpClient.newCall(request).execute();
                 if (response.isSuccessful()) {
                     long downloadLen = 0;
                     int readLen;
@@ -61,14 +56,16 @@ public class WorkDownLoadService extends DownLoadService {
                         downloadLen += readLen;
                         fos.write(buffer, 0, readLen);
                         final int percent = (int) (downloadLen * 1.0f / totalLen * 100);
-                        Log.i(TAG, "Percent-> " + String.valueOf(percent));
+                        mHandler.post(() -> DownLoadHelper.instance().dispatchProgressEvent(toDownLoad.fileName, percent));
 
                     }
                     fos.flush();
+                    mHandler.post(() -> DownLoadHelper.instance().dispatchSuccessEvent(toDownLoad.fileName, file.getAbsolutePath()));
 
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+                mHandler.post(() -> DownLoadHelper.instance().dispatchFailEvent(toDownLoad.fileName));
             } catch (Throwable ignored) {
             } finally {
                 try {
@@ -78,6 +75,7 @@ public class WorkDownLoadService extends DownLoadService {
                         is.close();
                 } catch (IOException e) {
                     e.printStackTrace();
+                    mHandler.post(() -> DownLoadHelper.instance().dispatchFailEvent(toDownLoad.fileName));
                 }
             }
         }

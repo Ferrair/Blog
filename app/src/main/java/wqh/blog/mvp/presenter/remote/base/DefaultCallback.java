@@ -25,7 +25,12 @@ public abstract class DefaultCallback<DataType> implements Callback<ResponseBody
     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
         if (response.isSuccessful()) {
             try {
-                //Attention: response.body() will return null in second calls.
+                /**
+                 * ResponseBody:
+                 * A one-shot stream from the origin server to the client application with the raw bytes of the response body.
+                 * Each response body is supported by an active connection to the WebServer.
+                 * This imposes both obligations and limits on the client application.
+                 */
                 String jsonStr = response.body().string();
                 Holder holder = Json.fromJson(jsonStr, Holder.class);
                 if (holder.Code == RemoteManager.OK) {

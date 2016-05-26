@@ -1,7 +1,15 @@
 package wqh.blog.ui.fragment;
 
+import android.Manifest;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
 import java.util.List;
@@ -19,6 +27,8 @@ import wqh.blog.ui.base.ScrollFragment;
 import wqh.blog.ui.customview.Dialog;
 import wqh.blog.mvp.view.LoadView;
 import wqh.blog.util.IntentUtil;
+import wqh.blog.util.StatusUtil;
+import wqh.blog.util.ToastUtil;
 
 /**
  * Created by WQH on 2016/4/11  20:17.
@@ -60,15 +70,29 @@ public class WorkListFragment extends ScrollFragment {
 
     @Override
     public void onLoadMore(int toToLoadPage) {
-        // Do nothing.
+        mDownLoadPresenter.loadAll(toToLoadPage, mDefaultLoadDataView);
+    }
+
+    /*
+    * Request Permission for WRITE_EXTERNAL_STORAGE.
+    */
+    private void requestPermission() {
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                ToastUtil.showToast("Give me Permission for SDCard");
+            } else {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 10);
+            }
+        }
     }
 
     /*
      * Download the Work by given URL.
      */
     private void doDownload(Work data) {
-        DownLoadHelper.instance().offer(data.fileName);
-
+        requestPermission();
+        DownLoadHelper.instance().addDownLoadEvent(data.fileName, new WorkDownLoadEvent());
+        DownLoadHelper.instance().offer(data.fileName, data.title);
         IntentUtil.startService(getActivity(), WorkDownLoadService.class);
     }
 
@@ -91,9 +115,46 @@ public class WorkListFragment extends ScrollFragment {
             if (errorCode == RemoteManager.NO_MORE) {
                 mAdapter.setLoadState(LayoutState.FINISHED);
             }
-
-            mStateLayout.showErrorView();
+            //If no network will show local-data instead of error-view.
+            if (!StatusUtil.isNetworkAvailable(getActivity())) {
+                ToastUtil.showToast("没有网络咯");
+                mStateLayout.showErrorView();
+            }
             Log.e(TAG, "ErrorCode-> " + errorCode + ", ErrorMsg-> " + errorMsg);
+        }
+    }
+
+    private class WorkDownLoadEvent extends DownLoadHelper.DownLoadEventAdapter {
+        NotificationManager mNotifyManager;
+        NotificationCompat.Builder mBuilder;
+
+        @Override
+        public void onStart(String targetTitle) {
+            super.onStart(targetTitle);
+            mNotifyManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+            mBuilder = new NotificationCompat.Builder(getActivity());
+            mBuilder.setContentTitle("Picture Download").setContentText("Download in progress").setSmallIcon(R.mipmap.ic_launcher);
+        }
+
+        // Todo: No update.
+        @Override
+        public void onProgress(int percent) {
+            super.onProgress(percent);
+            Log.i(TAG, String.valueOf(percent));
+            mBuilder.setProgress(100, percent, false);
+            mNotifyManager.notify(0, mBuilder.build());
+        }
+
+        @Override
+        public void onFail() {
+            super.onFail();
+        }
+
+        @Override
+        public void onSuccess(String filePath) {
+            super.onSuccess(filePath);
+            mBuilder.setContentText("Download complete").setProgress(0, 0, false);
+            mNotifyManager.notify(0, mBuilder.build());
         }
     }
 }
