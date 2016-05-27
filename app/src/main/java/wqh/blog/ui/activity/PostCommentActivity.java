@@ -3,12 +3,13 @@ package wqh.blog.ui.activity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.EditText;
 
 import java.util.List;
 
 import butterknife.Bind;
-import butterknife.OnClick;
 import wqh.blog.R;
 import wqh.blog.mvp.model.bean.Comment;
 import wqh.blog.mvp.model.service.UserManager;
@@ -42,11 +43,9 @@ public class PostCommentActivity extends ToolbarActivity {
     }
 
     private void initView() {
-
     }
 
-    @OnClick(R.id.do_post)
-    public void postComment() {
+    private void postComment() {
         String comment = mCommentContent.getText().toString();
         if (!isValid(comment))
             return;
@@ -63,6 +62,22 @@ public class PostCommentActivity extends ToolbarActivity {
         if (TextUtils.isEmpty(text)) {
             ToastUtil.showToast("评论为空啊");
             return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_post_comment, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.post_comment:
+                postComment();
+                break;
         }
         return true;
     }

@@ -11,6 +11,7 @@ import java.io.OutputStream;
 import okhttp3.Request;
 import okhttp3.Response;
 import wqh.blog.app.Config;
+import wqh.blog.mvp.model.bean.DownLoadBean;
 import wqh.blog.util.FileUtil;
 
 /**
@@ -20,16 +21,16 @@ public class WorkDownLoadService extends DownLoadService {
 
     @Override
     protected void startDownLoad() {
-        DownLoadHelper.DownLoadBean toDownLoad = DownLoadHelper.instance().peek();
-        if (toDownLoad != null && toDownLoad.status != DownLoadHelper.DOWNLOAD) {
+        DownLoadBean toDownLoad = DownLoadHelper.instance().peek();
+        if (toDownLoad != null && toDownLoad.status != DownLoadBean.DOWNLOADING) {
             DownLoadHelper.instance().servicePool().execute(new DownloadThread(toDownLoad));
         }
     }
 
     private class DownloadThread extends Thread {
-        DownLoadHelper.DownLoadBean toDownLoad;
+        DownLoadBean toDownLoad;
 
-        public DownloadThread(@NonNull DownLoadHelper.DownLoadBean toDownLoad) {
+        public DownloadThread(@NonNull DownLoadBean toDownLoad) {
             this.toDownLoad = toDownLoad;
         }
 
@@ -48,20 +49,23 @@ public class WorkDownLoadService extends DownLoadService {
                     long downloadLen = 0;
                     int readLen;
                     byte[] buffer = new byte[2048];
-
                     long totalLen = response.body().contentLength();
+
                     is = response.body().byteStream();
                     fos = new FileOutputStream(file);
+
+                    toDownLoad.status = DownLoadBean.DOWNLOADING;
                     while ((readLen = is.read(buffer)) != -1) {
                         downloadLen += readLen;
                         fos.write(buffer, 0, readLen);
                         final int percent = (int) (downloadLen * 1.0f / totalLen * 100);
-                        mHandler.post(() -> DownLoadHelper.instance().dispatchProgressEvent(toDownLoad.fileName, percent));
+                        DownLoadHelper.instance().dispatchProgressEvent(toDownLoad.fileName, percent);
 
                     }
                     fos.flush();
                     mHandler.post(() -> DownLoadHelper.instance().dispatchSuccessEvent(toDownLoad.fileName, file.getAbsolutePath()));
-
+                    toDownLoad.status = DownLoadBean.FINISH;
+                    toDownLoad.filePath = file.getAbsolutePath();
                 }
             } catch (IOException e) {
                 e.printStackTrace();

@@ -54,6 +54,11 @@ public class LoginActivity extends ToolbarActivity {
         mUserPresenter.login(username, password, mUserLoadView);
     }
 
+    @OnClick(R.id.do_register)
+    public void doregister() {
+        IntentUtil.goToOtherActivity(this, RegisterActivity.class);
+    }
+
     private class UserLoadView implements LoadView<User> {
         @Override
         public void onSuccess(List<User> data) {
@@ -63,7 +68,7 @@ public class LoginActivity extends ToolbarActivity {
             }
             UserManager.instance().saveUser(data.get(0));
             ToastUtil.showToast("登陆成功");
-            IntentUtil.goToOtherActivity(LoginActivity.this,MainActivity.class);
+            IntentUtil.goToOtherActivity(LoginActivity.this, MainActivity.class);
         }
 
         @Override

@@ -1,9 +1,10 @@
 package wqh.blog.ui.fragment;
 
 import android.Manifest;
-import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -20,6 +21,7 @@ import wqh.blog.download.WorkDownLoadService;
 import wqh.blog.mvp.model.service.RemoteManager;
 import wqh.blog.mvp.presenter.remote.base.DownLoadPresenter;
 import wqh.blog.mvp.presenter.remote.work.WorkDownLoadPresenterImpl;
+import wqh.blog.ui.activity.DownLoadListActivity;
 import wqh.blog.ui.adapter.WorkAdapter;
 import wqh.blog.mvp.model.bean.Work;
 import wqh.blog.ui.adapter.event.LayoutState;
@@ -91,10 +93,12 @@ public class WorkListFragment extends ScrollFragment {
      */
     private void doDownload(Work data) {
         requestPermission();
+
         DownLoadHelper.instance().addDownLoadEvent(data.fileName, new WorkDownLoadEvent());
         DownLoadHelper.instance().offer(data.fileName, data.title);
         IntentUtil.startService(getActivity(), WorkDownLoadService.class);
     }
+
 
     /**
      * A Load-Data View,which means show loaded-data is it's function.
@@ -131,17 +135,24 @@ public class WorkListFragment extends ScrollFragment {
         @Override
         public void onStart(String targetTitle) {
             super.onStart(targetTitle);
-            mNotifyManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
-            mBuilder = new NotificationCompat.Builder(getActivity());
-            mBuilder.setContentTitle("Picture Download").setContentText("Download in progress").setSmallIcon(R.mipmap.ic_launcher);
+            initNotification(targetTitle);
         }
 
-        // Todo: No update.
+        private void initNotification(String targetTitle) {
+            mNotifyManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+            mBuilder = new NotificationCompat.Builder(getActivity());
+
+            mBuilder.setContentTitle("下载文件").setContentText(targetTitle + "正在下载").setSmallIcon(R.mipmap.ic_launcher);
+
+            Intent resultIntent = new Intent(getActivity(), DownLoadListActivity.class);
+            PendingIntent resultPendingIntent = PendingIntent.getActivity(getActivity(), 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            mBuilder.setContentIntent(resultPendingIntent);
+        }
+
         @Override
         public void onProgress(int percent) {
             super.onProgress(percent);
-            Log.i(TAG, String.valueOf(percent));
-            mBuilder.setProgress(100, percent, false);
+            mBuilder.setProgress(0, 0, true);
             mNotifyManager.notify(0, mBuilder.build());
         }
 
@@ -150,10 +161,11 @@ public class WorkListFragment extends ScrollFragment {
             super.onFail();
         }
 
+        //Todo : How to set Progress in finish-state.
         @Override
         public void onSuccess(String filePath) {
             super.onSuccess(filePath);
-            mBuilder.setContentText("Download complete").setProgress(0, 0, false);
+            mBuilder.setContentText("下载完成").setProgress(0, 0, false);
             mNotifyManager.notify(0, mBuilder.build());
         }
     }

@@ -252,6 +252,10 @@ public abstract class BaseAdapter<Holder extends BaseAdapter.BaseHolder, DataTyp
         mLongItemClickListener.append(resId, mOnItemLongClickListener);
     }
 
+    /**
+     * Trigger that this Adapter can LoadMore.
+     * So if do not call this method,and the adapter will not call OnBottomListener().
+     */
     public void setOnBottomListener(OnBottomListener mOnBottomListener) {
         this.mOnBottomListener = mOnBottomListener;
     }

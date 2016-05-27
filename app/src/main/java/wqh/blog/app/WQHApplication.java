@@ -33,8 +33,8 @@ public class WQHApplication extends Application {
         initImageLoader();
         initToast();
         initDB();
-        LeakCanary.install(this);
-        BlockCanary.install(this, new AppBlockCanaryContext()).start();
+       // LeakCanary.install(this);
+       // BlockCanary.install(this, new AppBlockCanaryContext()).start();
     }
 
     private void initDB() {

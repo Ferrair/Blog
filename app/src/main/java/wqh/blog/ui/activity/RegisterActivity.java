@@ -1,5 +1,6 @@
 package wqh.blog.ui.activity;
 
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.EditText;
@@ -14,6 +15,7 @@ import wqh.blog.mvp.presenter.remote.user.UserPresenter;
 import wqh.blog.mvp.presenter.remote.user.UserPresenterImpl;
 import wqh.blog.mvp.view.LoadView;
 import wqh.blog.ui.base.ToolbarActivity;
+import wqh.blog.util.IntentUtil;
 import wqh.blog.util.ToastUtil;
 
 public class RegisterActivity extends ToolbarActivity {
@@ -59,11 +61,13 @@ public class RegisterActivity extends ToolbarActivity {
     private class UserLoadView implements LoadView<User> {
         @Override
         public void onSuccess(List<User> data) { //data in null in this section.
-            Log.e(TAG, "OnSuccess");
+            ToastUtil.showToast("注册成功");
+            new Handler().postDelayed(() -> IntentUtil.goToOtherActivity(RegisterActivity.this, MainActivity.class), 1000);
         }
 
         @Override
         public void onFail(int errorCode, String errorMsg) {
+            ToastUtil.showToast("注册失败");
             Log.e(TAG, "ErrorCode-> " + errorCode + ", ErrorMsg-> " + errorMsg);
         }
     }

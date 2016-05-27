@@ -1,14 +1,10 @@
 package wqh.blog.ui.activity;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,6 +19,8 @@ import java.util.List;
 
 import butterknife.Bind;
 import wqh.blog.R;
+import wqh.blog.mvp.model.bean.User;
+import wqh.blog.mvp.model.service.UserManager;
 import wqh.blog.ui.adapter.FragmentAdapter;
 import wqh.blog.ui.base.ScrollFragment;
 import wqh.blog.ui.base.ToolbarActivity;
@@ -30,7 +28,6 @@ import wqh.blog.ui.fragment.BlogListFragment;
 import wqh.blog.ui.customview.DrawerDelegate;
 import wqh.blog.ui.fragment.WorkListFragment;
 import wqh.blog.util.IntentUtil;
-import wqh.blog.util.ToastUtil;
 
 /**
  * Created by WQH on 2016/4/11  17:11.
@@ -61,12 +58,20 @@ public class MainActivity extends ToolbarActivity implements DrawerDelegate.Draw
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initView();
-        mDrawerDelegate = new DrawerDelegate(this, mToolbar, this);
-        mDrawerDelegate.init();
+        initContentView();
+        initDrawer();
     }
 
-    private void initView() {
+    private void initDrawer() {
+        mDrawerDelegate = new DrawerDelegate(this, mToolbar, this);
+        mDrawerDelegate.init();
+        if (UserManager.instance().isLogged()) {
+            User currentUser = UserManager.instance().currentUser();
+            mDrawerDelegate.setName(currentUser.username);
+        }
+    }
+
+    private void initContentView() {
         mViewPager.setAdapter(new FragmentAdapter(getSupportFragmentManager(), getTabFragment()));
         mTabLayout.setupWithViewPager(mViewPager);
     }
@@ -82,6 +87,12 @@ public class MainActivity extends ToolbarActivity implements DrawerDelegate.Draw
         switch (position) {
             case 1:
                 break;
+            case 2:
+                IntentUtil.goToOtherActivity(this, RegisterActivity.class);
+                break;
+            case 3:
+                IntentUtil.goToOtherActivity(this, LoginActivity.class);
+                break;
         }
         return false;
     }
@@ -91,6 +102,8 @@ public class MainActivity extends ToolbarActivity implements DrawerDelegate.Draw
     public List<IDrawerItem> onDrawerMenuCreate() {
         List<IDrawerItem> list = new ArrayList<>();
         list.add(new PrimaryDrawerItem().withName("下载队列").withIcon(FontAwesome.Icon.faw_download));
+        list.add(new PrimaryDrawerItem().withName("注册").withIcon(FontAwesome.Icon.faw_user));
+        list.add(new PrimaryDrawerItem().withName("登陆").withIcon(FontAwesome.Icon.faw_user));
         return list;
     }
 

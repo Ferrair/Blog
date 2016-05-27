@@ -2,8 +2,12 @@ package wqh.blog.util;
 
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Queue;
+
+import wqh.blog.mvp.model.bean.DownLoadBean;
 
 /**
  * Created by WQH on 2016/5/9  19:42.
@@ -27,5 +31,11 @@ public class CollectionUtil {
                 src.add(item);
             }
         }
+    }
+
+    public static <T> List<T> asList(Collection<T> data) {
+        List<T> list = new ArrayList<>();
+        list.addAll(data);
+        return list;
     }
 }

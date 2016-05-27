@@ -45,7 +45,7 @@ public class DrawerDelegate {
         header = new AccountHeaderBuilder()
                 .withActivity(activity)
                 .withHeaderBackground(R.mipmap.user_info_bg)
-                .addProfiles(profileDrawerItem = new ProfileDrawerItem().withEmail("WQH").withName("hellowangqihang@gmail.com"))
+                .addProfiles(profileDrawerItem = new ProfileDrawerItem().withName("未登录"))
                 .withOnAccountHeaderListener((view, profile, current) -> {
                     //activity.startActivity(new Intent(activity, UserCenterActivity.class));
                     //drawer.closeDrawer();
@@ -74,13 +74,8 @@ public class DrawerDelegate {
         drawer.getSlider().setFitsSystemWindows(true);
     }
 
-    public void setUsername(String username) {
-        profileDrawerItem.withName(username);
-        header.updateProfile(profileDrawerItem);
-    }
-
-    public void setEmail(String email) {
-        profileDrawerItem.withEmail(email);
+    public void setName(String name) {
+        profileDrawerItem.withName(name);
         header.updateProfile(profileDrawerItem);
     }
 

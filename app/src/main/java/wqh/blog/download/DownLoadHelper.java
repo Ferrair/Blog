@@ -1,16 +1,15 @@
 package wqh.blog.download;
 
-import android.support.annotation.IntDef;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import wqh.blog.mvp.model.bean.DownLoadBean;
+import wqh.blog.util.CollectionUtil;
 import wqh.blog.util.ToastUtil;
 
 /**
@@ -18,20 +17,13 @@ import wqh.blog.util.ToastUtil;
  */
 public class DownLoadHelper {
 
-    public static final int BEFORE = 0;
-    public static final int PAUSE = 1;
-    public static final int DOWNLOAD = 2;
-    public static final int FINISH = 3;
-    public static final int FAIL = 4;
-
-    @IntDef({BEFORE, PAUSE, DOWNLOAD, FINISH, FAIL})
-    @Retention(RetentionPolicy.SOURCE)
-    public @interface DownLoadStatus {
-    }
-
     private Queue<DownLoadBean> mDownLoadQueue = new LinkedList<>();
     private ExecutorService mService = Executors.newCachedThreadPool();
     private Map<String, DownLoadEvent> mDownLoadEventList = new HashMap<>();
+
+    public List<DownLoadBean> data() {
+        return CollectionUtil.asList(mDownLoadQueue);
+    }
 
     private static class ClassHolder {
         private static final DownLoadHelper INSTANCE = new DownLoadHelper();
@@ -43,12 +35,12 @@ public class DownLoadHelper {
 
     public void offer(String fileName, String title) {
         DownLoadBean aDownLoad = new DownLoadBean(fileName, title);
-      /*  if (mDownLoadQueue.contains(aDownLoad)) {
-            // Callback
-            ToastUtil.showToast("该文件已在下载目录里面了");
-        } else {*/
+        if (mDownLoadQueue.contains(aDownLoad)) {
+            if (aDownLoad.status != DownLoadBean.FINISH)
+                ToastUtil.showToast("该文件已在下载目录里面了");
+        } else {
             mDownLoadQueue.offer(aDownLoad);
-        //}
+        }
     }
 
     /**
@@ -89,24 +81,6 @@ public class DownLoadHelper {
      */
     public void addDownLoadEvent(String fileName, DownLoadEvent aDownLoadEvent) {
         mDownLoadEventList.put(fileName, aDownLoadEvent);
-    }
-
-    public static class DownLoadBean {
-        String fileName; // The apk fileName
-        String title;    // the title that shown to user.
-        @DownLoadStatus
-        int status;
-
-        public DownLoadBean(String fileName, String title) {
-            this.fileName = fileName;
-            this.status = BEFORE;
-            this.title = title;
-        }
-
-        @Override
-        public boolean equals(Object other) {
-            return other instanceof DownLoadBean && ((DownLoadBean) other).fileName.equals(fileName);
-        }
     }
 
     public interface DownLoadEvent {
