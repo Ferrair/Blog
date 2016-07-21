@@ -11,6 +11,7 @@ import butterknife.Bind;
 import butterknife.OnClick;
 import wqh.blog.R;
 import wqh.blog.mvp.model.bean.User;
+import wqh.blog.mvp.model.service.UserManager;
 import wqh.blog.mvp.presenter.remote.user.UserPresenter;
 import wqh.blog.mvp.presenter.remote.user.UserPresenterImpl;
 import wqh.blog.mvp.view.LoadView;
@@ -62,6 +63,7 @@ public class RegisterActivity extends ToolbarActivity {
         @Override
         public void onSuccess(List<User> data) { //data in null in this section.
             ToastUtil.showToast("注册成功");
+            UserManager.instance().saveUser(data.get(0));
             new Handler().postDelayed(() -> IntentUtil.goToOtherActivity(RegisterActivity.this, MainActivity.class), 1000);
         }
 

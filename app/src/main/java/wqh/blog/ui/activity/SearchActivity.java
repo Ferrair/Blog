@@ -5,6 +5,9 @@ import android.support.v7.widget.SearchView;
 
 import butterknife.Bind;
 import wqh.blog.R;
+import wqh.blog.mvp.model.bean.Blog;
+import wqh.blog.mvp.presenter.remote.base.DownLoadPresenter;
+import wqh.blog.mvp.presenter.remote.blog.BlogDownLoadPresenterImpl;
 import wqh.blog.ui.base.StateActivity;
 import wqh.blog.util.ToastUtil;
 
@@ -25,7 +28,8 @@ public class SearchActivity extends StateActivity {
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                search();
+                mStateLayout.showLoadingView();
+                mStateLayout.postDelayed(() -> doSearch(query), 1000);
                 return false;
             }
 
@@ -36,9 +40,9 @@ public class SearchActivity extends StateActivity {
         });
     }
 
-    public void search() {
-        mStateLayout.showLoadingView();
-        mStateLayout.postDelayed(() -> ToastUtil.showToast("No Thing"), 1000);
+    //todo :重新写一个IndexPresenter
+    private void doSearch(String searchStr) {
+
     }
 
 }

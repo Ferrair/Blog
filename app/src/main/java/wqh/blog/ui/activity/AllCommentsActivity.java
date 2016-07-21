@@ -1,11 +1,17 @@
 package wqh.blog.ui.activity;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.View;
 
 import java.util.List;
 
 import butterknife.OnClick;
+import me.drakeet.materialdialog.MaterialDialog;
 import wqh.blog.R;
 import wqh.blog.mvp.model.bean.Comment;
 import wqh.blog.mvp.model.service.RemoteManager;
@@ -14,10 +20,12 @@ import wqh.blog.mvp.presenter.remote.comment.CommentDownLoadPresenter;
 import wqh.blog.mvp.presenter.remote.comment.CommentDownLoadPresenterImpl;
 import wqh.blog.ui.adapter.CommentsAdapter;
 import wqh.blog.ui.adapter.event.LayoutState;
+import wqh.blog.ui.adapter.event.OnItemClickListener;
 import wqh.blog.ui.base.ScrollActivity;
 import wqh.blog.ui.customview.Dialog;
 import wqh.blog.util.IntentUtil;
 import wqh.blog.mvp.view.LoadView;
+import wqh.blog.util.ToastUtil;
 
 public class AllCommentsActivity extends ScrollActivity {
     private static final String TAG = "AllCommentsActivity";
@@ -46,6 +54,19 @@ public class AllCommentsActivity extends ScrollActivity {
         belongTo = getIntent().getIntExtra("id", 0);
         mAdapter = new CommentsAdapter(this);
         mAdapter.setOnBottomListener(this);
+        mAdapter.setOnItemClickListener(R.id.item_comment, (view, data) -> new AlertDialog
+                .Builder(AllCommentsActivity.this)
+                .setItems(new String[]{"复制评论", "回复评论"}, (dialog, which) -> {
+                    switch (which) {
+                        case 0:
+                            ClipboardManager clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                            clipboardManager.setPrimaryClip(ClipData.newPlainText("Comment", mAdapter.getOne(which).content));
+                            ToastUtil.showToast("已复制到粘贴板");
+                            break;
+                    }
+                })
+                .create()
+                .show());
 
         mDownLoadCommentPresenter.loadById(belongTo, 1, mDefaultLoadDataView);
     }

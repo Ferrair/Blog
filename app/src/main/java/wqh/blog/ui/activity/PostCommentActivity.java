@@ -72,12 +72,19 @@ public class PostCommentActivity extends ToolbarActivity {
         return true;
     }
 
+    /**
+     * When toolbar set menu.If too;bar can response the home button,MUST set it here.
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.post_comment:
                 postComment();
                 break;
+            case android.R.id.home:
+                onBackPressed();
+                break;
+
         }
         return true;
     }
@@ -91,6 +98,7 @@ public class PostCommentActivity extends ToolbarActivity {
 
         @Override
         public void onFail(int errorCode, String errorMsg) {
+            ToastUtil.showToast("服务器繁忙->" + errorCode);
             Log.e(TAG, "ErrorCode-> " + errorCode + ", ErrorMsg-> " + errorMsg);
         }
     }

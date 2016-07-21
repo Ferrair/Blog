@@ -39,7 +39,7 @@ public abstract class ToolbarActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         //Toolbar
         if (mToolbar == null) {
-            throw new RuntimeException("Toolbar must be set at id(toolbar)");
+            throw new RuntimeException("Toolbar must be set id as 'toolbar'");
         }
         setSupportActionBar(mToolbar);
         mToolbar.setOnClickListener(view -> onToolbarClick());

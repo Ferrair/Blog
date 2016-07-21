@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -65,10 +66,6 @@ public class MainActivity extends ToolbarActivity implements DrawerDelegate.Draw
     private void initDrawer() {
         mDrawerDelegate = new DrawerDelegate(this, mToolbar, this);
         mDrawerDelegate.init();
-        if (UserManager.instance().isLogged()) {
-            User currentUser = UserManager.instance().currentUser();
-            mDrawerDelegate.setName(currentUser.username);
-        }
     }
 
     private void initContentView() {
@@ -86,6 +83,7 @@ public class MainActivity extends ToolbarActivity implements DrawerDelegate.Draw
     public boolean onDrawerMenuSelected(View view, int position, IDrawerItem drawerItem) {
         switch (position) {
             case 1:
+                IntentUtil.goToOtherActivity(this, DownLoadListActivity.class);
                 break;
             case 2:
                 IntentUtil.goToOtherActivity(this, RegisterActivity.class);
@@ -129,6 +127,15 @@ public class MainActivity extends ToolbarActivity implements DrawerDelegate.Draw
     @Override
     protected void onToolbarClick() {
         ((ScrollFragment) mContentList.get(mViewPager.getCurrentItem())).onToolbarClick();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (UserManager.instance().isLogged()) {
+            User currentUser = UserManager.instance().currentUser();
+            mDrawerDelegate.setName(currentUser.username);
+        }
     }
 
     @Override

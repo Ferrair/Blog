@@ -19,6 +19,8 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import java.util.List;
 
 import wqh.blog.R;
+import wqh.blog.ui.activity.UserCenterActivity;
+import wqh.blog.util.IntentUtil;
 
 /**
  * Created by WQH on 2016/4/11  18:30.
@@ -45,7 +47,7 @@ public class DrawerDelegate {
         header = new AccountHeaderBuilder()
                 .withActivity(activity)
                 .withHeaderBackground(R.mipmap.user_info_bg)
-                .addProfiles(profileDrawerItem = new ProfileDrawerItem().withName("未登录"))
+                .addProfiles(profileDrawerItem = new ProfileDrawerItem())
                 .withOnAccountHeaderListener((view, profile, current) -> {
                     //activity.startActivity(new Intent(activity, UserCenterActivity.class));
                     //drawer.closeDrawer();
@@ -61,8 +63,8 @@ public class DrawerDelegate {
                 .withDrawerItems(drawerListener.onDrawerMenuCreate())
                 .withOnDrawerItemClickListener((view, position, drawerItem) -> {
                     if (drawerItem == setting) {
-                        //activity.startActivity(new Intent(activity, SettingActivity.class));
-                        //drawer.closeDrawer();
+                        IntentUtil.goToOtherActivity(activity, UserCenterActivity.class);
+                        drawer.closeDrawer();
                         return true;
                     }
                     return drawerListener.onDrawerMenuSelected(view, position, drawerItem);

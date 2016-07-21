@@ -8,7 +8,7 @@ import java.util.Queue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import wqh.blog.mvp.model.bean.DownLoadBean;
+import wqh.blog.mvp.model.bean.Download;
 import wqh.blog.util.CollectionUtil;
 import wqh.blog.util.ToastUtil;
 
@@ -17,11 +17,12 @@ import wqh.blog.util.ToastUtil;
  */
 public class DownLoadHelper {
 
-    private Queue<DownLoadBean> mDownLoadQueue = new LinkedList<>();
+    private static final String TAG = "DownLoadHelper";
+    private Queue<Download> mDownLoadQueue = new LinkedList<>();
     private ExecutorService mService = Executors.newCachedThreadPool();
     private Map<String, DownLoadEvent> mDownLoadEventList = new HashMap<>();
 
-    public List<DownLoadBean> data() {
+    public List<Download> data() {
         return CollectionUtil.asList(mDownLoadQueue);
     }
 
@@ -33,43 +34,51 @@ public class DownLoadHelper {
         return ClassHolder.INSTANCE;
     }
 
-    public void offer(String fileName, String title) {
-        DownLoadBean aDownLoad = new DownLoadBean(fileName, title);
+    public void offer(int id, String fileName, String title) {
+        Download aDownLoad = new Download(id, fileName, title);
         if (mDownLoadQueue.contains(aDownLoad)) {
-            if (aDownLoad.status != DownLoadBean.FINISH)
-                ToastUtil.showToast("该文件已在下载目录里面了");
+            if (aDownLoad.status != Download.FINISH)
+                ToastUtil.showToast("该文件已在下载队列里面了");
         } else {
             mDownLoadQueue.offer(aDownLoad);
+            DownLoadHelper.instance().dispatchPreStartEvent(aDownLoad);
         }
     }
 
     /**
-     * Peek the element from the head of the queue.
+     * Pool(take and remove) the element from the head of the queue.
      */
-    public DownLoadBean peek() {
-        return mDownLoadQueue.peek();
+    public Download poll() {
+        return mDownLoadQueue.poll();
     }
 
     public ExecutorService servicePool() {
         return mService;
     }
 
-    public void dispatchFailEvent(String fileName) {
-        mDownLoadEventList.get(fileName).onFail();
+    public void dispatchOnPreProgressEvent(Download toDownload) {
+        mDownLoadEventList.get(toDownload.fileName).onPreProgress(toDownload);
     }
 
-    public void dispatchStartEvent(String fileName, String targetTitle) {
-        mDownLoadEventList.get(fileName).onStart(targetTitle);
+    public void dispatchFailEvent(Download toDownload) {
+        mDownLoadEventList.get(toDownload.fileName).onFail(toDownload);
+    }
+
+    public void dispatchStartEvent(Download toDownload) {
+        mDownLoadEventList.get(toDownload.fileName).onStart(toDownload);
+    }
+
+    public void dispatchPreStartEvent(Download toDownload) {
+        mDownLoadEventList.get(toDownload.fileName).onPreStart(toDownload);
+    }
+
+    public void dispatchSuccessEvent(Download toDownload) {
+        mDownLoadEventList.get(toDownload.fileName).onSuccess(toDownload);
     }
 
 
-    public void dispatchSuccessEvent(String fileName, String filePath) {
-        mDownLoadEventList.get(fileName).onSuccess(filePath);
-    }
-
-
-    public void dispatchProgressEvent(String fileName, int percent) {
-        mDownLoadEventList.get(fileName).onProgress(percent);
+    public void dispatchProgressEvent(Download toDownload, int percent) {
+        mDownLoadEventList.get(toDownload.fileName).onProgress(toDownload, percent);
     }
 
     /**
@@ -84,13 +93,18 @@ public class DownLoadHelper {
     }
 
     public interface DownLoadEvent {
-        void onStart(String targetTitle);
 
-        void onSuccess(String filePath);
+        void onPreProgress(Download toDownload);
 
-        void onFail();
+        void onPreStart(Download toDownload);
 
-        void onProgress(int percent);
+        void onStart(Download toDownload);
+
+        void onSuccess(Download toDownload);
+
+        void onFail(Download toDownload);
+
+        void onProgress(Download toDownload, int percent);
     }
 
     /**
@@ -100,24 +114,36 @@ public class DownLoadHelper {
     public static class DownLoadEventAdapter implements DownLoadEvent {
 
         @Override
-        public void onStart(String targetTitle) {
-            ToastUtil.showToast(targetTitle + " 加入下载队列");
+        public void onPreProgress(Download toDownload) {
+
         }
 
         @Override
-        public void onSuccess(String filePath) {
-            ToastUtil.showToast("已保存到->" + filePath);
+        public void onPreStart(Download toDownload) {
+
         }
 
         @Override
-        public void onFail() {
+        public void onStart(Download toDownload) {
+            ToastUtil.showToast(toDownload.title + " 加入下载队列");
+        }
+
+        @Override
+        public void onSuccess(Download toDownload) {
+            DownLoadHelper.instance().data().remove(toDownload);
+            ToastUtil.showToast("已保存到->" + toDownload.filePath);
+        }
+
+        @Override
+        public void onFail(Download toDownload) {
             ToastUtil.showToast("下载失败");
         }
 
         @Override
-        public void onProgress(int percent) {
+        public void onProgress(Download toDownload, int percent) {
 
         }
     }
+
 
 }

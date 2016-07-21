@@ -61,6 +61,9 @@
             android:name=".download.WorkDownLoadService"
             android:enabled="true"
             android:exported="true"/>
+
+        <activity android:name=".ui.activity.UserCenterActivity">
+        </activity>
     </application>
 
 </manifest>

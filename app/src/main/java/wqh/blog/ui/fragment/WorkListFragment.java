@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -13,11 +14,14 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
+import com.litesuits.orm.LiteOrm;
+
 import java.util.List;
 
 import wqh.blog.R;
 import wqh.blog.download.DownLoadHelper;
 import wqh.blog.download.WorkDownLoadService;
+import wqh.blog.mvp.model.bean.Download;
 import wqh.blog.mvp.model.service.RemoteManager;
 import wqh.blog.mvp.presenter.remote.base.DownLoadPresenter;
 import wqh.blog.mvp.presenter.remote.work.WorkDownLoadPresenterImpl;
@@ -49,7 +53,10 @@ public class WorkListFragment extends ScrollFragment {
         mAdapter.setOnBottomListener(this);
 
         // Show Download Dialog here.
-        mAdapter.setOnItemLongClickListener(R.id.item_work, (view, data) -> Dialog.create(getActivity(), "是否下载 '" + data.title + "'").setPositiveListener("下载", v -> doDownload(data)).show());
+        mAdapter.setOnItemLongClickListener(R.id.item_work, (view, data) -> {
+            if (grantPermission())
+                Dialog.create(getActivity(), "是否下载 '" + data.title + "'").setPositiveListener("下载", v -> doDownload(data)).show();
+        });
 
         mDownLoadPresenter.loadAll(1, mDefaultLoadDataView);
     }
@@ -78,24 +85,27 @@ public class WorkListFragment extends ScrollFragment {
     /*
     * Request Permission for WRITE_EXTERNAL_STORAGE.
     */
-    private void requestPermission() {
+    private boolean grantPermission() {
+        if (Build.VERSION.SDK_INT < 23)
+            return true;
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 ToastUtil.showToast("Give me Permission for SDCard");
+                return false;
             } else {
                 ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 10);
+                return true;
             }
         }
+        return true;
     }
 
     /*
      * Download the Work by given URL.
      */
     private void doDownload(Work data) {
-        requestPermission();
-
         DownLoadHelper.instance().addDownLoadEvent(data.fileName, new WorkDownLoadEvent());
-        DownLoadHelper.instance().offer(data.fileName, data.title);
+        DownLoadHelper.instance().offer(data.id, data.fileName, data.title);
         IntentUtil.startService(getActivity(), WorkDownLoadService.class);
     }
 
@@ -131,42 +141,57 @@ public class WorkListFragment extends ScrollFragment {
     private class WorkDownLoadEvent extends DownLoadHelper.DownLoadEventAdapter {
         NotificationManager mNotifyManager;
         NotificationCompat.Builder mBuilder;
+        LiteOrm liteOrm;
 
+        // Waiting to download
         @Override
-        public void onStart(String targetTitle) {
-            super.onStart(targetTitle);
-            initNotification(targetTitle);
-        }
-
-        private void initNotification(String targetTitle) {
+        public void onPreStart(Download toDownload) {
+            super.onPreStart(toDownload);
             mNotifyManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
             mBuilder = new NotificationCompat.Builder(getActivity());
+            if (liteOrm == null) {
+                liteOrm = LiteOrm.newSingleInstance(getActivity(), "blog.db");
+            }
+            liteOrm.save(toDownload);
+        }
 
-            mBuilder.setContentTitle("下载文件").setContentText(targetTitle + "正在下载").setSmallIcon(R.mipmap.ic_launcher);
+        @Override
+        public void onStart(Download toDownload) {
+            super.onStart(toDownload);
 
+            mBuilder.setContentTitle("下载文件").setContentText(toDownload.title + "正在下载").setSmallIcon(R.mipmap.ic_launcher).setProgress(100, 0, false);
             Intent resultIntent = new Intent(getActivity(), DownLoadListActivity.class);
             PendingIntent resultPendingIntent = PendingIntent.getActivity(getActivity(), 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             mBuilder.setContentIntent(resultPendingIntent);
+            mNotifyManager.notify(1, mBuilder.build());
+        }
+
+        // Downloading
+        @Override
+        public void onPreProgress(Download toDownload) {
+            super.onPreProgress(toDownload);
+            liteOrm.update(toDownload);
         }
 
         @Override
-        public void onProgress(int percent) {
-            super.onProgress(percent);
-            mBuilder.setProgress(0, 0, true);
-            mNotifyManager.notify(0, mBuilder.build());
+        public void onProgress(Download toDownload, int percent) {
+            super.onProgress(toDownload, percent);
+            mBuilder.setProgress(100, percent, false);
+            mNotifyManager.notify(1, mBuilder.build());
         }
 
+        // Finish
         @Override
-        public void onFail() {
-            super.onFail();
-        }
-
-        //Todo : How to set Progress in finish-state.
-        @Override
-        public void onSuccess(String filePath) {
-            super.onSuccess(filePath);
+        public void onSuccess(Download toDownload) {
+            super.onSuccess(toDownload);
             mBuilder.setContentText("下载完成").setProgress(0, 0, false);
-            mNotifyManager.notify(0, mBuilder.build());
+            mNotifyManager.notify(1, mBuilder.build());
+            liteOrm.update(toDownload);
+        }
+
+        @Override
+        public void onFail(Download toDownload) {
+            super.onFail(toDownload);
         }
     }
 }

@@ -17,7 +17,7 @@ public class UserManager {
         private static final UserManager INSTANCE = new UserManager();
     }
 
-    public UserManager() {
+    private UserManager() {
         currentUser = Json.fromJson(SharePreferenceUtil.read().getString(KEY, null), User.class);
     }
 

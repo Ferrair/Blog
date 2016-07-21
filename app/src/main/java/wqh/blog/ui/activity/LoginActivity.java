@@ -55,7 +55,7 @@ public class LoginActivity extends ToolbarActivity {
     }
 
     @OnClick(R.id.do_register)
-    public void doregister() {
+    public void doRegister() {
         IntentUtil.goToOtherActivity(this, RegisterActivity.class);
     }
 
