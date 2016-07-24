@@ -7,4 +7,6 @@
     <string name="loading">正在加载</string>
     <string name="error">出错了</string>
     <string name="empty">空空如也</string>
+    <string name="footer_load_more">正在加载</string>
+    <string name="footer_load_finish">没用更多了</string>
 </resources>

@@ -1,10 +1,13 @@
 package wqh.blog.ui.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.List;
 
@@ -12,6 +15,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import wqh.blog.R;
+import wqh.blog.app.Config;
 import wqh.blog.ui.adapter.base.BaseAdapter;
 import wqh.blog.mvp.model.bean.Blog;
 import wqh.blog.util.TimeUtil;
@@ -35,11 +39,11 @@ public class BlogAdapter extends BaseAdapter<BlogAdapter.BlogHolder, Blog> {
     @Override
     protected void onBindItemDataToView(BlogAdapter.BlogHolder holder, Blog itemData) {
         holder.title.setText(itemData.title);
-        holder.abstractStr.setText(itemData.abstractStr);
         holder.tag.setText(itemData.tag);
         holder.times.setText(String.valueOf(itemData.times));
         holder.createdAt.setText(TimeUtil.date2time(itemData.createdAt.toString()));
-        //Todo: How t show user's avatar?
+        //if (itemData. != null && !TextUtils.isEmpty(itemData.creatorAvatarUri))
+        //    ImageLoader.getInstance().displayImage(Config.REMOTE_DIR + itemData.creatorAvatarUri, holder.avatar);
     }
 
     @Override
@@ -50,8 +54,6 @@ public class BlogAdapter extends BaseAdapter<BlogAdapter.BlogHolder, Blog> {
     static class BlogHolder extends BaseAdapter.BaseHolder {
         @Bind(R.id.title)
         TextView title;
-        @Bind(R.id.abstractStr)
-        TextView abstractStr;
         @Bind(R.id.tag)
         TextView tag;
         @Bind(R.id.times)

@@ -1,18 +1,13 @@
 package wqh.blog.mvp.view;
 
-import android.support.annotation.Nullable;
-
-import java.util.List;
-
 /**
  * Created by WQH on 2016/4/12  23:47.
  */
-public interface LoadView<DataType> {
+public interface LoadView {
     /**
-     * Null only occurs in POST action.means success.
+     * @param resultJson a JSON string associated with <code>Holder.Result</code>,So the subclass MUST parse the JSON string.
      */
-    @Nullable
-    void onSuccess(List<DataType> data);
+    void onSuccess(String resultJson);
 
     void onFail(int errorCode, String errorMsg);
 }

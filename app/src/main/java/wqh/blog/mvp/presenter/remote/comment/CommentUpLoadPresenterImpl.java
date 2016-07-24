@@ -18,7 +18,7 @@ import wqh.blog.mvp.view.LoadView;
 /**
  * Created by WQH on 2016/5/2  18:52.
  */
-public class CommentUpLoadPresenterImpl extends LoadPresenter<Comment> implements UpLoadPresenter<Comment> {
+public class CommentUpLoadPresenterImpl extends LoadPresenter implements CommentUpLoadPresenter {
     CommentAPI mCommentAPI;
 
     @Override
@@ -27,26 +27,23 @@ public class CommentUpLoadPresenterImpl extends LoadPresenter<Comment> implement
     }
 
     @Override
-    public void publish(Comment aData, LoadView<Comment> mLoadView) {
+    public void publish(Comment aData, LoadView mLoadView) {
         User currentUser = UserManager.instance().currentUser();
         Call<ResponseBody> call = mCommentAPI.postComment(aData.belongTo, aData.content, aData.createdBy, currentUser.id, currentUser.token);
-        Log.i("USer", currentUser.toString());
+        Log.i("User", currentUser.toString());
         doPublish(call, mLoadView);
     }
 
-    private void doPublish(Call<ResponseBody> call, LoadView<Comment> mLoadView) {
-        call.enqueue(new CommentCallback(mLoadView));
+
+    @Override
+    public void reply(Comment aData, LoadView mLoadView) {
+        User currentUser = UserManager.instance().currentUser();
+        Call<ResponseBody> call = mCommentAPI.replyComment(aData.belongTo, aData.content, aData.createdBy, aData.replyTo, currentUser.id, currentUser.token);
+        Log.i("User", currentUser.toString());
+        doPublish(call, mLoadView);
     }
 
-    private class CommentCallback extends DefaultCallback<Comment> {
-        public CommentCallback(LoadView<Comment> mLoadView) {
-            super(mLoadView);
-        }
-
-        @Override
-        protected void onParseResult(String result) {
-            // Load null for LoadView
-            mLoadView.onSuccess(null);
-        }
+    private void doPublish(Call<ResponseBody> call, LoadView mLoadView) {
+        call.enqueue(new DefaultCallback(mLoadView));
     }
 }

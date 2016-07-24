@@ -13,10 +13,12 @@ import butterknife.Bind;
 import wqh.blog.R;
 import wqh.blog.mvp.model.bean.Comment;
 import wqh.blog.mvp.model.service.UserManager;
+import wqh.blog.mvp.presenter.remote.comment.CommentUpLoadPresenter;
 import wqh.blog.mvp.presenter.remote.comment.CommentUpLoadPresenterImpl;
-import wqh.blog.mvp.presenter.remote.base.UpLoadPresenter;
 import wqh.blog.ui.base.ToolbarActivity;
+import wqh.blog.util.CollectionUtil;
 import wqh.blog.util.IntentUtil;
+import wqh.blog.util.Json;
 import wqh.blog.util.ToastUtil;
 import wqh.blog.mvp.view.LoadView;
 
@@ -28,7 +30,9 @@ public class PostCommentActivity extends ToolbarActivity {
     EditText mCommentContent;
 
     int blogId;
-    UpLoadPresenter<Comment> mCommentUpLoadPresenter = new CommentUpLoadPresenterImpl();
+    String replyToUserName;
+    int replyTo;
+    CommentUpLoadPresenter mCommentUpLoadPresenter = new CommentUpLoadPresenterImpl();
 
     @Override
     protected int layoutId() {
@@ -38,12 +42,18 @@ public class PostCommentActivity extends ToolbarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        blogId = getIntent().getIntExtra("id", 0);
+        blogId = getIntent().getIntExtra("belongTo", 0);
+        replyToUserName = getIntent().getStringExtra("replyToUserName");
+        replyTo = getIntent().getIntExtra("replyTo", 0);
         initView();
     }
 
     private void initView() {
+        if (replyTo != 0) {
+            mCommentContent.setHint("回复" + replyToUserName + ":");
+        }
     }
+
 
     private void postComment() {
         String comment = mCommentContent.getText().toString();
@@ -54,13 +64,18 @@ public class PostCommentActivity extends ToolbarActivity {
         aComment.belongTo = blogId;
         aComment.content = comment;
         aComment.createdBy = UserManager.instance().currentUser().id;
+        if (replyTo != 0) {
+            aComment.replyTo = replyTo;
+            mCommentUpLoadPresenter.reply(aComment, new DefaultCommentUpLoadView());
+        } else {
+            mCommentUpLoadPresenter.publish(aComment, new DefaultCommentUpLoadView());
+        }
 
-        mCommentUpLoadPresenter.publish(aComment, new DefaultCommentUpLoadView());
     }
 
     private boolean isValid(String text) {
         if (TextUtils.isEmpty(text)) {
-            ToastUtil.showToast("评论为空啊");
+            ToastUtil.showToast("评论不能为空！");
             return false;
         }
         return true;
@@ -89,9 +104,10 @@ public class PostCommentActivity extends ToolbarActivity {
         return true;
     }
 
-    private class DefaultCommentUpLoadView implements LoadView<Comment> {
+    private class DefaultCommentUpLoadView implements LoadView {
         @Override
-        public void onSuccess(List<Comment> data) {
+        public void onSuccess(String resultJson) {
+            List<Comment> data = CollectionUtil.asList(Json.fromJson(resultJson, Comment[].class));
             IntentUtil.goToOtherActivity(PostCommentActivity.this, AllCommentsActivity.class, "id", blogId);
             finish();
         }

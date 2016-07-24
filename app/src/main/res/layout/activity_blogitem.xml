@@ -2,6 +2,7 @@
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -30,6 +31,35 @@
 
     <include layout="@layout/content_itemblog"/>
 
-    <include layout="@layout/include_comment"/>
+    <!--<include layout="@layout/include_comment"/>-->
+
+    <com.github.clans.fab.FloatingActionMenu
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        app:layout_behavior="@string/footer_behavior">
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/post_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_menu_edit"
+            fab:fab_label="发表你的评论"/>
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/all_comments"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_menu_compass"
+            fab:fab_label="查看所有评论"/>
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/share"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_menu_share"
+            fab:fab_label="分享此博文"/>
+    </com.github.clans.fab.FloatingActionMenu>
 
 </android.support.design.widget.CoordinatorLayout>

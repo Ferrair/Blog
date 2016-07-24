@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="通知">
+        <CheckBoxPreference
+            android:key="vibrate"
+            android:title="震动"/>
+        <CheckBoxPreference
+            android:key="voice"
+            android:title="声音"/>
+        <CheckBoxPreference
+            android:key="photo"
+            android:title="仅Wifi加载图片"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="安全">
+        <CheckBoxPreference
+            android:key="password"
+            android:title="登陆后保存密码"/>
+    </PreferenceCategory>
+</PreferenceScreen>

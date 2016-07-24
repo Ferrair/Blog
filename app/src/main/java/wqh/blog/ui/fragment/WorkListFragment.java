@@ -9,15 +9,18 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
+import android.widget.LinearLayout;
 
 import com.litesuits.orm.LiteOrm;
 
 import java.util.List;
 
+import butterknife.Bind;
 import wqh.blog.R;
 import wqh.blog.download.DownLoadHelper;
 import wqh.blog.download.WorkDownLoadService;
@@ -32,7 +35,9 @@ import wqh.blog.ui.adapter.event.LayoutState;
 import wqh.blog.ui.base.ScrollFragment;
 import wqh.blog.ui.customview.Dialog;
 import wqh.blog.mvp.view.LoadView;
+import wqh.blog.util.CollectionUtil;
 import wqh.blog.util.IntentUtil;
+import wqh.blog.util.Json;
 import wqh.blog.util.StatusUtil;
 import wqh.blog.util.ToastUtil;
 
@@ -41,9 +46,11 @@ import wqh.blog.util.ToastUtil;
  */
 public class WorkListFragment extends ScrollFragment {
 
+    @Bind(R.id.rootView)
+    LinearLayout mRootView;
     private static final String TAG = "WorkListFragment";
     WorkAdapter mAdapter;
-    DownLoadPresenter<Work> mDownLoadPresenter = new WorkDownLoadPresenterImpl();
+    DownLoadPresenter mDownLoadPresenter = new WorkDownLoadPresenterImpl();
     DefaultLoadView mDefaultLoadDataView = new DefaultLoadView();
 
     @Override
@@ -115,10 +122,11 @@ public class WorkListFragment extends ScrollFragment {
      * What's more,the loaded-data is from DownLoadPresenter.
      * The default means that the view will exists forever unless a new Load-Data View is going to be added.
      */
-    private class DefaultLoadView implements LoadView<Work> {
+    private class DefaultLoadView implements LoadView {
 
         @Override
-        public void onSuccess(List<Work> data) {
+        public void onSuccess(String resultJson) {
+            List<Work> data = CollectionUtil.asList(Json.fromJson(resultJson, Work[].class));
             mStateLayout.showContentView();
             mAdapter.addAll(data);
             mRecyclerView.setAdapter(mAdapter);
@@ -138,10 +146,54 @@ public class WorkListFragment extends ScrollFragment {
         }
     }
 
-    private class WorkDownLoadEvent extends DownLoadHelper.DownLoadEventAdapter {
+    /**
+     * A Simple implements of DownLoadHelper.DownLoadEvent.
+     * Provided some Toast.
+     */
+    public class DownLoadEventAdapter implements DownLoadHelper.DownLoadEvent {
+        LiteOrm liteOrm;
+
+        @Override
+        public void onPreStart(Download toDownload) {
+            if (liteOrm == null) {
+                liteOrm = LiteOrm.newSingleInstance(getActivity(), "blog.db");
+            }
+        }
+
+        @Override
+        public void onStart(Download toDownload) {
+            Snackbar.make(mRootView, toDownload.title + "开始下载", Snackbar.LENGTH_LONG).setAction("取消", v -> {
+                DownLoadHelper.instance().data().remove(toDownload);
+                liteOrm.delete(toDownload);
+            }).show();
+        }
+
+        @Override
+        public void onPreProgress(Download toDownload) {
+
+        }
+
+        @Override
+        public void onSuccess(Download toDownload) {
+            DownLoadHelper.instance().data().remove(toDownload);
+            ToastUtil.showToast("已保存到->" + toDownload.filePath);
+        }
+
+        @Override
+        public void onFail(Download toDownload) {
+            ToastUtil.showToast("下载失败");
+        }
+
+        @Override
+        public void onProgress(Download toDownload, int percent) {
+
+        }
+    }
+
+    private class WorkDownLoadEvent extends DownLoadEventAdapter {
         NotificationManager mNotifyManager;
         NotificationCompat.Builder mBuilder;
-        LiteOrm liteOrm;
+
 
         // Waiting to download
         @Override
@@ -149,9 +201,6 @@ public class WorkListFragment extends ScrollFragment {
             super.onPreStart(toDownload);
             mNotifyManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
             mBuilder = new NotificationCompat.Builder(getActivity());
-            if (liteOrm == null) {
-                liteOrm = LiteOrm.newSingleInstance(getActivity(), "blog.db");
-            }
             liteOrm.save(toDownload);
         }
 

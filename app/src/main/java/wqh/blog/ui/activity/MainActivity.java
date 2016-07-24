@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,6 +21,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import wqh.blog.R;
+import wqh.blog.app.Config;
 import wqh.blog.mvp.model.bean.User;
 import wqh.blog.mvp.model.service.UserManager;
 import wqh.blog.ui.adapter.FragmentAdapter;
@@ -86,9 +88,6 @@ public class MainActivity extends ToolbarActivity implements DrawerDelegate.Draw
                 IntentUtil.goToOtherActivity(this, DownLoadListActivity.class);
                 break;
             case 2:
-                IntentUtil.goToOtherActivity(this, RegisterActivity.class);
-                break;
-            case 3:
                 IntentUtil.goToOtherActivity(this, LoginActivity.class);
                 break;
         }
@@ -100,8 +99,7 @@ public class MainActivity extends ToolbarActivity implements DrawerDelegate.Draw
     public List<IDrawerItem> onDrawerMenuCreate() {
         List<IDrawerItem> list = new ArrayList<>();
         list.add(new PrimaryDrawerItem().withName("下载队列").withIcon(FontAwesome.Icon.faw_download));
-        list.add(new PrimaryDrawerItem().withName("注册").withIcon(FontAwesome.Icon.faw_user));
-        list.add(new PrimaryDrawerItem().withName("登陆").withIcon(FontAwesome.Icon.faw_user));
+        list.add(new PrimaryDrawerItem().withName("登陆").withIcon(FontAwesome.Icon.faw_download));
         return list;
     }
 
@@ -135,6 +133,8 @@ public class MainActivity extends ToolbarActivity implements DrawerDelegate.Draw
         if (UserManager.instance().isLogged()) {
             User currentUser = UserManager.instance().currentUser();
             mDrawerDelegate.setName(currentUser.username);
+            if (currentUser.avatarUri != null && !TextUtils.isEmpty(currentUser.avatarUri))
+                mDrawerDelegate.setAvatar(Config.REMOTE_DIR + currentUser.avatarUri);
         }
     }
 

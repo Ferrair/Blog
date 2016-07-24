@@ -39,31 +39,30 @@
         <activity
             android:name=".ui.activity.SplashActivity"
             android:launchMode="singleTop"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".ui.activity.SearchActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".ui.activity.LoginActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".ui.activity.RegisterActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".ui.activity.DownLoadListActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".ui.activity.UserCenterActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".ui.activity.SettingActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <service
             android:name=".download.WorkDownLoadService"
             android:enabled="true"
             android:exported="true"/>
-
-        <activity android:name=".ui.activity.UserCenterActivity">
-        </activity>
     </application>
 
 </manifest>

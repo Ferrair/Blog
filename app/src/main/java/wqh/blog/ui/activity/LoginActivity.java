@@ -16,7 +16,9 @@ import wqh.blog.mvp.presenter.remote.user.UserPresenter;
 import wqh.blog.mvp.presenter.remote.user.UserPresenterImpl;
 import wqh.blog.mvp.view.LoadView;
 import wqh.blog.ui.base.ToolbarActivity;
+import wqh.blog.util.CollectionUtil;
 import wqh.blog.util.IntentUtil;
+import wqh.blog.util.Json;
 import wqh.blog.util.ToastUtil;
 
 public class LoginActivity extends ToolbarActivity {
@@ -29,7 +31,7 @@ public class LoginActivity extends ToolbarActivity {
     EditText mPasswordEditText;
 
     private UserPresenter mUserPresenter = new UserPresenterImpl();
-    private LoadView<User> mUserLoadView = new UserLoadView();
+    private LoadView mUserLoadView = new UserLoadView();
 
     @Override
     protected int layoutId() {
@@ -59,9 +61,11 @@ public class LoginActivity extends ToolbarActivity {
         IntentUtil.goToOtherActivity(this, RegisterActivity.class);
     }
 
-    private class UserLoadView implements LoadView<User> {
+    private class UserLoadView implements LoadView {
+
         @Override
-        public void onSuccess(List<User> data) {
+        public void onSuccess(String resultJson) {
+            List<User> data = CollectionUtil.asList(Json.fromJson(resultJson, User[].class));
             if (data.size() == 0) {
                 ToastUtil.showToast("登陆失败");
                 return;

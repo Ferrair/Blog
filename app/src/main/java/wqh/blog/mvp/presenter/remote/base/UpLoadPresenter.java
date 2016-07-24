@@ -1,5 +1,6 @@
 package wqh.blog.mvp.presenter.remote.base;
 
+import wqh.blog.mvp.model.bean.Comment;
 import wqh.blog.mvp.view.LoadView;
 
 /**
@@ -8,5 +9,6 @@ import wqh.blog.mvp.view.LoadView;
  * Load Presenter for upload data to server.
  */
 public interface UpLoadPresenter<DataType> {
-    void publish(DataType aData, LoadView<DataType> mLoadView);
+    void publish(DataType aData, LoadView mLoadView);
+
 }

@@ -3,11 +3,13 @@ package wqh.blog.mvp.model.service;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -32,4 +34,24 @@ public interface CommentAPI {
             @Header("userID") int userID,
             @Header("token") String token
     );
+
+
+    @FormUrlEncoded
+    @POST("blog/replyComment")
+    Call<ResponseBody> replyComment(
+            @Field("belongTo") int belongTo,
+            @Field("content") String content,
+            @Field("createdBy") int createdBy,
+            @Field("replyTo") int replyTo,
+            @Header("userID") int userID,
+            @Header("token") String token
+    );
+
+    /**
+     * Delete a comment by given id.
+     * And the comment.belongTo == currentUser.id.
+     */
+
+    @DELETE("/blog/deleteComment")
+    Call<ResponseBody> deleteById(@Query("id") int id);
 }

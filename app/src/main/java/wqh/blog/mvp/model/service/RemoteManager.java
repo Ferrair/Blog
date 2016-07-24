@@ -6,13 +6,13 @@ import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import wqh.blog.app.Config;
 
 /**
  * Created by WQH on 2016/4/16  19:13.
  */
 public class RemoteManager {
 
-    public static final String DOMAIN = "http://wangqihang.cn:8080/Blog/";
     public static final int OK = 100; // Request OK.
     public static final int PARSE = 109; // Some error in parse JSON.
     public static final int NO_MORE = 107; // No More Data from server.
@@ -32,12 +32,12 @@ public class RemoteManager {
         OkHttpClient client =
                 new OkHttpClient
                         .Builder()
-                        .readTimeout(10, TimeUnit.SECONDS)
+                        .connectTimeout(5, TimeUnit.SECONDS)
                         .build();
 
         retrofit = new Retrofit
                 .Builder()
-                .baseUrl(DOMAIN)
+                .baseUrl(Config.DOMAIN)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();

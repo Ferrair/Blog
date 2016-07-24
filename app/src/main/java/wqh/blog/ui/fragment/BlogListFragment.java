@@ -16,7 +16,9 @@ import wqh.blog.mvp.presenter.remote.blog.BlogDownLoadPresenterImpl;
 import wqh.blog.ui.adapter.animation.AnimationManager;
 import wqh.blog.ui.adapter.event.LayoutState;
 import wqh.blog.ui.base.ScrollFragment;
+import wqh.blog.util.CollectionUtil;
 import wqh.blog.util.IntentUtil;
+import wqh.blog.util.Json;
 import wqh.blog.util.StatusUtil;
 import wqh.blog.util.ToastUtil;
 import wqh.blog.mvp.view.LoadView;
@@ -32,7 +34,7 @@ public class BlogListFragment extends ScrollFragment {
      * A Load-Data Presenter,which means load data from server is it's function.
      * On the other hand,load-data can't be found in this class
      */
-    DownLoadPresenter<Blog> mDownLoadPresenter = new BlogDownLoadPresenterImpl();
+    DownLoadPresenter mDownLoadPresenter = new BlogDownLoadPresenterImpl();
     /**
      * A Load-Data View,which means show loaded-data is it's function.
      * What's more,the loaded-data is from DownLoadPresenter.
@@ -87,11 +89,11 @@ public class BlogListFragment extends ScrollFragment {
      * What's more,the loaded-data is from DownLoadPresenter.
      * The default means that the view will exists forever unless a new Load-Data View is going to be added.
      */
-    private class DefaultLoadView implements LoadView<Blog> {
+    private class DefaultLoadView implements LoadView {
 
         @Override
-        public void onSuccess(List<Blog> data) {
-            showContent(data);
+        public void onSuccess(String resultJson) {
+            showContent(CollectionUtil.asList(Json.fromJson(resultJson, Blog[].class)));
         }
 
         @Override

@@ -10,7 +10,7 @@ import wqh.blog.mvp.view.LoadView;
 /**
  * Created by WQH on 2016/5/5  21:57.
  */
-public class BlogUpLoadPresenterImpl extends LoadPresenter<Blog> implements BlogUpLoadPresenter {
+public class BlogUpLoadPresenterImpl extends LoadPresenter implements BlogUpLoadPresenter {
 
     BlogAPI mBlogAPI;
     private static final String TAG = "BlogUpLoadPresenterImpl";
@@ -21,7 +21,7 @@ public class BlogUpLoadPresenterImpl extends LoadPresenter<Blog> implements Blog
     }
 
     @Override
-    public void publish(Blog aData, LoadView<Blog> mLoadView) {
+    public void publish(Blog aData, LoadView mLoadView) {
         //do nothing here.
     }
 

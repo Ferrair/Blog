@@ -9,9 +9,13 @@ import java.sql.Date;
 public class Comment {
     public Integer id;
     public String content;
-    public Integer createdBy;
     public Date createdAt;
     public Integer belongTo;
+    public Integer replyTo;
+
+    public Integer createdBy;
+    public String creatorAvatarUri;
+    public String creatorName;
 
     @Override
     public String toString() {

@@ -16,7 +16,9 @@ import wqh.blog.mvp.presenter.remote.user.UserPresenter;
 import wqh.blog.mvp.presenter.remote.user.UserPresenterImpl;
 import wqh.blog.mvp.view.LoadView;
 import wqh.blog.ui.base.ToolbarActivity;
+import wqh.blog.util.CollectionUtil;
 import wqh.blog.util.IntentUtil;
+import wqh.blog.util.Json;
 import wqh.blog.util.ToastUtil;
 
 public class RegisterActivity extends ToolbarActivity {
@@ -31,7 +33,7 @@ public class RegisterActivity extends ToolbarActivity {
     EditText mPassWordConfirmEditText;
 
     private UserPresenter mUserPresenter = new UserPresenterImpl();
-    private LoadView<User> mUserLoadView = new UserLoadView();
+    private LoadView mUserLoadView = new UserLoadView();
 
     @Override
     protected int layoutId() {
@@ -59,9 +61,11 @@ public class RegisterActivity extends ToolbarActivity {
     }
 
 
-    private class UserLoadView implements LoadView<User> {
+    private class UserLoadView implements LoadView {
+
         @Override
-        public void onSuccess(List<User> data) { //data in null in this section.
+        public void onSuccess(String resultJson) {
+            List<User> data = CollectionUtil.asList(Json.fromJson(resultJson, User[].class));
             ToastUtil.showToast("注册成功");
             UserManager.instance().saveUser(data.get(0));
             new Handler().postDelayed(() -> IntentUtil.goToOtherActivity(RegisterActivity.this, MainActivity.class), 1000);

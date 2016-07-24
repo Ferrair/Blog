@@ -107,43 +107,4 @@ public class DownLoadHelper {
         void onProgress(Download toDownload, int percent);
     }
 
-    /**
-     * A Simple implements of DownLoadEvent.
-     * Provided some Toast.
-     */
-    public static class DownLoadEventAdapter implements DownLoadEvent {
-
-        @Override
-        public void onPreProgress(Download toDownload) {
-
-        }
-
-        @Override
-        public void onPreStart(Download toDownload) {
-
-        }
-
-        @Override
-        public void onStart(Download toDownload) {
-            ToastUtil.showToast(toDownload.title + " 加入下载队列");
-        }
-
-        @Override
-        public void onSuccess(Download toDownload) {
-            DownLoadHelper.instance().data().remove(toDownload);
-            ToastUtil.showToast("已保存到->" + toDownload.filePath);
-        }
-
-        @Override
-        public void onFail(Download toDownload) {
-            ToastUtil.showToast("下载失败");
-        }
-
-        @Override
-        public void onProgress(Download toDownload, int percent) {
-
-        }
-    }
-
-
 }

@@ -3,16 +3,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/rootView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="wqh.blog.ui.activity.AllCommentsActivity">
-    <!--
-       layout_collapseMode="pin" : when collapse,this view will not disappear
-       layout_collapseMode="parallax" : when collapse,this view will disappear
-   -->
+    tools:context=".ui.activity.SettingActivity">
+
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
@@ -23,19 +20,16 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:title="所有评论"/>
+            app:title="设置"/>
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/layout_list"/>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/post_comment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@android:drawable/ic_input_add"
-        app:layout_behavior="@string/scale_behavior"/>
+    <LinearLayout
+        android:id="@+id/settingContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="10dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
 </android.support.design.widget.CoordinatorLayout>

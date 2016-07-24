@@ -1,6 +1,8 @@
 package wqh.blog.mvp.presenter.remote.comment;
 
 
+import android.util.Log;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import wqh.blog.mvp.model.bean.Comment;
@@ -16,32 +18,28 @@ import wqh.blog.mvp.view.LoadView;
 /**
  * Created by WQH on 2016/5/1  20:49.
  */
-public class CommentDownLoadPresenterImpl extends LoadPresenter<Comment> implements CommentDownLoadPresenter {
+public class CommentDownLoadPresenterImpl extends LoadPresenter implements CommentDownLoadPresenter {
+    private static final String TAG = "CommentDownLoadPresenterImpl";
     CommentAPI mCommentAPI;
+
 
     @Override
     protected void initAPI() {
         mCommentAPI = RemoteManager.create(CommentAPI.class);
     }
 
-    public void loadById(int blogId, int pageNum, LoadView<Comment> mLoadView) {
+    public void loadById(int blogId, int pageNum, LoadView mLoadView) {
         Call<ResponseBody> call = mCommentAPI.queryComment(blogId, pageNum);
         doQuery(call, mLoadView);
     }
 
-    private void doQuery(Call<ResponseBody> call, LoadView<Comment> mLoadView) {
-        call.enqueue(new CommentCallback(mLoadView));
+    @Override
+    public void deleteById(int id, LoadView mLoadView) {
+        Call<ResponseBody> call = mCommentAPI.deleteById(id);
+        doQuery(call, mLoadView);
     }
 
-    class CommentCallback extends DefaultCallback<Comment> {
-
-        public CommentCallback(LoadView<Comment> mLoadView) {
-            super(mLoadView);
-        }
-
-        @Override
-        protected void onParseResult(String result) {
-            mLoadView.onSuccess(CollectionUtil.asList(Json.fromJson(result, Comment[].class)));
-        }
+    private void doQuery(Call<ResponseBody> call, LoadView mLoadView) {
+        call.enqueue(new DefaultCallback(mLoadView));
     }
 }

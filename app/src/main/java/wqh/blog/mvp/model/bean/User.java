@@ -6,9 +6,10 @@ package wqh.blog.mvp.model.bean;
 public class User {
     public Integer id;
     public String username;
-    public String passwork;
+    public String password;
     public String token;
-    public String avatarUrl;
+    public String avatarUri;
+    public String coverUri; // user's cover background image url.
 
     @Override
     public String toString() {

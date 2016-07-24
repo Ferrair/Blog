@@ -19,6 +19,9 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import java.util.List;
 
 import wqh.blog.R;
+import wqh.blog.mvp.model.service.UserManager;
+import wqh.blog.ui.activity.LoginActivity;
+import wqh.blog.ui.activity.SettingActivity;
 import wqh.blog.ui.activity.UserCenterActivity;
 import wqh.blog.util.IntentUtil;
 
@@ -47,10 +50,16 @@ public class DrawerDelegate {
         header = new AccountHeaderBuilder()
                 .withActivity(activity)
                 .withHeaderBackground(R.mipmap.user_info_bg)
-                .addProfiles(profileDrawerItem = new ProfileDrawerItem())
+                .addProfiles(profileDrawerItem = new ProfileDrawerItem().withName("未登录"))
                 .withOnAccountHeaderListener((view, profile, current) -> {
-                    //activity.startActivity(new Intent(activity, UserCenterActivity.class));
-                    //drawer.closeDrawer();
+                    /*
+                     * User is logged => UserCenterActivity
+                     * User is not logged => LoginActivity
+                     */
+                    if (UserManager.instance().isLogged())
+                        IntentUtil.goToOtherActivity(activity, UserCenterActivity.class);
+                    else
+                        IntentUtil.goToOtherActivity(activity, LoginActivity.class);
                     return true;
                 })
                 .build();
@@ -63,8 +72,7 @@ public class DrawerDelegate {
                 .withDrawerItems(drawerListener.onDrawerMenuCreate())
                 .withOnDrawerItemClickListener((view, position, drawerItem) -> {
                     if (drawerItem == setting) {
-                        IntentUtil.goToOtherActivity(activity, UserCenterActivity.class);
-                        drawer.closeDrawer();
+                        IntentUtil.goToOtherActivity(activity, SettingActivity.class);
                         return true;
                     }
                     return drawerListener.onDrawerMenuSelected(view, position, drawerItem);

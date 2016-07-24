@@ -13,13 +13,17 @@ import butterknife.OnClick;
 import us.feras.mdv.MarkdownView;
 import wqh.blog.R;
 import wqh.blog.mvp.model.bean.Blog;
+import wqh.blog.mvp.model.service.UserManager;
 import wqh.blog.mvp.presenter.local.LocalPresenter;
 import wqh.blog.mvp.presenter.remote.blog.BlogDownLoadPresenterImpl;
 import wqh.blog.mvp.presenter.remote.base.DownLoadPresenter;
 import wqh.blog.mvp.presenter.remote.blog.BlogUpLoadPresenter;
 import wqh.blog.mvp.presenter.remote.blog.BlogUpLoadPresenterImpl;
 import wqh.blog.ui.base.StateActivity;
+import wqh.blog.ui.customview.Dialog;
+import wqh.blog.util.CollectionUtil;
 import wqh.blog.util.IntentUtil;
+import wqh.blog.util.Json;
 import wqh.blog.util.ShareUtil;
 import wqh.blog.util.StatusUtil;
 import wqh.blog.util.TimeUtil;
@@ -55,7 +59,7 @@ public class BlogItemActivity extends StateActivity {
      * And this below two class is a Presenter for Blog,and a Presenter for Comment which belongs to a Blog.
      * that is why the two Presenter will be existed in one Activity
      */
-    DownLoadPresenter<Blog> mBlogDownLoadPresenter = new BlogDownLoadPresenterImpl();
+    DownLoadPresenter mBlogDownLoadPresenter = new BlogDownLoadPresenterImpl();
     /*
      * A Up-Load-Data Presenter that add view-times for this blog.
      * But it can tolerate error in this method.HaHa......
@@ -95,13 +99,19 @@ public class BlogItemActivity extends StateActivity {
         mBlogUpLoadPresenter.addTimes(blogId);
     }
 
+
     /*
      * Footer Layout.
-     * Using <code>@OnClick</code> to go to another Activity.
      */
     @OnClick(R.id.post_comment)
     public void postComment() {
-        IntentUtil.goToOtherActivity(this, PostCommentActivity.class, "id", blogId);
+        if (UserManager.instance().isLogged()) {
+            IntentUtil.goToOtherActivity(this, PostCommentActivity.class, "id", blogId);
+        } else {
+            Dialog.create(this, "只有登陆之后才可以发表评论咯，是否前去登陆？").setPositiveListener(
+                    "前去登陆",
+                    v -> IntentUtil.goToOtherActivity(BlogItemActivity.this, LoginActivity.class)).show();
+        }
     }
 
     @OnClick(R.id.all_comments)
@@ -137,10 +147,11 @@ public class BlogItemActivity extends StateActivity {
      * The below class will show View after fetch data from server.
      * So see initView() method in this class.
      */
-    private class DefaultBlogDownLoadView implements LoadView<Blog> {
+    private class DefaultBlogDownLoadView implements LoadView {
 
         @Override
-        public void onSuccess(List<Blog> data) {
+        public void onSuccess(String resultJson) {
+            List<Blog> data = CollectionUtil.asList(Json.fromJson(resultJson, Blog[].class));
             itemData = data.get(0);
             mLocalPresenter.db().save(itemData);
             showContent(itemData);

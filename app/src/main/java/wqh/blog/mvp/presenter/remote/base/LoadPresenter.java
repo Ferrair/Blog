@@ -8,13 +8,13 @@ import wqh.blog.mvp.view.LoadView;
  * Load Presenter. provided some init methods.
  * So the subclass can add some specific load jobs.@link{DownLoadPresenter} and @link{UpLoadPresenter}
  */
-public abstract class LoadPresenter<DataType> {
+public abstract class LoadPresenter {
     /**
      * The default LoadView,the LoadView will not change.
      */
-    protected LoadView<DataType> mLoadView;
+    protected LoadView mLoadView;
 
-    public LoadPresenter(LoadView<DataType> mLoadView) {
+    public LoadPresenter(LoadView mLoadView) {
         this.mLoadView = mLoadView;
         initAPI();
     }

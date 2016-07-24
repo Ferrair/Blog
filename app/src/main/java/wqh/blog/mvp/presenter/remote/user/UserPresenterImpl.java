@@ -14,7 +14,7 @@ import wqh.blog.util.Json;
 /**
  * Created by WQH on 2016/5/13  22:22.
  */
-public class UserPresenterImpl extends LoadPresenter<User> implements UserPresenter {
+public class UserPresenterImpl extends LoadPresenter implements UserPresenter {
 
     private UserAPI mUserAPI;
 
@@ -24,41 +24,28 @@ public class UserPresenterImpl extends LoadPresenter<User> implements UserPresen
     }
 
     @Override
-    public void login(String username, String password, LoadView<User> mLoadView) {
+    public void login(String username, String password, LoadView mLoadView) {
         Call<ResponseBody> call = mUserAPI.login(username, password);
         doAction(call, mLoadView);
     }
 
     @Override
-    public void register(String username, String password, LoadView<User> mLoadView) {
+    public void register(String username, String password, LoadView mLoadView) {
         Call<ResponseBody> call = mUserAPI.register(username, password);
         doAction(call, mLoadView);
     }
 
-    private void doAction(Call<ResponseBody> call, LoadView<User> mLoadView) {
-        call.enqueue(new UserCallback(mLoadView));
-    }
-
     @Override
-    public void logout(int id, LoadView<User> mLoadView) {
+    public void logout(int id, LoadView mLoadView) {
         Call<ResponseBody> call = mUserAPI.logout(id);
         doAction(call, mLoadView);
     }
-
     @Override
-    public boolean status(int id, LoadView<User> mLoadView) {
+    public boolean status(int id, LoadView mLoadView) {
         return false;
     }
 
-    private class UserCallback extends DefaultCallback<User> {
-
-        public UserCallback(LoadView<User> mLoadView) {
-            super(mLoadView);
-        }
-
-        @Override
-        protected void onParseResult(String result) {
-            mLoadView.onSuccess(CollectionUtil.asList(Json.fromJson(result, User[].class)));
-        }
+    private void doAction(Call<ResponseBody> call, LoadView mLoadView) {
+        call.enqueue(new DefaultCallback(mLoadView));
     }
 }

@@ -321,7 +321,7 @@ public abstract class BaseAdapter<Holder extends BaseAdapter.BaseHolder, DataTyp
             if (footerProgressBar.getVisibility() != View.VISIBLE) {
                 footerProgressBar.setVisibility(View.VISIBLE);
             }
-            footerText.setText("Load");
+            footerText.setText(R.string.footer_load_more);
         }
 
         private void noMore() {
@@ -329,7 +329,7 @@ public abstract class BaseAdapter<Holder extends BaseAdapter.BaseHolder, DataTyp
             if (footerProgressBar.getVisibility() != View.GONE) {
                 footerProgressBar.setVisibility(View.GONE);
             }
-            footerText.setText("End");
+            footerText.setText(R.string.footer_load_finish);
         }
 
         private void hide() {
