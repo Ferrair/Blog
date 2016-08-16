@@ -1,12 +1,61 @@
 <resources>
-    <string name="app_name">Blog</string>
     <string name="footer_behavior" translatable="false">wqh.blog.ui.customview.behavior.FooterBehavior</string>
     <string name="scale_behavior" translatable="false">wqh.blog.ui.customview.behavior.ScaleBehavior</string>
-    <string name="search">Search</string>
-    <string name="action_settings">Settings</string>
-    <string name="loading">正在加载</string>
-    <string name="error">出错了</string>
-    <string name="empty">空空如也</string>
-    <string name="footer_load_more">正在加载</string>
-    <string name="footer_load_finish">没用更多了</string>
+
+
+    <string name="app_name">Blog</string>
+    <string name="action_search">Search</string>
+    <string name="action_settings">Setting</string>
+    <string name="loading">Loading</string>
+    <string name="error">Error</string>
+    <string name="empty">Nothing</string>
+    <string name="footer_load_more">Loading</string>
+    <string name="footer_load_finish">No More</string>
+    <string name="have_downloaded">This file is in download-list.</string>
+    <string name="need_login">You need to login before comment.Go Login?</string>
+    <string name="go_login">Login</string>
+    <string name="copy_comment">Copy Comment</string>
+    <string name="delete_comment">Delete Comment</string>
+    <string name="reply_comment">Reply Comment</string>
+    <string name="copy_to_clipboard">This String is copied to clipboard</string>
+    <string name="undo">Undo</string>
+    <string name="no_network">No Network</string>
+    <string name="username_empty">Username Empty</string>
+    <string name="password_empty">Password Empty</string>
+    <string name="login_error">Login Error</string>
+    <string name="login_success">Login Success</string>
+    <string name="download_list">Download Queue</string>
+    <string name="reply">Reply</string>
+    <string name="comment_empty">Comment Empty</string>
+    <string name="wrong_password_confirm">Two Password Wrong</string>
+    <string name="register_success">Register Success</string>
+    <string name="register_fail">Register Fail</string>
+    <string name="change_cover">Change This Cover</string>
+    <string name="save_cover">Save This Cover</string>
+    <string name="blog">Blog</string>
+    <string name="work">Work</string>
+    <string name="download_start">Start Fownload</string>
+    <string name="download">Download</string>
+    <string name="start">Start</string>
+    <string name="save_in">Save In</string>
+    <string name="download_fail">Download Fail</string>
+    <string name="download_finish">Download Finish</string>
+    <string name="download_file">Download File</string>
+    <string name="downloading">Downloading</string>
+    <string name="permission_denied">Permission Denied</string>
+    <string name="all_comment">All Comments</string>
+    <string name="blog_detail">Detail</string>
+    <string name="your_comment">Your Comment</string>
+    <string name="share_blog">Share This Blog</string>
+    <string name="login">Login</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="go_register">Click add-button to register.</string>
+    <string name="post_comment">Post Comment</string>
+    <string name="say_something">Say Something</string>
+    <string name="register">Register</string>
+    <string name="password_confirm">Confirm</string>
+    <string name="search_text">Blog, Work.</string>
+    <string name="cancel">Cancel</string>
+    <string name="no_login">No Login</string>
 </resources>

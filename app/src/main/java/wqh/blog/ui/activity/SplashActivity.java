@@ -1,19 +1,24 @@
 package wqh.blog.ui.activity;
 
+import android.app.Activity;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 
 import wqh.blog.R;
-import wqh.blog.util.IntentUtil;
+import wqh.blog.manager.IntentManager;
 
-public class SplashActivity extends AppCompatActivity {
+/**
+ * Full Screen Mode.(Immersive Mode,hide status bar nad navigation bar)
+ * See Manifest.xml and style.xml.
+ */
+
+public class SplashActivity extends Activity {
 
     final Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            IntentUtil.goToOtherActivity(SplashActivity.this, MainActivity.class);
+            IntentManager.goToOtherActivity(SplashActivity.this, MainActivity.class);
             finish();
         }
     };
@@ -22,8 +27,8 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        task();
         new Thread(() -> {
-            task();
             handler.sendMessageDelayed(Message.obtain(), 2000);
         }).start();
     }

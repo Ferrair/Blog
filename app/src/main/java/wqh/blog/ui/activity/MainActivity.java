@@ -7,7 +7,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,12 +24,13 @@ import wqh.blog.app.Config;
 import wqh.blog.mvp.model.bean.User;
 import wqh.blog.mvp.model.service.UserManager;
 import wqh.blog.ui.adapter.FragmentAdapter;
+import wqh.blog.ui.base.BaseFragment;
 import wqh.blog.ui.base.ScrollFragment;
 import wqh.blog.ui.base.ToolbarActivity;
 import wqh.blog.ui.fragment.BlogListFragment;
 import wqh.blog.ui.customview.DrawerDelegate;
 import wqh.blog.ui.fragment.WorkListFragment;
-import wqh.blog.util.IntentUtil;
+import wqh.blog.manager.IntentManager;
 
 /**
  * Created by WQH on 2016/4/11  17:11.
@@ -51,7 +51,7 @@ public class MainActivity extends ToolbarActivity implements DrawerDelegate.Draw
     /**
      * A List that holds Fragment.
      */
-    private List<Fragment> mContentList = new ArrayList<>();
+    private List<BaseFragment> mContentList = new ArrayList<>();
 
     @Override
     protected int layoutId() {
@@ -75,7 +75,7 @@ public class MainActivity extends ToolbarActivity implements DrawerDelegate.Draw
         mTabLayout.setupWithViewPager(mViewPager);
     }
 
-    private List<Fragment> getTabFragment() {
+    private List<BaseFragment> getTabFragment() {
         mContentList.add(new BlogListFragment());
         mContentList.add(new WorkListFragment());
         return mContentList;
@@ -85,10 +85,10 @@ public class MainActivity extends ToolbarActivity implements DrawerDelegate.Draw
     public boolean onDrawerMenuSelected(View view, int position, IDrawerItem drawerItem) {
         switch (position) {
             case 1:
-                IntentUtil.goToOtherActivity(this, DownLoadListActivity.class);
+                IntentManager.goToOtherActivity(this, DownLoadListActivity.class);
                 break;
             case 2:
-                IntentUtil.goToOtherActivity(this, LoginActivity.class);
+                IntentManager.goToOtherActivity(this, LoginActivity.class);
                 break;
         }
         return false;
@@ -98,7 +98,7 @@ public class MainActivity extends ToolbarActivity implements DrawerDelegate.Draw
     @Override
     public List<IDrawerItem> onDrawerMenuCreate() {
         List<IDrawerItem> list = new ArrayList<>();
-        list.add(new PrimaryDrawerItem().withName("下载队列").withIcon(FontAwesome.Icon.faw_download));
+        list.add(new PrimaryDrawerItem().withName(R.string.download_list).withIcon(FontAwesome.Icon.faw_download));
         list.add(new PrimaryDrawerItem().withName("登陆").withIcon(FontAwesome.Icon.faw_download));
         return list;
     }
@@ -113,7 +113,7 @@ public class MainActivity extends ToolbarActivity implements DrawerDelegate.Draw
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_search:
-                IntentUtil.goToOtherActivity(this, SearchActivity.class);
+                IntentManager.goToOtherActivity(this, SearchActivity.class);
                 break;
         }
         return true;

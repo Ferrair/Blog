@@ -1,1 +1,5 @@
-<resources></resources>
+<resources>
+    <style name="AppTheme.NoActionBar.Transparent" parent="AppTheme.NoActionBar">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+</resources>

@@ -1,6 +1,7 @@
 package wqh.blog.mvp.presenter.remote.user;
 
-import wqh.blog.mvp.model.bean.User;
+import java.io.File;
+
 import wqh.blog.mvp.view.LoadView;
 
 /**
@@ -14,4 +15,8 @@ public interface UserPresenter {
     void logout(int id, LoadView mLoadView);
 
     boolean status(int id, LoadView mLoadView);
+
+    void changeCover(int id, File coverFile, LoadView mLoadView);
+
+    void changeAvatar(int id, File avatarFile, LoadView mLoadView);
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.View;
 
 import me.drakeet.materialdialog.MaterialDialog;
+import wqh.blog.R;
 
 /**
  * Created by WQH on 2016/5/5  20:06.
@@ -38,7 +39,7 @@ public class Dialog {
      * <code>Dialog.create(getActivity(), "是否下载 '" + data.title + "'").setPositiveListener("下载", v -> doDownload(data)).show()</code>
      */
     public static Dialog create(Context context, String message) {
-        return new Dialog(context, null, message).setNegativeListener("取消");
+        return new Dialog(context, null, message).setNegativeListener(context.getString(R.string.cancel));
     }
 
     private Dialog setNegativeListener(String text, View.OnClickListener listener) {

@@ -23,4 +23,8 @@
         <item name="shadow_right">@mipmap/shadow_right</item>
         <item name="shadow_bottom">@mipmap/shadow_bottom</item>
     </style>
+
+    <style name="AppTheme.NoActionBar.Transparent" parent="AppTheme.NoActionBar">
+        <item name="colorPrimaryDark">@android:color/transparent</item>
+    </style>
 </resources>

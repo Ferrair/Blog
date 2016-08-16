@@ -17,8 +17,8 @@ import wqh.blog.mvp.presenter.remote.comment.CommentUpLoadPresenter;
 import wqh.blog.mvp.presenter.remote.comment.CommentUpLoadPresenterImpl;
 import wqh.blog.ui.base.ToolbarActivity;
 import wqh.blog.util.CollectionUtil;
-import wqh.blog.util.IntentUtil;
-import wqh.blog.util.Json;
+import wqh.blog.manager.IntentManager;
+import wqh.blog.util.JsonUtil;
 import wqh.blog.util.ToastUtil;
 import wqh.blog.mvp.view.LoadView;
 
@@ -50,7 +50,7 @@ public class PostCommentActivity extends ToolbarActivity {
 
     private void initView() {
         if (replyTo != 0) {
-            mCommentContent.setHint("回复" + replyToUserName + ":");
+            mCommentContent.setHint(getString(R.string.reply) + replyToUserName + ":");
         }
     }
 
@@ -65,7 +65,7 @@ public class PostCommentActivity extends ToolbarActivity {
         aComment.content = comment;
         aComment.createdBy = UserManager.instance().currentUser().id;
         if (replyTo != 0) {
-            aComment.replyTo = replyTo;
+            aComment.replyTo = replyTo; // reply to which comment.
             mCommentUpLoadPresenter.reply(aComment, new DefaultCommentUpLoadView());
         } else {
             mCommentUpLoadPresenter.publish(aComment, new DefaultCommentUpLoadView());
@@ -75,7 +75,7 @@ public class PostCommentActivity extends ToolbarActivity {
 
     private boolean isValid(String text) {
         if (TextUtils.isEmpty(text)) {
-            ToastUtil.showToast("评论不能为空！");
+            ToastUtil.showToast(R.string.comment_empty);
             return false;
         }
         return true;
@@ -107,8 +107,8 @@ public class PostCommentActivity extends ToolbarActivity {
     private class DefaultCommentUpLoadView implements LoadView {
         @Override
         public void onSuccess(String resultJson) {
-            List<Comment> data = CollectionUtil.asList(Json.fromJson(resultJson, Comment[].class));
-            IntentUtil.goToOtherActivity(PostCommentActivity.this, AllCommentsActivity.class, "id", blogId);
+            List<Comment> data = CollectionUtil.asList(JsonUtil.fromJson(resultJson, Comment[].class));
+            IntentManager.goToOtherActivity(PostCommentActivity.this, AllCommentsActivity.class, "id", blogId);
             finish();
         }
 

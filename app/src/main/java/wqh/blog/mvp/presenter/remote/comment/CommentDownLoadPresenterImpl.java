@@ -1,18 +1,12 @@
 package wqh.blog.mvp.presenter.remote.comment;
 
 
-import android.util.Log;
-
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import wqh.blog.mvp.model.bean.Comment;
 import wqh.blog.mvp.model.service.CommentAPI;
 import wqh.blog.mvp.model.service.RemoteManager;
 import wqh.blog.mvp.presenter.remote.base.DefaultCallback;
-import wqh.blog.mvp.presenter.remote.base.DownLoadPresenter;
 import wqh.blog.mvp.presenter.remote.base.LoadPresenter;
-import wqh.blog.util.CollectionUtil;
-import wqh.blog.util.Json;
 import wqh.blog.mvp.view.LoadView;
 
 /**

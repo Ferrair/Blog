@@ -23,7 +23,7 @@ import wqh.blog.mvp.model.service.UserManager;
 import wqh.blog.ui.activity.LoginActivity;
 import wqh.blog.ui.activity.SettingActivity;
 import wqh.blog.ui.activity.UserCenterActivity;
-import wqh.blog.util.IntentUtil;
+import wqh.blog.manager.IntentManager;
 
 /**
  * Created by WQH on 2016/4/11  18:30.
@@ -50,21 +50,21 @@ public class DrawerDelegate {
         header = new AccountHeaderBuilder()
                 .withActivity(activity)
                 .withHeaderBackground(R.mipmap.user_info_bg)
-                .addProfiles(profileDrawerItem = new ProfileDrawerItem().withName("未登录"))
+                .addProfiles(profileDrawerItem = new ProfileDrawerItem().withName(activity.getString(R.string.no_login)))
                 .withOnAccountHeaderListener((view, profile, current) -> {
                     /*
                      * User is logged => UserCenterActivity
                      * User is not logged => LoginActivity
                      */
                     if (UserManager.instance().isLogged())
-                        IntentUtil.goToOtherActivity(activity, UserCenterActivity.class);
+                        IntentManager.goToOtherActivity(activity, UserCenterActivity.class);
                     else
-                        IntentUtil.goToOtherActivity(activity, LoginActivity.class);
+                        IntentManager.goToOtherActivity(activity, LoginActivity.class);
                     return true;
                 })
                 .build();
 
-        final PrimaryDrawerItem setting = new PrimaryDrawerItem().withIcon(FontAwesome.Icon.faw_cogs).withName("设置");
+        final PrimaryDrawerItem setting = new PrimaryDrawerItem().withIcon(FontAwesome.Icon.faw_cogs).withName(R.string.action_settings);
         drawer = new DrawerBuilder()
                 .withToolbar(toolbar)
                 .withActivity(activity)
@@ -72,7 +72,7 @@ public class DrawerDelegate {
                 .withDrawerItems(drawerListener.onDrawerMenuCreate())
                 .withOnDrawerItemClickListener((view, position, drawerItem) -> {
                     if (drawerItem == setting) {
-                        IntentUtil.goToOtherActivity(activity, SettingActivity.class);
+                        IntentManager.goToOtherActivity(activity, SettingActivity.class);
                         return true;
                     }
                     return drawerListener.onDrawerMenuSelected(view, position, drawerItem);

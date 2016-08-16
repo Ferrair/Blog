@@ -22,8 +22,7 @@ import wqh.blog.util.TimeUtil;
 
 /**
  * Created by WQH on 2016/4/11  23:31.
- * <p>
- * Adapter for list of Blog
+ * Adapter for list of Blog.
  */
 public class BlogAdapter extends BaseAdapter<BlogAdapter.BlogHolder, Blog> {
 
@@ -32,7 +31,7 @@ public class BlogAdapter extends BaseAdapter<BlogAdapter.BlogHolder, Blog> {
     }
 
     public BlogAdapter(Context mContext) {
-        super(mContext, null);
+        this(mContext, null);
     }
 
 

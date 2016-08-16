@@ -19,7 +19,7 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:title="发表评论"/>
+            app:title="@string/post_comment"/>
     </android.support.design.widget.AppBarLayout>
 
     <EditText
@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="?attr/actionBarSize"
         android:gravity="top"
-        android:hint="说点什么"
+        android:hint="@string/say_something"
         android:minLines="6"
         android:padding="5dp"/>
 </android.support.design.widget.CoordinatorLayout>

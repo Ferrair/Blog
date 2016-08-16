@@ -23,7 +23,7 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:title="所有评论"/>
+            app:title="@string/all_comment"/>
 
     </android.support.design.widget.AppBarLayout>
 

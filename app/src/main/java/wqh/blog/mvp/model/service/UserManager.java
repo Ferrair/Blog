@@ -1,8 +1,8 @@
 package wqh.blog.mvp.model.service;
 
 import wqh.blog.mvp.model.bean.User;
-import wqh.blog.util.Json;
-import wqh.blog.util.SharePreferenceUtil;
+import wqh.blog.util.JsonUtil;
+import wqh.blog.manager.SharePreferenceManager;
 
 /**
  * Created by WQH on 2016/5/14  21:44.
@@ -18,7 +18,7 @@ public class UserManager {
     }
 
     private UserManager() {
-        currentUser = Json.fromJson(SharePreferenceUtil.read().getString(KEY, null), User.class);
+        currentUser = JsonUtil.fromJson(SharePreferenceManager.read().getString(KEY, null), User.class);
     }
 
     public static UserManager instance() {
@@ -27,7 +27,7 @@ public class UserManager {
 
     public void saveUser(User aUser) {
         currentUser = aUser;
-        SharePreferenceUtil.write().putString(KEY, Json.toJson(aUser)).commit();
+        SharePreferenceManager.write().putString(KEY, JsonUtil.toJson(aUser)).commit();
     }
 
     public User currentUser() {

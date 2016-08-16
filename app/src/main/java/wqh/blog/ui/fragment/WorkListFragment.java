@@ -6,12 +6,10 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.widget.LinearLayout;
@@ -24,20 +22,21 @@ import butterknife.Bind;
 import wqh.blog.R;
 import wqh.blog.download.DownLoadHelper;
 import wqh.blog.download.WorkDownLoadService;
+import wqh.blog.manager.PermissionManager;
 import wqh.blog.mvp.model.bean.Download;
+import wqh.blog.mvp.model.bean.Work;
 import wqh.blog.mvp.model.service.RemoteManager;
 import wqh.blog.mvp.presenter.remote.base.DownLoadPresenter;
 import wqh.blog.mvp.presenter.remote.work.WorkDownLoadPresenterImpl;
+import wqh.blog.mvp.view.LoadView;
 import wqh.blog.ui.activity.DownLoadListActivity;
 import wqh.blog.ui.adapter.WorkAdapter;
-import wqh.blog.mvp.model.bean.Work;
 import wqh.blog.ui.adapter.event.LayoutState;
 import wqh.blog.ui.base.ScrollFragment;
 import wqh.blog.ui.customview.Dialog;
-import wqh.blog.mvp.view.LoadView;
 import wqh.blog.util.CollectionUtil;
-import wqh.blog.util.IntentUtil;
-import wqh.blog.util.Json;
+import wqh.blog.manager.IntentManager;
+import wqh.blog.util.JsonUtil;
 import wqh.blog.util.StatusUtil;
 import wqh.blog.util.ToastUtil;
 
@@ -61,11 +60,40 @@ public class WorkListFragment extends ScrollFragment {
 
         // Show Download Dialog here.
         mAdapter.setOnItemLongClickListener(R.id.item_work, (view, data) -> {
-            if (grantPermission())
-                Dialog.create(getActivity(), "是否下载 '" + data.title + "'").setPositiveListener("下载", v -> doDownload(data)).show();
+            if (PermissionManager.hasPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                Dialog.create(getActivity(), getString(R.string.download_start) + data.title + "'").setPositiveListener(getString(R.string.download), v -> doDownload(data)).show();
+            } else {
+                PermissionManager.requestPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            }
         });
 
         mDownLoadPresenter.loadAll(1, mDefaultLoadDataView);
+    }
+
+    /**
+     * Callback for the result from requesting permissions. This method is invoked for every call on requestPermissions(android.app.Activity, String[], int).
+     *
+     * Note: It is possible that the permissions request interaction with the user is interrupted.
+     * In this case you will receive empty permissions and results arrays which should be treated as a cancellation.
+     *
+     * @param requestCode  int: The request code passed in requestPermissions(android.app.Activity, String[], int)
+     * @param permissions  String: The requested permissions. Never null.
+     * @param grantResults int: The grant results for the corresponding permissions which is either PERMISSION_GRANTED or PERMISSION_DENIED. Never null.
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            for (String permission : permissions) {
+                if (permission.equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    for (int grantResult : grantResults) {
+                        if (grantResult == PackageManager.PERMISSION_GRANTED) {
+                            // Download.
+                        }
+                    }
+                }
+
+            }
+        }
     }
 
 
@@ -76,7 +104,7 @@ public class WorkListFragment extends ScrollFragment {
 
     @Override
     public String toString() {
-        return "产品";
+        return "Work";
     }
 
     @Override
@@ -90,30 +118,12 @@ public class WorkListFragment extends ScrollFragment {
     }
 
     /*
-    * Request Permission for WRITE_EXTERNAL_STORAGE.
-    */
-    private boolean grantPermission() {
-        if (Build.VERSION.SDK_INT < 23)
-            return true;
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                ToastUtil.showToast("Give me Permission for SDCard");
-                return false;
-            } else {
-                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 10);
-                return true;
-            }
-        }
-        return true;
-    }
-
-    /*
      * Download the Work by given URL.
      */
     private void doDownload(Work data) {
         DownLoadHelper.instance().addDownLoadEvent(data.fileName, new WorkDownLoadEvent());
         DownLoadHelper.instance().offer(data.id, data.fileName, data.title);
-        IntentUtil.startService(getActivity(), WorkDownLoadService.class);
+        IntentManager.startService(getActivity(), WorkDownLoadService.class);
     }
 
 
@@ -126,7 +136,7 @@ public class WorkListFragment extends ScrollFragment {
 
         @Override
         public void onSuccess(String resultJson) {
-            List<Work> data = CollectionUtil.asList(Json.fromJson(resultJson, Work[].class));
+            List<Work> data = CollectionUtil.asList(JsonUtil.fromJson(resultJson, Work[].class));
             mStateLayout.showContentView();
             mAdapter.addAll(data);
             mRecyclerView.setAdapter(mAdapter);
@@ -139,7 +149,7 @@ public class WorkListFragment extends ScrollFragment {
             }
             //If no network will show local-data instead of error-view.
             if (!StatusUtil.isNetworkAvailable(getActivity())) {
-                ToastUtil.showToast("没有网络咯");
+                ToastUtil.showToast(R.string.no_network);
                 mStateLayout.showErrorView();
             }
             Log.e(TAG, "ErrorCode-> " + errorCode + ", ErrorMsg-> " + errorMsg);
@@ -162,7 +172,7 @@ public class WorkListFragment extends ScrollFragment {
 
         @Override
         public void onStart(Download toDownload) {
-            Snackbar.make(mRootView, toDownload.title + "开始下载", Snackbar.LENGTH_LONG).setAction("取消", v -> {
+            Snackbar.make(mRootView, toDownload.title + getString(R.string.start), Snackbar.LENGTH_LONG).setAction(getString(R.string.undo), v -> {
                 DownLoadHelper.instance().data().remove(toDownload);
                 liteOrm.delete(toDownload);
             }).show();
@@ -176,12 +186,12 @@ public class WorkListFragment extends ScrollFragment {
         @Override
         public void onSuccess(Download toDownload) {
             DownLoadHelper.instance().data().remove(toDownload);
-            ToastUtil.showToast("已保存到->" + toDownload.filePath);
+            ToastUtil.showToast(getString(R.string.save_in) + "->" + toDownload.filePath);
         }
 
         @Override
         public void onFail(Download toDownload) {
-            ToastUtil.showToast("下载失败");
+            ToastUtil.showToast(R.string.download_fail);
         }
 
         @Override
@@ -208,7 +218,7 @@ public class WorkListFragment extends ScrollFragment {
         public void onStart(Download toDownload) {
             super.onStart(toDownload);
 
-            mBuilder.setContentTitle("下载文件").setContentText(toDownload.title + "正在下载").setSmallIcon(R.mipmap.ic_launcher).setProgress(100, 0, false);
+            mBuilder.setContentTitle(getString(R.string.download_file)).setContentText(toDownload.title + getString(R.string.downloading)).setSmallIcon(R.mipmap.ic_launcher).setProgress(100, 0, false);
             Intent resultIntent = new Intent(getActivity(), DownLoadListActivity.class);
             PendingIntent resultPendingIntent = PendingIntent.getActivity(getActivity(), 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             mBuilder.setContentIntent(resultPendingIntent);
@@ -233,7 +243,7 @@ public class WorkListFragment extends ScrollFragment {
         @Override
         public void onSuccess(Download toDownload) {
             super.onSuccess(toDownload);
-            mBuilder.setContentText("下载完成").setProgress(0, 0, false);
+            mBuilder.setContentText(getString(R.string.download_finish)).setProgress(0, 0, false);
             mNotifyManager.notify(1, mBuilder.build());
             liteOrm.update(toDownload);
         }

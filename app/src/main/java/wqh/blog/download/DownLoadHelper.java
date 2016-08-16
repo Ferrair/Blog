@@ -8,6 +8,7 @@ import java.util.Queue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import wqh.blog.R;
 import wqh.blog.mvp.model.bean.Download;
 import wqh.blog.util.CollectionUtil;
 import wqh.blog.util.ToastUtil;
@@ -18,6 +19,7 @@ import wqh.blog.util.ToastUtil;
 public class DownLoadHelper {
 
     private static final String TAG = "DownLoadHelper";
+
     private Queue<Download> mDownLoadQueue = new LinkedList<>();
     private ExecutorService mService = Executors.newCachedThreadPool();
     private Map<String, DownLoadEvent> mDownLoadEventList = new HashMap<>();
@@ -38,7 +40,7 @@ public class DownLoadHelper {
         Download aDownLoad = new Download(id, fileName, title);
         if (mDownLoadQueue.contains(aDownLoad)) {
             if (aDownLoad.status != Download.FINISH)
-                ToastUtil.showToast("该文件已在下载队列里面了");
+                ToastUtil.showToast(R.string.have_downloaded);
         } else {
             mDownLoadQueue.offer(aDownLoad);
             DownLoadHelper.instance().dispatchPreStartEvent(aDownLoad);

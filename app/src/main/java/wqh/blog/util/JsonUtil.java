@@ -7,14 +7,14 @@ import com.google.gson.JsonSyntaxException;
 /**
  * Created by WQH on 2016/4/17  23:19.
  * <p>
- * Json parser using Google Gson.
+ * JsonUtil parser using Google Gson.
  */
-public class Json {
+public class JsonUtil {
     private static Gson gson;
 
     private static Gson getGson() {
         if (gson == null) {
-            synchronized (Json.class) {
+            synchronized (JsonUtil.class) {
                 if (gson == null) {
                     gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
                 }

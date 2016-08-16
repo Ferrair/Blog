@@ -6,7 +6,6 @@
     android:id="@+id/parentPanel"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     tools:context="wqh.blog.ui.activity.SearchActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -27,14 +26,15 @@
                 android:id="@+id/searchView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:defaultQueryHint="博客，产品"/>
+                app:defaultQueryHint="@string/search_text"/>
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
 
     <wqh.blog.ui.customview.StateLayout
         android:id="@+id/stateLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"

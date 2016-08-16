@@ -6,7 +6,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import wqh.blog.mvp.model.bean.Holder;
 import wqh.blog.mvp.model.service.RemoteManager;
-import wqh.blog.util.Json;
+import wqh.blog.util.JsonUtil;
 import wqh.blog.mvp.view.LoadView;
 
 /**
@@ -32,7 +32,7 @@ public class DefaultCallback implements Callback<ResponseBody> {
                  * This imposes both obligations and limits on the client application.
                  */
                 String jsonStr = response.body().string();
-                Holder holder = Json.fromJson(jsonStr, Holder.class);
+                Holder holder = JsonUtil.fromJson(jsonStr, Holder.class);
 
                 if (holder.Code == RemoteManager.OK) {
                     mLoadView.onSuccess(holder.Result.toString());

@@ -1,5 +1,6 @@
 package wqh.blog.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.NestedScrollView;
 import android.util.Log;
@@ -22,9 +23,8 @@ import wqh.blog.mvp.presenter.remote.blog.BlogUpLoadPresenterImpl;
 import wqh.blog.ui.base.StateActivity;
 import wqh.blog.ui.customview.Dialog;
 import wqh.blog.util.CollectionUtil;
-import wqh.blog.util.IntentUtil;
-import wqh.blog.util.Json;
-import wqh.blog.util.ShareUtil;
+import wqh.blog.manager.IntentManager;
+import wqh.blog.util.JsonUtil;
 import wqh.blog.util.StatusUtil;
 import wqh.blog.util.TimeUtil;
 import wqh.blog.util.ToastUtil;
@@ -106,23 +106,29 @@ public class BlogItemActivity extends StateActivity {
     @OnClick(R.id.post_comment)
     public void postComment() {
         if (UserManager.instance().isLogged()) {
-            IntentUtil.goToOtherActivity(this, PostCommentActivity.class, "id", blogId);
+            IntentManager.goToOtherActivity(this, PostCommentActivity.class, "id", blogId);
         } else {
-            Dialog.create(this, "只有登陆之后才可以发表评论咯，是否前去登陆？").setPositiveListener(
-                    "前去登陆",
-                    v -> IntentUtil.goToOtherActivity(BlogItemActivity.this, LoginActivity.class)).show();
+            Dialog.create(this, getString(R.string.need_login)).setPositiveListener(
+                    getString(R.string.go_login),
+                    v -> IntentManager.goToOtherActivity(BlogItemActivity.this, LoginActivity.class)).show();
         }
     }
 
     @OnClick(R.id.all_comments)
     public void allComments() {
-        IntentUtil.goToOtherActivity(this, AllCommentsActivity.class, "id", blogId);
+        IntentManager.goToOtherActivity(this, AllCommentsActivity.class, "id", blogId);
     }
 
     @OnClick(R.id.share)
     public void share() {
-        if (itemData != null)
-            ShareUtil.share(getApplicationContext(), itemData.title);
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain"); //MIME type
+        intent.putExtra(Intent.EXTRA_SUBJECT, getTitle());
+        intent.putExtra(Intent.EXTRA_TEXT, "Share");
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(Intent.createChooser(intent, getTitle()));
+        }
     }
 
     @Override
@@ -151,7 +157,7 @@ public class BlogItemActivity extends StateActivity {
 
         @Override
         public void onSuccess(String resultJson) {
-            List<Blog> data = CollectionUtil.asList(Json.fromJson(resultJson, Blog[].class));
+            List<Blog> data = CollectionUtil.asList(JsonUtil.fromJson(resultJson, Blog[].class));
             itemData = data.get(0);
             mLocalPresenter.db().save(itemData);
             showContent(itemData);
@@ -162,7 +168,7 @@ public class BlogItemActivity extends StateActivity {
             if (StatusUtil.isNetworkAvailable(BlogItemActivity.this)) {
                 mStateLayout.showErrorView();
             } else {
-                ToastUtil.showToast("没有网络咯");
+                ToastUtil.showToast(R.string.no_network);
             }
             Log.e(TAG, "ErrorCode-> " + errorCode + ", ErrorMsg-> " + errorMsg);
         }

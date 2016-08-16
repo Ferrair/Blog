@@ -1,4 +1,4 @@
-package wqh.blog.util;
+package wqh.blog.manager;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,7 +10,7 @@ import java.io.Serializable;
  * Created by WQH on 2015/11/30 14:51.
  * A Intent wrapper that can go to another Activity by those static method in this class.
  */
-public class IntentUtil {
+public class IntentManager {
 
     public static void goToOtherActivity(Context mContext, Class<?> cla) {
         mContext.startActivity(new Intent(mContext, cla));

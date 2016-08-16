@@ -1,8 +1,8 @@
 package wqh.blog.ui.activity;
 
+import android.support.design.widget.TextInputEditText;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.EditText;
 
 
 import java.util.List;
@@ -17,18 +17,18 @@ import wqh.blog.mvp.presenter.remote.user.UserPresenterImpl;
 import wqh.blog.mvp.view.LoadView;
 import wqh.blog.ui.base.ToolbarActivity;
 import wqh.blog.util.CollectionUtil;
-import wqh.blog.util.IntentUtil;
-import wqh.blog.util.Json;
+import wqh.blog.manager.IntentManager;
+import wqh.blog.util.JsonUtil;
 import wqh.blog.util.ToastUtil;
 
 public class LoginActivity extends ToolbarActivity {
 
     private static final String TAG = "LoginActivity";
     @Bind(R.id.username)
-    EditText mUserNameEditText;
+    TextInputEditText mUserNameEditText;
 
     @Bind(R.id.password)
-    EditText mPasswordEditText;
+    TextInputEditText mPasswordEditText;
 
     private UserPresenter mUserPresenter = new UserPresenterImpl();
     private LoadView mUserLoadView = new UserLoadView();
@@ -45,11 +45,11 @@ public class LoginActivity extends ToolbarActivity {
         String password = mPasswordEditText.getText().toString().trim();
 
         if (TextUtils.isEmpty(username)) {
-            ToastUtil.showToast("用户名为空");
+            ToastUtil.showToast(R.string.username_empty);
             return;
         }
         if (TextUtils.isEmpty(password)) {
-            ToastUtil.showToast("密码为空");
+            ToastUtil.showToast(R.string.password_empty);
             return;
         }
 
@@ -58,21 +58,21 @@ public class LoginActivity extends ToolbarActivity {
 
     @OnClick(R.id.do_register)
     public void doRegister() {
-        IntentUtil.goToOtherActivity(this, RegisterActivity.class);
+        IntentManager.goToOtherActivity(this, RegisterActivity.class);
     }
 
     private class UserLoadView implements LoadView {
 
         @Override
         public void onSuccess(String resultJson) {
-            List<User> data = CollectionUtil.asList(Json.fromJson(resultJson, User[].class));
+            List<User> data = CollectionUtil.asList(JsonUtil.fromJson(resultJson, User[].class));
             if (data.size() == 0) {
-                ToastUtil.showToast("登陆失败");
+                ToastUtil.showToast(R.string.login_error);
                 return;
             }
             UserManager.instance().saveUser(data.get(0));
-            ToastUtil.showToast("登陆成功");
-            IntentUtil.goToOtherActivity(LoginActivity.this, MainActivity.class);
+            ToastUtil.showToast(R.string.login_success);
+            IntentManager.goToOtherActivity(LoginActivity.this, MainActivity.class);
         }
 
         @Override

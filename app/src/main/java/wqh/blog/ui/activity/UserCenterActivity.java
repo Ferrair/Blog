@@ -9,6 +9,7 @@ import android.provider.MediaStore;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -25,6 +26,9 @@ import wqh.blog.R;
 import wqh.blog.app.Config;
 import wqh.blog.mvp.model.bean.User;
 import wqh.blog.mvp.model.service.UserManager;
+import wqh.blog.mvp.presenter.remote.user.UserPresenter;
+import wqh.blog.mvp.presenter.remote.user.UserPresenterImpl;
+import wqh.blog.mvp.view.LoadView;
 import wqh.blog.ui.base.ToolbarActivity;
 
 /**
@@ -50,6 +54,11 @@ public class UserCenterActivity extends ToolbarActivity {
     @Bind(R.id.cover_image)
     CollapsingToolbarLayout mCoverView;
 
+
+    private UserPresenter mUserPresenter = new UserPresenterImpl();
+    private LoadView mLoadView = new DefaultLoadView();
+    private User currentUser;
+
     @Override
     protected int layoutId() {
         return R.layout.activity_user_center;
@@ -63,18 +72,19 @@ public class UserCenterActivity extends ToolbarActivity {
 
     private void initView() {
         appBarLayout.addOnOffsetChangedListener(new OnOffsetChangedListenerHelper());
-        User currentUser = UserManager.instance().currentUser();
+        currentUser = UserManager.instance().currentUser();
         if (currentUser == null)
             throw new NullPointerException("CurrentUser is null,please check it before enter UserCenterActivity");
         mUserNameTextView.setText(currentUser.username);
-        ImageLoader.getInstance().displayImage(Config.REMOTE_DIR + currentUser.avatarUri, mUserAvatarImageView);
+        if (currentUser.avatarUri != null && !TextUtils.isEmpty(currentUser.avatarUri))
+            ImageLoader.getInstance().displayImage(Config.REMOTE_DIR + currentUser.avatarUri, mUserAvatarImageView);
     }
 
     @OnClick(R.id.cover_image)
     public void operateCover() {
         new AlertDialog
                 .Builder(UserCenterActivity.this)
-                .setItems(new String[]{"更改这个封面", "保存这个封面"}, (dialog, which) -> {
+                .setItems(new String[]{getString(R.string.change_cover), getString(R.string.save_cover)}, (dialog, which) -> {
                     switch (which) {
                         case 0:
                             changeCover();
@@ -113,12 +123,18 @@ public class UserCenterActivity extends ToolbarActivity {
             Cursor cursor = getContentResolver().query(data.getData(), null, null, null, null);
             if (cursor != null) {
                 cursor.moveToFirst();
-                File uploadFile = new File(cursor.getString(cursor.getColumnIndex("_data")));
+                File coverFile = new File(cursor.getString(cursor.getColumnIndex("_data")));
+
+                doUpload("cover", coverFile);
                 Log.i(TAG, "LocalPath-> " + cursor.getString(cursor.getColumnIndex("_data")));
                 cursor.close();
             } else
                 Log.e(TAG, "Fail to pick photo in album");
         }
+    }
+
+    private void doUpload(String name, File uploadFile) {
+        mUserPresenter.changeCover(currentUser.id, uploadFile, mLoadView);
     }
 
 
@@ -180,6 +196,19 @@ public class UserCenterActivity extends ToolbarActivity {
                         }
                     })
                     .start();
+        }
+    }
+
+    private class DefaultLoadView implements LoadView {
+        @Override
+        public void onSuccess(String resultJson) {
+            Log.i(TAG, resultJson);
+        }
+
+        // Todo : handle the errorCode. Why can find data return 107???
+        @Override
+        public void onFail(int errorCode, String errorMsg) {
+            Log.e(TAG, "ErrorCode-> " + errorCode + ", ErrorMsg-> " + errorMsg);
         }
     }
 }

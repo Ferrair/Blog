@@ -181,10 +181,18 @@ public abstract class BaseAdapter<Holder extends BaseAdapter.BaseHolder, DataTyp
 
 
     @Override
-    public void refresh(List<DataType> newData) {
+    public void update(List<DataType> newDataList) {
         mListData.clear();
-        mListData.addAll(newData);
+        mListData.addAll(newDataList);
         notifyDataSetChanged();
+    }
+
+    @Override
+    public void update(DataType newData) {
+        int index = mListData.indexOf(newData);
+        mListData.remove(index);
+        mListData.add(index, newData);
+        notifyItemChanged(index);
     }
 
     @Override

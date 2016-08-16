@@ -18,14 +18,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.activity.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:name=".ui.activity.SplashActivity"
+            android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".ui.activity.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".ui.activity.BlogItemActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
@@ -35,10 +38,6 @@
             android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".ui.activity.AllCommentsActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity
-            android:name=".ui.activity.SplashActivity"
-            android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".ui.activity.SearchActivity"

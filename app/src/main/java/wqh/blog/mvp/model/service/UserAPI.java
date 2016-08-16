@@ -1,8 +1,10 @@
 package wqh.blog.mvp.model.service;
 
 import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -39,10 +41,10 @@ public interface UserAPI {
 
     @Multipart
     @POST("/user/changeAvatar")
-    Call<ResponseBody> changeAvatar(@Field("id") int id, @Part MultipartBody.Part avatarFile);
+    Call<ResponseBody> changeAvatar(@Part("id") int id, @Part("avatar") MultipartBody.Part avatarFile);
 
     @Multipart
     @POST("/user/changeCover")
-    Call<ResponseBody> changeCover(@Field("id") int id, @Part MultipartBody.Part coverFile);
+    Call<ResponseBody> changeCover(@Part("id") int id, @Part("cover") RequestBody coverFile);
 
 }

@@ -1,4 +1,4 @@
-package wqh.blog.util;
+package wqh.blog.manager;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -9,14 +9,14 @@ import wqh.blog.app.WQHApplication;
  * Created by WQH on 2016/5/14  21:44.
  * A Util that can store data by <code>SharedPreferences</code>.
  */
-public class SharePreferenceUtil {
+public class SharePreferenceManager {
     private SharedPreferences sharedPreferences;
 
     private static class ClassHolder {
-        private static final SharePreferenceUtil INSTANCE = new SharePreferenceUtil();
+        private static final SharePreferenceManager INSTANCE = new SharePreferenceManager();
     }
 
-    private SharePreferenceUtil() {
+    private SharePreferenceManager() {
         sharedPreferences = WQHApplication.getApp().getSharedPreferences("SharedPreferences", Context.MODE_PRIVATE);
     }
 

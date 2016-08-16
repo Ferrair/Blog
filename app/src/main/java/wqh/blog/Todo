@@ -1,5 +1,10 @@
 下载--- 通知进度,列表中动态更新Progress
-评论--- 中文乱码（服务器原因)  删除
+评论--- 中文乱码（服务器原因)
 搜索--- 未完成
+
 AppBarLayout.OnOffsetChangedListener 学习
-UserCenter下面放评论
+UserCenter下面放评论 我的博文(类似与BlogList WorkList)
+
+retrofit 删除评论 上传文件 （可以每个写一个callback）
+注册用户名不能一样哦
+toString getString StackOverflow??

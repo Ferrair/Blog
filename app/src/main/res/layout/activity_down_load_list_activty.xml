@@ -22,7 +22,7 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:title="下载列表"/>
+            app:title="@string/download_list"/>
 
     </android.support.design.widget.AppBarLayout>
 
