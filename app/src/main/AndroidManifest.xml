@@ -53,7 +53,7 @@
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".ui.activity.UserCenterActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar.Transparent"/>
         <activity
             android:name=".ui.activity.SettingActivity"
             android:theme="@style/AppTheme.NoActionBar"/>

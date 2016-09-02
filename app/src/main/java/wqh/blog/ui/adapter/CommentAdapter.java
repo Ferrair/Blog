@@ -53,8 +53,12 @@ public class CommentAdapter extends BaseAdapter<CommentAdapter.CommentsHolder, C
             Spannable span = new SpannableString(itemData.content);
             int startIndex = itemData.content.indexOf("//@");
             int endIndex = itemData.content.indexOf(":");
-            span.setSpan(new ForegroundColorSpan(Color.BLUE), startIndex, endIndex + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            holder.content.setText(span);
+            if (startIndex >= 0 && endIndex >= 0) {
+                span.setSpan(new ForegroundColorSpan(Color.BLUE), startIndex, endIndex + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                holder.content.setText(span);
+            } else {
+                holder.content.setText(itemData.content);
+            }
         }
     }
 

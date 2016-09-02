@@ -20,6 +20,7 @@ public interface CommentAPI {
     Call<ResponseBody> queryComment(@Query("belongTo") int blogId, @Query("pageNum") int pageNum);
 
     /**
+     * Todo : Error when post a comment.
      * Post a comment.
      * Using<code>@FormUrlEncoded</code> , <code> @POST</code> and <code>@Field</code>.
      *

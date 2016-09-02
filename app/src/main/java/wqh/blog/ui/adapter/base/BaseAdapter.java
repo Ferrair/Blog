@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.content.Context;
 import android.support.annotation.IdRes;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +23,7 @@ import wqh.blog.ui.adapter.event.LayoutState;
 import wqh.blog.ui.adapter.event.OnBottomListener;
 import wqh.blog.ui.adapter.event.OnItemClickListener;
 import wqh.blog.ui.adapter.event.OnItemLongClickListener;
-import wqh.blog.util.CollectionUtil;
+
 
 /**
  * Created by WQH on 2016/4/11  21:07.
@@ -33,6 +32,7 @@ import wqh.blog.util.CollectionUtil;
  * Such as bind the data to the view,that's mean show the data to the user.
  */
 public abstract class BaseAdapter<Holder extends BaseAdapter.BaseHolder, DataType> extends RecyclerView.Adapter<Holder> implements Adapter<DataType> {
+    private static final String TAG = "BaseAdapter";
     protected Context mContext;
     protected List<DataType> mListData;
 
@@ -50,7 +50,7 @@ public abstract class BaseAdapter<Holder extends BaseAdapter.BaseHolder, DataTyp
     /**
      * The current state of FooterView.
      */
-    private int mState = LayoutState.LOAD;
+    private int mState = LayoutState.GONE;
 
     public static final int ITEM_TYPE_FOOTER = 0;
     public static final int ITEM_TYPE_NORMAL = 1;
@@ -82,6 +82,7 @@ public abstract class BaseAdapter<Holder extends BaseAdapter.BaseHolder, DataTyp
         this.mContext = mContext;
         this.mListData = mListData;
     }
+
 
     @SuppressWarnings("unchecked")
     @Override
@@ -171,7 +172,8 @@ public abstract class BaseAdapter<Holder extends BaseAdapter.BaseHolder, DataTyp
     public int getItemCount() {
         if (mListData == null)
             return 0;
-        return mListData.size() + 1;
+        return mListData.size();
+
     }
 
     @Override
@@ -181,30 +183,24 @@ public abstract class BaseAdapter<Holder extends BaseAdapter.BaseHolder, DataTyp
 
 
     @Override
-    public void update(List<DataType> newDataList) {
+    public void fill(List<DataType> newDataList) {
+        if (this.mListData == null) {
+            this.mListData = newDataList;
+            return;
+        }
         mListData.clear();
         mListData.addAll(newDataList);
         notifyDataSetChanged();
     }
 
     @Override
-    public void update(DataType newData) {
+    public void fill(DataType newData) {
         int index = mListData.indexOf(newData);
         mListData.remove(index);
         mListData.add(index, newData);
         notifyItemChanged(index);
     }
 
-    @Override
-    public void addAll(List<DataType> newData) {
-        if (this.mListData == null) {
-            this.mListData = newData;
-        } else {
-            int prePosition = mListData.size();
-            CollectionUtil.addAllDistinct(mListData, newData);
-            notifyItemRangeChanged(prePosition, mListData.size() - 1);
-        }
-    }
 
     @Override
     public void addAtTail(DataType data) {

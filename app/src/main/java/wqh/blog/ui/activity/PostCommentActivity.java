@@ -95,6 +95,7 @@ public class PostCommentActivity extends ToolbarActivity {
         switch (item.getItemId()) {
             case R.id.post_comment:
                 postComment();
+                item.setCheckable(false);
                 break;
             case android.R.id.home:
                 onBackPressed();

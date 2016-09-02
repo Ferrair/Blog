@@ -34,7 +34,7 @@
     <string name="save_cover">Save This Cover</string>
     <string name="blog">Blog</string>
     <string name="work">Work</string>
-    <string name="download_start">Start Fownload</string>
+    <string name="download_start">Start Download</string>
     <string name="download">Download</string>
     <string name="start">Start</string>
     <string name="save_in">Save In</string>
@@ -45,7 +45,7 @@
     <string name="permission_denied">Permission Denied</string>
     <string name="all_comment">All Comments</string>
     <string name="blog_detail">Detail</string>
-    <string name="your_comment">Your Comment</string>
+    <string name="your_comment">Post Your Comment</string>
     <string name="share_blog">Share This Blog</string>
     <string name="login">Login</string>
     <string name="username">Username</string>
