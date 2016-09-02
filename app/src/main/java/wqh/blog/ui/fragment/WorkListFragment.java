@@ -31,6 +31,7 @@ import wqh.blog.mvp.presenter.remote.work.WorkDownLoadPresenterImpl;
 import wqh.blog.mvp.view.LoadView;
 import wqh.blog.ui.activity.DownLoadListActivity;
 import wqh.blog.ui.adapter.WorkAdapter;
+import wqh.blog.ui.adapter.base.AdapterPool;
 import wqh.blog.ui.adapter.event.LayoutState;
 import wqh.blog.ui.base.ScrollFragment;
 import wqh.blog.ui.customview.Dialog;
@@ -48,14 +49,15 @@ public class WorkListFragment extends ScrollFragment {
     @Bind(R.id.rootView)
     LinearLayout mRootView;
     private static final String TAG = "WorkListFragment";
-    WorkAdapter mAdapter;
+    AdapterPool<WorkAdapter.WorkHolder, Work> mAdapter;
     DownLoadPresenter mDownLoadPresenter = new WorkDownLoadPresenterImpl();
     DefaultLoadView mDefaultLoadDataView = new DefaultLoadView();
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mAdapter = new WorkAdapter(getActivity());
+        mAdapter = new AdapterPool<>(getActivity());
+        mAdapter.register(Work.class, new WorkAdapter(getActivity()));
         mAdapter.setOnBottomListener(this);
 
         // Show Download Dialog here.
@@ -138,7 +140,7 @@ public class WorkListFragment extends ScrollFragment {
         public void onSuccess(String resultJson) {
             List<Work> data = CollectionUtil.asList(JsonUtil.fromJson(resultJson, Work[].class));
             mStateLayout.showContentView();
-            mAdapter.addAll(data);
+            mAdapter.fill(data);
             mRecyclerView.setAdapter(mAdapter);
         }
 

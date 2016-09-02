@@ -39,7 +39,7 @@ public class UserCenterActivity extends ToolbarActivity {
     @Bind(R.id.username)
     TextView mUserNameTextView;
 
-    @Bind(R.id.email)
+   /* @Bind(R.id.email)
     TextView mEmailTextView;
 
     @Bind(R.id.avatar)
@@ -53,7 +53,7 @@ public class UserCenterActivity extends ToolbarActivity {
 
     @Bind(R.id.cover_image)
     CollapsingToolbarLayout mCoverView;
-
+*/
 
     private UserPresenter mUserPresenter = new UserPresenterImpl();
     private LoadView mLoadView = new DefaultLoadView();
@@ -71,16 +71,16 @@ public class UserCenterActivity extends ToolbarActivity {
     }
 
     private void initView() {
-        appBarLayout.addOnOffsetChangedListener(new OnOffsetChangedListenerHelper());
+     /*   appBarLayout.addOnOffsetChangedListener(new OnOffsetChangedListenerHelper());
         currentUser = UserManager.instance().currentUser();
         if (currentUser == null)
             throw new NullPointerException("CurrentUser is null,please check it before enter UserCenterActivity");
         mUserNameTextView.setText(currentUser.username);
         if (currentUser.avatarUri != null && !TextUtils.isEmpty(currentUser.avatarUri))
-            ImageLoader.getInstance().displayImage(Config.REMOTE_DIR + currentUser.avatarUri, mUserAvatarImageView);
+            ImageLoader.getInstance().displayImage(Config.REMOTE_DIR + currentUser.avatarUri, mUserAvatarImageView);*/
     }
 
-    @OnClick(R.id.cover_image)
+   /* @OnClick(R.id.cover_image)
     public void operateCover() {
         new AlertDialog
                 .Builder(UserCenterActivity.this)
@@ -96,7 +96,7 @@ public class UserCenterActivity extends ToolbarActivity {
                 })
                 .create()
                 .show();
-    }
+    }*/
 
     private void saveCover() {
 
@@ -138,7 +138,7 @@ public class UserCenterActivity extends ToolbarActivity {
     }
 
 
-    private class OnOffsetChangedListenerHelper implements AppBarLayout.OnOffsetChangedListener {
+    /*private class OnOffsetChangedListenerHelper implements AppBarLayout.OnOffsetChangedListener {
         boolean avatarCanFadeOut = true, avatarCanFadeIn = false;
         boolean hasFadeOut = false, hasFadeIn = true;
         int totalScrollRange;
@@ -158,12 +158,12 @@ public class UserCenterActivity extends ToolbarActivity {
             if (!hasFadeOut && avatarCanFadeOut) {
                 hasFadeOut = true;
                 animateOut(linearLayout);
-                /*animateOut(username_tv);*/
+                *//*animateOut(username_tv);*//*
 
             } else if (!hasFadeIn && avatarCanFadeIn) {
                 hasFadeIn = true;
                 animateIn(linearLayout);
-                /*animateIn(username_tv);*/
+                *//*animateIn(username_tv);*//*
             }
         }
 
@@ -197,7 +197,7 @@ public class UserCenterActivity extends ToolbarActivity {
                     })
                     .start();
         }
-    }
+    }*/
 
     private class DefaultLoadView implements LoadView {
         @Override

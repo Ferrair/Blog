@@ -1,14 +1,16 @@
 package wqh.blog.ui.adapter.base;
 
+import android.support.annotation.NonNull;
+
 import java.util.List;
 
 /**
  * Created by WQH on 2016/4/11  21:21.
  * <p>
  * Interface for all <code>Adapter<code/>.
- * subclass MUST have a <code>List<DataType><code/> stores the data.
+ * subclass MUST have a <code>List<Model><code/> stores the data.
  */
-public interface Adapter<DataType> {
+public interface Adapter<Model> {
 
     boolean isEmpty();
 
@@ -16,28 +18,30 @@ public interface Adapter<DataType> {
      * Fill the Adapter by the given newDataList.
      * Means clear the last data.
      */
-    void fill(List<DataType> newDataList);
+    void fill(@NonNull List<Model> newDataList);
 
     /**
      * Update the Adapter by given newData.
-     * Only fill the place where to fill.
+     * Only update the place where to update.
      */
-    void fill(DataType newData);
+    void update(@NonNull Model newData);
 
+    /**
+     * Add a newData.
+     */
+    void addOne(@NonNull Model data, int position);
 
-    void addOne(DataType data, int position);
+    void addAtTail(@NonNull Model data);
 
-    void addAtTail(DataType data);
+    void addAtHead(@NonNull Model data);
 
-    void addAtHead(DataType data);
-
-    void removeOne(DataType item);
+    void removeOne(@NonNull Model item);
 
     void removeOne(int position);
 
     void removeAll();
 
-    List<DataType> getAllData();
+    List<Model> getAllData();
 
-    DataType getOne(int which);
+    Model getOne(int which);
 }

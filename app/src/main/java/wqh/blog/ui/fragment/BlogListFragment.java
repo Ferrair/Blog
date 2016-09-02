@@ -14,6 +14,7 @@ import wqh.blog.ui.adapter.BlogAdapter;
 import wqh.blog.mvp.model.bean.Blog;
 import wqh.blog.mvp.presenter.remote.blog.BlogDownLoadPresenterImpl;
 import wqh.blog.ui.adapter.animation.AnimationManager;
+import wqh.blog.ui.adapter.base.AdapterPool;
 import wqh.blog.ui.adapter.event.LayoutState;
 import wqh.blog.ui.base.ScrollFragment;
 import wqh.blog.ui.customview.DividerItemDecoration;
@@ -30,7 +31,7 @@ import wqh.blog.mvp.view.LoadView;
 public class BlogListFragment extends ScrollFragment {
 
     private static final String TAG = "BlogListFragment";
-    BlogAdapter mAdapter;
+    AdapterPool<BlogAdapter.BlogHolder, Blog> mAdapter;
     /**
      * A Load-Data Presenter,which means load data from server is it's function.
      * On the other hand,load-data can't be found in this class
@@ -46,9 +47,10 @@ public class BlogListFragment extends ScrollFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         //init RecyclerView, Adapter,and set listener
+        mAdapter = new AdapterPool<>(getActivity());
+        mAdapter.register(Blog.class, new BlogAdapter(getActivity()));
         mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
 
-        mAdapter = new BlogAdapter(mContext);
         mAdapter.setOnItemClickListener(R.id.item_blog, (view, data) -> IntentManager.goToOtherActivity(getActivity(), BlogItemActivity.class, "id", data.id));
         mAdapter.openAnimation(AnimationManager.EnterInRight);
         mAdapter.setOnBottomListener(this);
@@ -73,7 +75,7 @@ public class BlogListFragment extends ScrollFragment {
      */
     private void showContent(List<Blog> data) {
         mStateLayout.showContentView();
-        mAdapter.addAll(data);
+        mAdapter.fill(data);
         mRecyclerView.setAdapter(mAdapter);
     }
 

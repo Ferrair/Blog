@@ -2,6 +2,7 @@ package wqh.blog.ui.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
@@ -13,34 +14,35 @@ import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import java.util.List;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import wqh.blog.R;
 import wqh.blog.app.Config;
 import wqh.blog.mvp.model.bean.Comment;
-import wqh.blog.ui.adapter.base.BaseAdapter;
+import wqh.blog.ui.adapter.base.AdapterProvider;
+import wqh.blog.ui.adapter.base.BaseViewHolder;
 import wqh.blog.util.ImageLoaderOption;
 
 /**
  * Created by WQH on 2016/5/2  20:43.
  */
-public class CommentAdapter extends BaseAdapter<CommentAdapter.CommentsHolder, Comment> {
+public class CommentAdapter extends AdapterProvider<CommentAdapter.CommentsHolder, Comment> {
 
     private static final String TAG = "CommentAdapter";
 
     public CommentAdapter(Context mContext) {
-        this(mContext, null);
+        super(mContext);
     }
 
-    public CommentAdapter(Context mContext, List<Comment> mListData) {
-        super(mContext, mListData);
+
+    @Override
+    public CommentsHolder onCreateViewHolder( @NonNull ViewGroup parent) {
+        return new CommentsHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_comment, parent, false));
     }
 
     @Override
-    protected void onBindItemDataToView(CommentsHolder holder, Comment itemData) {
+    public void onBindItemDataToView(CommentsHolder holder, Comment itemData) {
 
         holder.createdAt.setText(itemData.createdAt.toString());
         holder.creatorName.setText(String.valueOf(itemData.creatorName));
@@ -62,12 +64,7 @@ public class CommentAdapter extends BaseAdapter<CommentAdapter.CommentsHolder, C
         }
     }
 
-    @Override
-    public CommentsHolder onCreateHolder(ViewGroup parent, int viewType) {
-        return new CommentsHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_comment, parent, false));
-    }
-
-    public static class CommentsHolder extends BaseAdapter.BaseHolder {
+    public static class CommentsHolder extends BaseViewHolder {
         @Bind(R.id.createdAt)
         TextView createdAt;
         @Bind(R.id.creatorName)

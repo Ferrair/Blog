@@ -10,13 +10,14 @@ import java.util.List;
 import wqh.blog.R;
 import wqh.blog.mvp.model.bean.Download;
 import wqh.blog.ui.adapter.DownLoadAdapter;
+import wqh.blog.ui.adapter.base.AdapterPool;
 import wqh.blog.ui.adapter.event.LayoutState;
 import wqh.blog.ui.base.ScrollActivity;
 
 public class DownLoadListActivity extends ScrollActivity {
     private static final String TAG = "DownLoadListActivity";
     private static LiteOrm liteOrm;
-    private DownLoadAdapter mAdapter;
+    private AdapterPool<DownLoadAdapter.DownLoadHolder, Download> mAdapter;
 
     @Override
     protected int layoutId() {
@@ -26,7 +27,8 @@ public class DownLoadListActivity extends ScrollActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mAdapter = new DownLoadAdapter(this);
+        mAdapter = new AdapterPool<>(this);
+        mAdapter.register(Download.class, new DownLoadAdapter(this));
         mAdapter.setLoadState(LayoutState.GONE);
         if (liteOrm == null) {
             liteOrm = LiteOrm.newSingleInstance(this, "blog.db");
@@ -60,7 +62,7 @@ public class DownLoadListActivity extends ScrollActivity {
         if (mListData.size() == 0) {
             mStateLayout.showEmptyView();
         } else {
-            mAdapter.addAll(mListData);
+            mAdapter.fill(mListData);
             mStateLayout.showContentView();
             mRecyclerView.setAdapter(mAdapter);
         }

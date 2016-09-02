@@ -14,6 +14,12 @@ This is an Android project of my `Blog-System`.
 
 
 ##Generics Adapter in this project
+`AdapterPool` is a Pool that hold a lot of `AdapterProvider`. `AdapterProvider` can be holden by use `register(Model.class, new AdapterProvider(this))`.
+So some bind work is delegate to `AdapterProvider` while `AdapterPool` can do something generics like add data or setListener,etc.
 
-see wqh.blog.ui.adapter.BaseAdapter package.
+see wqh.blog.ui.adapter package.
+
+see [MultiType](https://github.com/drakeet/MultiType/blob/master/library/src/main/java/me/drakeet/multitype/TypeItemFactory.java)
+
+
 

@@ -20,6 +20,7 @@ import wqh.blog.mvp.model.service.UserManager;
 import wqh.blog.mvp.presenter.remote.comment.CommentDownLoadPresenter;
 import wqh.blog.mvp.presenter.remote.comment.CommentDownLoadPresenterImpl;
 import wqh.blog.ui.adapter.CommentAdapter;
+import wqh.blog.ui.adapter.base.AdapterPool;
 import wqh.blog.ui.adapter.event.LayoutState;
 import wqh.blog.ui.base.ScrollActivity;
 import wqh.blog.ui.customview.Dialog;
@@ -35,7 +36,7 @@ public class AllCommentsActivity extends ScrollActivity {
     @Bind(R.id.rootView)
     CoordinatorLayout mRootView;
 
-    CommentAdapter mAdapter;
+    AdapterPool<CommentAdapter.CommentsHolder, Comment> mAdapter;
     /**
      * A Load-Data Presenter,which means load data from server is it's function.
      * On the other hand,load-data can't be found in this class
@@ -59,7 +60,8 @@ public class AllCommentsActivity extends ScrollActivity {
         belongTo = getIntent().getIntExtra("id", 0);
 
         mRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.HORIZONTAL));
-        mAdapter = new CommentAdapter(this);
+        mAdapter = new AdapterPool<>(this);
+        mAdapter.register(Comment.class, new CommentAdapter(this));
         mAdapter.setOnBottomListener(this);
         mAdapter.setOnItemClickListener(R.id.item_comment, (view, data) -> createDialog(data));
         mDownLoadCommentPresenter.loadById(belongTo, 1, mDefaultLoadDataView);
@@ -154,7 +156,7 @@ public class AllCommentsActivity extends ScrollActivity {
      */
     private void showContent(List<Comment> data) {
         mStateLayout.showContentView();
-        mAdapter.addAll(data);
+        mAdapter.fill(data);
         mRecyclerView.setAdapter(mAdapter);
     }
 
